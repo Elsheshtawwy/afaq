@@ -1,4 +1,4 @@
-import 'package:afaq/pages/splash_screen.dart';
+import 'package:afaq/pages/Onboarding/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {

@@ -14,6 +14,8 @@ class MainButton extends StatelessWidget {
   final bool inProgress;
   final double btnHorizontalPadding;
   final double btnVerticalPadding;
+  final Widget? prefix;
+  final Widget? suffix;
 
   const MainButton({
     super.key,
@@ -21,14 +23,16 @@ class MainButton extends StatelessWidget {
     required this.onTap,
     this.btnColor,
     this.txtColor = Colors.white,
-    this.padding = const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+    this.padding = const EdgeInsets.symmetric(horizontal: 60.0, vertical: 10.0),
     this.inProgress = false,
-    required this.borderRadius,
-    this.fontSize = 18.0,
+    this.borderRadius = 8,
+    this.fontSize = 20,
     this.btnHorizontalPadding = 40,
     this.btnVerticalPadding = 8,
     this.txtSize,
     this.fontWeight,
+    this.prefix,
+    this.suffix,
   });
 
   @override
@@ -60,15 +64,26 @@ class MainButton extends StatelessWidget {
                     strokeWidth: 2,
                   ),
                 )
-              : Center(
-                  child: Text(
-                    text,
-                    style: TextStyle(
-                      color: txtColor,
-                      fontSize: fontSize,
-                      fontWeight: fontWeight,
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (prefix != null) ...[
+                      prefix!,
+                      const SizedBox(width: 8),
+                    ],
+                    Text(
+                      text,
+                      style: TextStyle(
+                        color: txtColor,
+                        fontSize: fontSize,
+                        fontWeight: fontWeight,
+                      ),
                     ),
-                  ),
+                    if (suffix != null) ...[
+                      const SizedBox(width: 8),
+                      suffix!,
+                    ],
+                  ],
                 ),
         ),
       ),

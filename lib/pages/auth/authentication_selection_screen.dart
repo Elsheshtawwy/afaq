@@ -1,5 +1,7 @@
 import 'package:afaq/helpers/get_size.dart';
+import 'package:afaq/pages/auth/signup_screen.dart';
 import 'package:afaq/widgets/buttons/main_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AuthenticationSelectionScreen extends StatelessWidget {
@@ -58,7 +60,10 @@ class AuthenticationSelectionScreen extends StatelessWidget {
                         text: 'Sign Up',
                         fontWeight: FontWeight.w600,
                         onTap: () {
-                          // Define your onTap function here
+                          Navigator.push(
+                              context,
+                              CupertinoPageRoute(
+                                  builder: (context) =>  SignUpScreen()));
                         },
                         borderRadius: 8,
                       ),
@@ -68,11 +73,9 @@ class AuthenticationSelectionScreen extends StatelessWidget {
                       MainButton(
                         btnColor: Colors.transparent,
                         txtColor: Theme.of(context).primaryColor,
-                        text: 'Skip',
+                        text: 'Log In',
                         fontWeight: FontWeight.w400,
-                        onTap: () {
-                          // Define your onTap function here
-                        },
+                        onTap: () {},
                         borderRadius: 8,
                       ),
                     ],
