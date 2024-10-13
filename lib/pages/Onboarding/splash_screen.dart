@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:afaq/pages/auth/authentication_selection_screen.dart';
-import 'package:afaq/helpers/get_size.dart';
+import 'package:afaq/helpers/functions.dart';
+import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -15,6 +15,8 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
+  late Timer _loadingTimer;
+  String _loadingText = 'Loading';
 
   @override
   void initState() {
@@ -23,52 +25,75 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeIn);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceInOut);
 
-    _controller.forward();
+    _controller.repeat(reverse: true);
+
+    _loadingTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+      setState(() {
+        if (_loadingText.endsWith('...')) {
+          _loadingText = 'Loading';
+        } else {
+          _loadingText += '.';
+        }
+      });
+    });
 
     Timer(const Duration(seconds: 3), () {
+      _loadingTimer.cancel();
       Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-              builder: (context) => const AuthenticationSelectionScreen()));
+              builder: (context) => const LoginScreen()));
     });
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _loadingTimer.cancel();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: FadeTransition(
-          opacity: _animation,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                "assets/images/logo.png",
-                width: getSize(context).width,
-              ),
-              const SizedBox(height: 20),
-              const CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
-              const SizedBox(height: 20),
-              const Text(
-                'Loading...',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.blue,
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.blue, Colors.purple],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: Center(
+          child: FadeTransition(
+            opacity: _animation,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ScaleTransition(
+                  scale: _animation,
+                  child: Image.asset(
+                    "assets/images/logo.png",
+                    width: getSize(context).width * 0.4,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+                const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  _loadingText,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
