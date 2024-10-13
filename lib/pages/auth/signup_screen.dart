@@ -55,14 +55,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
             return Container(
               decoration: BoxDecoration(
                 gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
                   colors: [
-                    primaryColor.withOpacity(0.4),
-                    primaryColor.withOpacity(0.7),
-                    primaryColor.withOpacity(1.0),
+                    Colors.lightBlue.shade100,
+                    Colors.lightBlue.shade300,
+                    Colors.lightBlue.shade700,
                   ],
                   stops: [0.1, 0.5, 0.9],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomRight,
                 ),
               ),
               child: Center(
@@ -105,20 +105,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             const SizedBox(height: 20),
                             _buildDividerWithText(getFontSize),
                             const SizedBox(height: 20),
-                         buildSocialButtons(
-                          [
-                            "assets/socialLogos/light/google.png",
-                            "assets/socialLogos/light/facebook.png",
-                          ],
-                          [
-                            () {
-                              
-                            },
-                            () {
-                              
-                            },
-                          ],
-                        ),
+                            buildSocialButtons(
+                              [
+                                "assets/socialLogos/light/google.png",
+                                "assets/socialLogos/light/facebook.png",
+                              ],
+                              [
+                                () {},
+                                () {},
+                              ],
+                            ),
                             const SizedBox(height: 20),
                             _buildLoginRow(primaryColor, getFontSize),
                           ],
@@ -262,8 +258,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       label: 'Sign Up',
       onPressed: () {
         if (_formKey.currentState!.validate()) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>  HomePage()));
+          Navigator.pushReplacement(
+              context, MaterialPageRoute(builder: (context) => HomePage()));
         }
       },
       buttonColor: primaryColor,

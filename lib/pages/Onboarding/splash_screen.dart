@@ -25,7 +25,8 @@ class _SplashScreenState extends State<SplashScreen>
       duration: const Duration(seconds: 2),
       vsync: this,
     );
-    _animation = CurvedAnimation(parent: _controller, curve: Curves.bounceInOut);
+    _animation =
+        CurvedAnimation(parent: _controller, curve: Curves.bounceInOut);
 
     _controller.repeat(reverse: true);
 
@@ -41,10 +42,8 @@ class _SplashScreenState extends State<SplashScreen>
 
     Timer(const Duration(seconds: 3), () {
       _loadingTimer.cancel();
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => const LoginScreen()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
     });
   }
 
@@ -59,12 +58,26 @@ class _SplashScreenState extends State<SplashScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue, Colors.purple],
-            begin: Alignment.topLeft,
+            colors: [
+              Colors.lightBlue.shade100,
+              Colors.lightBlue.shade300,
+              Colors.lightBlue.shade700,
+            ],
+            stops: [0.1, 0.5, 0.9],
+            begin: Alignment.topCenter,
             end: Alignment.bottomRight,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.2),
+              spreadRadius: 4,
+              blurRadius: 8,
+              offset: Offset(0, 4),
+            ),
+          ],
+          borderRadius: BorderRadius.circular(15),
         ),
         child: Center(
           child: FadeTransition(

@@ -43,11 +43,15 @@ class _HomePageState extends State<HomePage> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      backgroundColor: Theme.of(context).primaryColor,
+      flexibleSpace: Container(
+        decoration: BoxDecoration(
+          color: Colors.lightBlue,
+        ),
+      ),
       elevation: 0,
       leading: Builder(
         builder: (context) => IconButton(
-          icon: const Icon(Icons.menu),
+          icon: const Icon(Icons.menu, color: Colors.white),
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
       ),
@@ -60,9 +64,11 @@ class _HomePageState extends State<HomePage> {
           icon: const FaIcon(FontAwesomeIcons.bell, color: Colors.white),
           onPressed: () {},
         ),
-        IconButton(
-          icon: const FaIcon(FontAwesomeIcons.bars, color: Colors.white),
-          onPressed: () {},
+        Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: CircleAvatar(
+            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+          ),
         ),
       ],
     );
@@ -76,14 +82,21 @@ class _HomePageState extends State<HomePage> {
           DrawerHeader(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [Theme.of(context).primaryColor, Colors.purpleAccent],
+                colors: [
+                  Colors.lightBlue.shade100,
+                  Colors.lightBlue.shade300,
+                  Colors.lightBlue.shade700,
+                ],
+                stops: [0.1, 0.5, 0.9],
+                begin: Alignment.bottomCenter,
+                end: Alignment.topCenter,
               ),
             ),
             child: const Text(
               'Menu',
               style: TextStyle(
-                color: Colors.white,
                 fontSize: 24,
+                color: Colors.white,
               ),
             ),
           ),
@@ -127,23 +140,9 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBanner() {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      child: PageView(
-        children: [
-          _buildBannerImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtdbgK5RvawybzSuAJuufqXz6HMdX-FoqrQw&s'),
-          _buildBannerImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtdbgK5RvawybzSuAJuufqXz6HMdX-FoqrQw&s'),
-          _buildBannerImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtdbgK5RvawybzSuAJuufqXz6HMdX-FoqrQw&s'),
-        ],
-      ),
-    );
-  }
-
   Widget _buildBannerImage(String imageUrl) {
     return Container(
-      width: 350,
+      margin: const EdgeInsets.symmetric(horizontal: 8.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         image: DecorationImage(
@@ -186,13 +185,27 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Widget _buildBanner() {
+    return Container(
+      width: double.infinity,
+      height: 200,
+      child: PageView.builder(
+        controller: PageController(viewportFraction: 0.8),
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          return _buildBannerImage('https://via.placeholder.com/350');
+        },
+      ),
+    );
+  }
+
   Widget _buildMainTitle(BuildContext context) {
     return AutoSizeText(
       "Learn what you need today to succeed tomorrow.",
       style: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.bold,
-        color: Theme.of(context).primaryColor,
+        color: Colors.lightBlue.shade700,
       ),
       maxLines: 2,
     );
@@ -211,11 +224,15 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           "Top courses",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.lightBlue.shade700),
         ),
         TextButton(
           onPressed: () {},
-          child: Text("see more", style: TextStyle(color: Theme.of(context).primaryColor)),
+          child: Text("see more",
+              style: TextStyle(color: Colors.lightBlue.shade700)),
         ),
       ],
     );
@@ -245,11 +262,15 @@ class _HomePageState extends State<HomePage> {
       children: [
         Text(
           "More courses",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Theme.of(context).primaryColor),
+          style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.lightBlue.shade700),
         ),
         TextButton(
           onPressed: () {},
-          child: Text("see more", style: TextStyle(color: Theme.of(context).primaryColor)),
+          child: Text("see more",
+              style: TextStyle(color: Colors.lightBlue.shade700)),
         ),
       ],
     );
@@ -275,7 +296,7 @@ class _HomePageState extends State<HomePage> {
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
       backgroundColor: Colors.white,
-      selectedItemColor: Theme.of(context).primaryColor,
+      selectedItemColor: Colors.lightBlue.shade700,
       unselectedItemColor: Colors.grey,
       showUnselectedLabels: true,
       items: const [
@@ -355,7 +376,7 @@ class _CourseTileState extends State<CourseTile> {
           IconButton(
             icon: FaIcon(
               isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-              color: isFavorite ? Colors.red : Theme.of(context).primaryColor,
+              color: isFavorite ? Colors.red : Colors.lightBlue.shade700,
             ),
             onPressed: () {
               setState(() {
