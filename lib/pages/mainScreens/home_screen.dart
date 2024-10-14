@@ -1,13 +1,68 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  List<String> searchHints = [
+    'Search for courses',
+    'Find your next adventure',
+    'Explore new skills',
+  ];
+  int currentHintIndex = 0;
+  String currentHintText = '';
+  late Timer _timer;
+  late Timer _typewriterTimer;
+  int _charIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTextChangeTimer();
+    _startTypewriterEffect();
+  }
+
+  void _startTextChangeTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      setState(() {
+        currentHintIndex = (currentHintIndex + 1) % searchHints.length;
+        _charIndex = 0;
+        currentHintText = '';
+        _startTypewriterEffect();
+      });
+    });
+  }
+
+  void _startTypewriterEffect() {
+    _typewriterTimer =
+        Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
+      if (_charIndex < searchHints[currentHintIndex].length) {
+        setState(() {
+          currentHintText += searchHints[currentHintIndex][_charIndex];
+          _charIndex++;
+        });
+      } else {
+        _typewriterTimer.cancel();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _typewriterTimer.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +75,8 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              _buildSearchBar(),
+              const SizedBox(height: 16),
               _buildBanner(),
               const SizedBox(height: 20),
               _buildMainTitle(context),
@@ -44,7 +101,7 @@ class _HomePageState extends State<HomePage> {
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
       flexibleSpace: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.lightBlue,
         ),
       ),
@@ -55,19 +112,16 @@ class _HomePageState extends State<HomePage> {
           onPressed: () => Scaffold.of(context).openDrawer(),
         ),
       ),
-      title: const Text(
-        "Search your teacher",
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-      ),
       actions: [
         IconButton(
           icon: const FaIcon(FontAwesomeIcons.bell, color: Colors.white),
           onPressed: () {},
         ),
-        Padding(
-          padding: const EdgeInsets.only(right: 16.0),
+        const Padding(
+          padding: EdgeInsets.only(right: 16.0),
           child: CircleAvatar(
-            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+            backgroundImage: NetworkImage(
+                'https://i.pinimg.com/564x/b0/c7/af/b0c7af6be327de3d7f24ca2ae51eaf46.jpg'),
           ),
         ),
       ],
@@ -87,7 +141,7 @@ class _HomePageState extends State<HomePage> {
                   Colors.lightBlue.shade300,
                   Colors.lightBlue.shade700,
                 ],
-                stops: [0.1, 0.5, 0.9],
+                stops: const [0.1, 0.5, 0.9],
                 begin: Alignment.bottomCenter,
                 end: Alignment.topCenter,
               ),
@@ -100,41 +154,53 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          ListTile(
-            leading: const Icon(Icons.home),
-            title: const Text('Home'),
-            onTap: () {
-              Navigator.pop(context);
-            },
+          _buildDrawerItem(Icons.home, 'Home', context),
+          _buildDrawerItem(Icons.search, 'Search', context),
+          _buildDrawerItem(Icons.school, 'Courses', context),
+          _buildDrawerItem(Icons.person, 'Profile', context),
+          _buildDrawerItem(Icons.message, 'Messages', context),
+        ],
+      ),
+    );
+  }
+
+  ListTile _buildDrawerItem(IconData icon, String title, BuildContext context) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(title),
+      onTap: () {
+        Navigator.pop(context);
+      },
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
-          ListTile(
-            leading: const Icon(Icons.search),
-            title: const Text('Search'),
-            onTap: () {
-              Navigator.pop(context);
-            },
+        ],
+      ),
+      child: Row(
+        children: [
+          FaIcon(FontAwesomeIcons.search, color: Colors.lightBlue.shade700),
+          const SizedBox(width: 8),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: currentHintText,
+                border: InputBorder.none,
+              ),
+            ),
           ),
-          ListTile(
-            leading: const Icon(Icons.school),
-            title: const Text('Courses'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.person),
-            title: const Text('Profile'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.message),
-            title: const Text('Messages'),
-            onTap: () {
-              Navigator.pop(context);
-            },
-          ),
+          FaIcon(FontAwesomeIcons.filter, color: Colors.lightBlue.shade700),
         ],
       ),
     );
@@ -186,15 +252,17 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBanner() {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       height: 200,
-      child: PageView.builder(
-        controller: PageController(viewportFraction: 0.8),
-        itemCount: 3,
+      child: Swiper(
+        itemCount: 5,
         itemBuilder: (context, index) {
-          return _buildBannerImage('https://via.placeholder.com/350');
+          return _buildBannerImage(
+              'https://wallpapers.com/images/high/machine-gun-kelly-album-cover-rajgn4dxu5kze3no.webp');
         },
+        viewportFraction: 0.8,
+        scale: 0.9,
       ),
     );
   }
@@ -317,6 +385,7 @@ class CourseTile extends StatefulWidget {
   final String avatarUrl;
 
   const CourseTile({
+    super.key,
     required this.name,
     required this.rating,
     required this.reviews,
@@ -362,7 +431,12 @@ class _CourseTileState extends State<CourseTile> {
               ),
               Row(
                 children: [
-                  Icon(Icons.star, color: Colors.yellow[700], size: 16),
+                  Row(
+                    children: List.generate(5, (index) {
+                      return Icon(Icons.star,
+                          color: Colors.yellow[700], size: 16);
+                    }),
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     "${widget.rating} (${widget.reviews})",
@@ -395,6 +469,7 @@ class CourseCard extends StatelessWidget {
   final String price;
 
   const CourseCard({
+    super.key,
     required this.courseName,
     required this.price,
   });

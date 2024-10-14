@@ -4,6 +4,8 @@ import 'package:afaq/helpers/functions.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:flutter/material.dart';
 
+
+
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -65,7 +67,7 @@ class _SplashScreenState extends State<SplashScreen>
               Colors.lightBlue.shade300,
               Colors.lightBlue.shade700,
             ],
-            stops: [0.1, 0.5, 0.9],
+            stops: const [0.1, 0.5, 0.9],
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
           ),
@@ -74,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
               color: Colors.black.withOpacity(0.2),
               spreadRadius: 4,
               blurRadius: 8,
-              offset: Offset(0, 4),
+              offset: const Offset(0, 4),
             ),
           ],
           borderRadius: BorderRadius.circular(15),
