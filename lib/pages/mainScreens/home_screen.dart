@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:afaq/widgets/cards/CourseCard.dart';
+import 'package:afaq/widgets/cards/TeacherTile.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
@@ -83,9 +85,9 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 8),
               _buildSubtitle(),
               const SizedBox(height: 20),
-              _buildTopCoursesSection(context),
+              _buildPopularTeachersSection(context),
               const SizedBox(height: 10),
-              _buildCourseList(),
+              _buildPopularTeachersList(),
               const SizedBox(height: 20),
               _buildMoreCoursesSection(context),
               const SizedBox(height: 10),
@@ -196,8 +198,10 @@ class _HomePageState extends State<HomePage> {
             child: TextField(
               decoration: InputDecoration(
                 hintText: currentHintText,
+                hintStyle: const TextStyle(color: Colors.grey),
                 border: InputBorder.none,
               ),
+              style: TextStyle(color: Colors.lightBlue.shade700),
             ),
           ),
           FaIcon(FontAwesomeIcons.filter, color: Colors.lightBlue.shade700),
@@ -256,6 +260,8 @@ class _HomePageState extends State<HomePage> {
       width: double.infinity,
       height: 200,
       child: Swiper(
+        autoplay: true,
+        autoplayDelay: 6000,
         itemCount: 5,
         itemBuilder: (context, index) {
           return _buildBannerImage(
@@ -263,6 +269,15 @@ class _HomePageState extends State<HomePage> {
         },
         viewportFraction: 0.8,
         scale: 0.9,
+        pagination: const SwiperPagination(
+          alignment: Alignment.bottomCenter,
+          builder: DotSwiperPaginationBuilder(
+            color: Colors.grey,
+            activeColor: Colors.lightBlue,
+            size: 6,
+            activeSize: 8,
+          ),
+        ),
       ),
     );
   }
@@ -286,12 +301,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildTopCoursesSection(BuildContext context) {
+  Widget _buildPopularTeachersSection(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Top courses",
+          "Popular teachers",
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -305,22 +320,55 @@ class _HomePageState extends State<HomePage> {
       ],
     );
   }
-
-  Widget _buildCourseList() {
-    return const Column(
-      children: [
-        CourseTile(
-            name: 'Omar Shareef',
-            rating: '4.5',
-            reviews: '13,657',
-            avatarUrl: 'https://via.placeholder.com/50'),
-        SizedBox(height: 10),
-        CourseTile(
-            name: 'Ali Omar Sharif',
-            rating: '4.5',
-            reviews: '13,657',
-            avatarUrl: 'https://via.placeholder.com/50'),
-      ],
+  Widget _buildPopularTeachersList() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          height: 300,
+          width: double.infinity,
+          child: Swiper(
+            itemCount: 6,
+            itemBuilder: (context, index) {
+              return ListView(
+                physics: const BouncingScrollPhysics(),
+                children: const [
+                  TeacherTile(
+                    name: 'Omar Sharif',
+                    rating: '4.5',
+                    reviews: '13,657',
+                    avatarUrl: 'https://via.placeholder.com/50',
+                  ),
+                  SizedBox(height: 10),
+                  TeacherTile(
+                    name: 'Ali Omar Sharif',
+                    rating: '4.5',
+                    reviews: '13,657',
+                    avatarUrl: 'https://via.placeholder.com/50',
+                  ),
+                  SizedBox(height: 10),
+                  TeacherTile(
+                    name: 'John Doe',
+                    rating: '4.5',
+                    reviews: '13,657',
+                    avatarUrl: 'https://via.placeholder.com/50',
+                  ),
+                ],
+              );
+            },
+            viewportFraction: constraints.maxWidth > 600 ? 0.5 : 0.9,
+            scale: 0.9,
+            pagination: const SwiperPagination(
+              alignment: Alignment.bottomCenter,
+              builder: DotSwiperPaginationBuilder(
+                color: Colors.grey,
+                activeColor: Colors.lightBlue,
+                size: 6,
+                activeSize: 8,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -329,7 +377,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "More courses",
+          "Courses",
           style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -345,19 +393,55 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildCoursesGrid() {
-    return GridView.count(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 2,
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      childAspectRatio: 0.75,
-      children: const [
-        CourseCard(courseName: "Learn Flutter", price: "429.29"),
-        CourseCard(courseName: "Learn JS", price: "429.29"),
-        CourseCard(courseName: "Learn Python", price: "429.29"),
-        CourseCard(courseName: "Learn English", price: "429.29"),
-      ],
+    final courses = [
+      {
+        "courseName": "Learn Flutter",
+        "price": "429.29",
+        "description": "A comprehensive Flutter course",
+        "rating": "4.8",
+        "reviews": "1500",
+      },
+      {
+        "courseName": "Learn Dart",
+        "price": "329.29",
+        "description": "A comprehensive Dart course",
+        "rating": "4.5",
+        "reviews": "1000",
+      },
+      {
+        "courseName": "Learn Firebase",
+        "price": "229.29",
+        "description": "A comprehensive Firebase course",
+        "rating": "4.7",
+        "reviews": "1200",
+      },
+    ];
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SizedBox(
+          height: 300,
+          width: double.infinity,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: courses.length,
+            itemBuilder: (context, index) {
+              final course = courses[index];
+              return Container(
+                margin: const EdgeInsets.only(right: 10),
+                width: constraints.maxWidth > 600 ? 400 : 300,
+                child: CourseCard(
+                  courseName: course["courseName"]!,
+                  price: course["price"]!,
+                  description: course["description"]!,
+                  rating: course["rating"]!,
+                  reviews: course["reviews"]!,
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 
@@ -374,144 +458,6 @@ class _HomePageState extends State<HomePage> {
         BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
       ],
-    );
-  }
-}
-
-class CourseTile extends StatefulWidget {
-  final String name;
-  final String rating;
-  final String reviews;
-  final String avatarUrl;
-
-  const CourseTile({
-    super.key,
-    required this.name,
-    required this.rating,
-    required this.reviews,
-    required this.avatarUrl,
-  });
-
-  @override
-  _CourseTileState createState() => _CourseTileState();
-}
-
-class _CourseTileState extends State<CourseTile> {
-  bool isFavorite = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          )
-        ],
-      ),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(widget.avatarUrl),
-          ),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AutoSizeText(
-                widget.name,
-                style:
-                    const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                maxLines: 1,
-              ),
-              Row(
-                children: [
-                  Row(
-                    children: List.generate(5, (index) {
-                      return Icon(Icons.star,
-                          color: Colors.yellow[700], size: 16);
-                    }),
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    "${widget.rating} (${widget.reviews})",
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const Spacer(),
-          IconButton(
-            icon: FaIcon(
-              isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
-              color: isFavorite ? Colors.red : Colors.lightBlue.shade700,
-            ),
-            onPressed: () {
-              setState(() {
-                isFavorite = !isFavorite;
-              });
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class CourseCard extends StatelessWidget {
-  final String courseName;
-  final String price;
-
-  const CourseCard({
-    super.key,
-    required this.courseName,
-    required this.price,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Image.network('https://via.placeholder.com/100',
-                fit: BoxFit.cover),
-          ),
-          const SizedBox(height: 10),
-          AutoSizeText(
-            courseName,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-            maxLines: 1,
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "₺ $price",
-            style: TextStyle(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
