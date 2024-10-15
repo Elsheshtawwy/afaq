@@ -1,4 +1,4 @@
-import 'package:afaq/pages/mainScreens/home_screen.dart';
+import 'package:afaq/pages/auth/otpScreen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
@@ -20,6 +20,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  String? _role;
 
   @override
   void initState() {
@@ -88,11 +89,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             _buildLogo(),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 8),
                             _buildTitle(getFontSize),
                             const SizedBox(height: 8),
-                            _buildSubtitle(getFontSize),
-                            const SizedBox(height: 20),
                             _buildNameField(),
                             const SizedBox(height: 16),
                             _buildEmailField(),
@@ -100,6 +99,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             _buildPasswordField(),
                             const SizedBox(height: 16),
                             _buildConfirmPasswordField(),
+                            const SizedBox(height: 16),
+                            _buildRoleDropdown(), // Add the role dropdown
                             const SizedBox(height: 16),
                             _buildSignUpButton(primaryColor, getFontSize),
                             const SizedBox(height: 20),
@@ -152,21 +153,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
-  Widget _buildSubtitle(double Function(double) getFontSize) {
-    return Text(
-      'Create your account by filling the form below',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.black54,
-        fontSize: getFontSize(16),
-      ),
-    );
-  }
-
   Widget _buildNameField() {
     return CustomTextField(
       controller: _nameController,
-      labelText: 'Name',
+      labelText: 'User name',
       keyboardType: TextInputType.name,
       prefixIcon: const Icon(Icons.person_outline),
       validator: (value) {
@@ -252,15 +242,41 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 
+  Widget _buildRoleDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _role,
+      hint: const Text('Select your role'),
+      items: ['Learner', 'Teacher'].map((role) {
+        return DropdownMenuItem(
+          value: role,
+          child: Text(role),
+        );
+      }).toList(),
+      onChanged: (value) {
+        setState(() {
+          _role = value;
+        });
+      },
+      validator: (value) {
+        if (value == null) {
+          return 'Please select your role';
+        }
+        return null;
+      },
+    );
+  }
+
   Widget _buildSignUpButton(
       Color primaryColor, double Function(double) getFontSize) {
     return CustomButton(
       label: 'Sign Up',
       onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
-        }
+        // if (_formKey.currentState!.validate()) {
+        //   Navigator.pushReplacement(context,
+        //       MaterialPageRoute(builder: (context) => const HomePage()));
+        // }
+        Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const OtpScreen()));
       },
       buttonColor: primaryColor,
       labelFontSize: getFontSize(16),

@@ -1,5 +1,7 @@
 import 'dart:async';
-
+import 'package:afaq/pages/auth/login_screen.dart';
+import 'package:afaq/pages/mainScreens/TeachersScreen.dart';
+import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/CourseCard.dart';
 import 'package:afaq/widgets/cards/TeacherTile.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -25,6 +27,13 @@ class _HomePageState extends State<HomePage> {
   late Timer _timer;
   late Timer _typewriterTimer;
   int _charIndex = 0;
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   @override
   void initState() {
@@ -73,11 +82,13 @@ class _HomePageState extends State<HomePage> {
       drawer: _buildDrawer(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.only(top: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSearchBar(),
+              CustomSearchBar(
+                hintText: currentHintText,
+              ),
               const SizedBox(height: 16),
               _buildBanner(),
               const SizedBox(height: 20),
@@ -88,7 +99,6 @@ class _HomePageState extends State<HomePage> {
               _buildPopularTeachersSection(context),
               const SizedBox(height: 10),
               _buildPopularTeachersList(),
-              const SizedBox(height: 20),
               _buildMoreCoursesSection(context),
               const SizedBox(height: 10),
               _buildCoursesGrid(),
@@ -161,6 +171,15 @@ class _HomePageState extends State<HomePage> {
           _buildDrawerItem(Icons.school, 'Courses', context),
           _buildDrawerItem(Icons.person, 'Profile', context),
           _buildDrawerItem(Icons.message, 'Messages', context),
+          const Divider(),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('Logout'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+            },
+          ),
         ],
       ),
     );
@@ -173,40 +192,6 @@ class _HomePageState extends State<HomePage> {
       onTap: () {
         Navigator.pop(context);
       },
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.3),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          FaIcon(FontAwesomeIcons.search, color: Colors.lightBlue.shade700),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: currentHintText,
-                hintStyle: const TextStyle(color: Colors.grey),
-                border: InputBorder.none,
-              ),
-              style: TextStyle(color: Colors.lightBlue.shade700),
-            ),
-          ),
-          FaIcon(FontAwesomeIcons.filter, color: Colors.lightBlue.shade700),
-        ],
-      ),
     );
   }
 
@@ -283,43 +268,58 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMainTitle(BuildContext context) {
-    return AutoSizeText(
-      "Learn what you need today to succeed tomorrow.",
-      style: TextStyle(
-        fontSize: 24,
-        fontWeight: FontWeight.bold,
-        color: Colors.lightBlue.shade700,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: AutoSizeText(
+        "Learn what you need today to succeed tomorrow.",
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: Colors.lightBlue.shade700,
+        ),
+        maxLines: 2,
       ),
-      maxLines: 2,
     );
   }
 
   Widget _buildSubtitle() {
-    return Text(
-      "Learning that fits your life today and builds your future.",
-      style: TextStyle(color: Colors.grey[600]),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Text(
+        "Learning that fits your life today and builds your future.",
+        style: TextStyle(color: Colors.grey[600]),
+      ),
     );
   }
 
   Widget _buildPopularTeachersSection(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "Popular teachers",
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.lightBlue.shade700),
-        ),
-        TextButton(
-          onPressed: () {},
-          child: Text("see more",
-              style: TextStyle(color: Colors.lightBlue.shade700)),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Popular teachers",
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.lightBlue.shade700),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const TeachersScreen()));
+            },
+            child: Text("see more",
+                style: TextStyle(color: Colors.lightBlue.shade700)),
+          ),
+        ],
+      ),
     );
   }
+
   Widget _buildPopularTeachersList() {
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -338,14 +338,14 @@ class _HomePageState extends State<HomePage> {
                     reviews: '13,657',
                     avatarUrl: 'https://via.placeholder.com/50',
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 6),
                   TeacherTile(
                     name: 'Ali Omar Sharif',
                     rating: '4.5',
                     reviews: '13,657',
                     avatarUrl: 'https://via.placeholder.com/50',
                   ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 6),
                   TeacherTile(
                     name: 'John Doe',
                     rating: '4.5',
@@ -373,22 +373,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildMoreCoursesSection(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          "Courses",
-          style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.lightBlue.shade700),
-        ),
-        TextButton(
-          onPressed: () {},
-          child: Text("see more",
-              style: TextStyle(color: Colors.lightBlue.shade700)),
-        ),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            "Courses",
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Colors.lightBlue.shade700),
+          ),
+          TextButton(
+            onPressed: () {},
+            child: Text("see more",
+                style: TextStyle(color: Colors.lightBlue.shade700)),
+          ),
+        ],
+      ),
     );
   }
 
@@ -420,7 +423,7 @@ class _HomePageState extends State<HomePage> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
-          height: 300,
+          height: 330,
           width: double.infinity,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -428,7 +431,7 @@ class _HomePageState extends State<HomePage> {
             itemBuilder: (context, index) {
               final course = courses[index];
               return Container(
-                margin: const EdgeInsets.only(right: 10),
+                margin: const EdgeInsets.only(left: 16, bottom: 16),
                 width: constraints.maxWidth > 600 ? 400 : 300,
                 child: CourseCard(
                   courseName: course["courseName"]!,
@@ -436,6 +439,8 @@ class _HomePageState extends State<HomePage> {
                   description: course["description"]!,
                   rating: course["rating"]!,
                   reviews: course["reviews"]!,
+                  imageUrl:
+                      'https://wallpapers.com/images/high/machine-gun-kelly-album-cover-rajgn4dxu5kze3no.webp',
                 ),
               );
             },
@@ -447,17 +452,35 @@ class _HomePageState extends State<HomePage> {
 
   BottomNavigationBar _buildBottomNavigationBar() {
     return BottomNavigationBar(
-      backgroundColor: Colors.white,
-      selectedItemColor: Colors.lightBlue.shade700,
-      unselectedItemColor: Colors.grey,
-      showUnselectedLabels: true,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Search'),
-        BottomNavigationBarItem(icon: Icon(Icons.school), label: 'Courses'),
-        BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Messages'),
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.search),
+          label: 'Search',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.school),
+          label: 'Courses',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.message),
+          label: 'Messages',
+        ),
       ],
+      currentIndex: _selectedIndex,
+      selectedItemColor: Colors.lightBlue.shade700,
+      unselectedItemColor: Colors.grey.shade600,
+      onTap: _onItemTapped,
+      selectedFontSize: 14,
+      unselectedFontSize: 12,
+      type: BottomNavigationBarType.fixed,
+      backgroundColor: Colors.white,
+      elevation: 8,
+      showSelectedLabels: true,
+      showUnselectedLabels: true,
     );
   }
 }

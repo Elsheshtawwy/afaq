@@ -8,6 +8,8 @@ class CourseCard extends StatefulWidget {
   final String description;
   final String rating;
   final String reviews;
+  final Color backgroundColor;
+  final String imageUrl;
 
   const CourseCard({
     super.key,
@@ -16,6 +18,8 @@ class CourseCard extends StatefulWidget {
     required this.description,
     required this.rating,
     required this.reviews,
+    required this.imageUrl,
+    this.backgroundColor = Colors.white,
   });
 
   @override
@@ -30,15 +34,15 @@ class _CourseCardState extends State<CourseCard> {
     return LayoutBuilder(
       builder: (context, constraints) {
         return Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            color: widget.backgroundColor,
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
                 color: Colors.grey.withOpacity(0.3),
-                blurRadius: 8,
-                offset: const Offset(0, 4),
+                blurRadius: 10,
+                offset: const Offset(0, 5),
               ),
             ],
           ),
@@ -46,13 +50,13 @@ class _CourseCardState extends State<CourseCard> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildImageSection(),
-              const SizedBox(height: 10),
+              const SizedBox(height: 12),
               _buildTextSection(),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               _buildPriceSection(),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               _buildDescriptionSection(),
-              const SizedBox(height: 4),
+              const SizedBox(height: 8),
               _buildRatingSection(),
             ],
           ),
@@ -62,23 +66,24 @@ class _CourseCardState extends State<CourseCard> {
   }
 
   Widget _buildImageSection() {
-    return Expanded(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(16),
       child: Stack(
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(12),
-            child: Image.network(
-              'https://via.placeholder.com/100',
-              fit: BoxFit.cover,
-              width: double.infinity,
-            ),
+          Image.network(
+            widget.imageUrl,
+            fit: BoxFit.cover,
+            width: double.infinity,
+            height: 150,
           ),
           Positioned(
             top: 8,
             right: 8,
             child: IconButton(
               icon: FaIcon(
-                isFavorite ? FontAwesomeIcons.solidHeart : FontAwesomeIcons.heart,
+                isFavorite
+                    ? FontAwesomeIcons.solidHeart
+                    : FontAwesomeIcons.heart,
                 color: isFavorite ? Colors.red : Colors.white,
               ),
               onPressed: () {
@@ -96,7 +101,7 @@ class _CourseCardState extends State<CourseCard> {
   Widget _buildTextSection() {
     return AutoSizeText(
       widget.courseName,
-      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       maxLines: 1,
     );
   }
@@ -107,6 +112,7 @@ class _CourseCardState extends State<CourseCard> {
       style: TextStyle(
         color: Colors.lightBlue.shade700,
         fontWeight: FontWeight.bold,
+        fontSize: 18,
       ),
       maxLines: 1,
     );
@@ -117,7 +123,7 @@ class _CourseCardState extends State<CourseCard> {
       widget.description.length > 50
           ? "${widget.description.substring(0, 50)}..."
           : widget.description,
-      style: TextStyle(color: Colors.grey[600]),
+      style: TextStyle(color: Colors.grey[600], fontSize: 14),
       maxLines: 2,
       overflow: TextOverflow.ellipsis,
     );
@@ -134,7 +140,7 @@ class _CourseCardState extends State<CourseCard> {
         const SizedBox(width: 4),
         AutoSizeText(
           "${widget.rating} (${widget.reviews})",
-          style: const TextStyle(color: Colors.grey),
+          style: const TextStyle(color: Colors.grey, fontSize: 14),
           maxLines: 1,
         ),
       ],

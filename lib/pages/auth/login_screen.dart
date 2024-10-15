@@ -79,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         _buildLogo(),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 16),
                         _buildTitle(getFontSize),
                         const SizedBox(height: 8),
                         _buildSubtitle(getFontSize),
@@ -141,7 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget _buildSubtitle(double Function(double) getFontSize) {
     return Text(
-      'Enter your email and password to log in',
+      'Welcome back! Please enter your credentials to continue',
       textAlign: TextAlign.center,
       style: TextStyle(
         color: Colors.black54,
@@ -223,7 +223,7 @@ class _LoginScreenState extends State<LoginScreen> {
         //       context, MaterialPageRoute(builder: (context) => HomePage()));
         // }
          Navigator.pushReplacement(
-              context, MaterialPageRoute(builder: (context) => HomePage()));
+              context, MaterialPageRoute(builder: (context) => const HomePage()));
       },
       buttonColor: primaryColor,
       labelFontSize: getFontSize(16),

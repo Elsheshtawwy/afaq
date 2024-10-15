@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: 
   font_awesome_flutter:  
   card_swiper: 
+  flutter_otp_text_field:
  
    
   
