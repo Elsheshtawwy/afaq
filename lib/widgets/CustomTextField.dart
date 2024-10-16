@@ -19,14 +19,15 @@ class CustomTextField extends StatelessWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.controller,
-    this.fillColor = const Color(0xFFF5F5F5),
-    this.borderRadius = const BorderRadius.all(Radius.circular(10)),
+    this.fillColor = Colors.white,
+    this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      
       controller: controller,
       obscureText: obscureText,
       keyboardType: keyboardType,

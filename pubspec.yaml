@@ -69,8 +69,8 @@ flutter:
   assets:
     - assets/
     - assets/images/
-    - assets/socialLogos/light/
     - assets/socialLogos/dark/
+    - assets/socialLogos/light/
     # - assets/socialLogos/google/
     # - assets/socialLogos/google/light/
   #   - images/a_dot_ham.jpeg

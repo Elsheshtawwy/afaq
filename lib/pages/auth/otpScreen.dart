@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:afaq/pages/mainScreens/home_screen.dart';
-import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
-import 'package:flutter/material.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class OtpScreen extends StatefulWidget {
   const OtpScreen({super.key});
@@ -14,12 +17,9 @@ class OtpScreen extends StatefulWidget {
 class _OtpScreenState extends State<OtpScreen> {
   final _otpController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    _otpController.clear();
-  }
+  bool _isLoading = false;
+  int _resendCounter = 30;
+  bool _canResend = true;
 
   @override
   void dispose() {
@@ -27,168 +27,189 @@ class _OtpScreenState extends State<OtpScreen> {
     super.dispose();
   }
 
+  void _verifyCode() {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+
+      Future.delayed(const Duration(seconds: 2), () {
+        setState(() {
+          _isLoading = false;
+        });
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const HomePage(),
+          ),
+        );
+      });
+    }
+  }
+
+  void _resendCode() {
+    if (_canResend) {
+      setState(() {
+        _canResend = false;
+        _resendCounter = 30;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Code has been resent')),
+      );
+
+      Timer.periodic(const Duration(seconds: 1), (timer) {
+        setState(() {
+          _resendCounter--;
+        });
+
+        if (_resendCounter == 0) {
+          timer.cancel();
+          setState(() {
+            _canResend = true;
+          });
+        }
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
     final screenWidth = MediaQuery.of(context).size.width;
-
-    double getFontSize(double baseSize) {
-      return baseSize * (screenWidth / 375);
-    }
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SafeArea(
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.lightBlue.shade100,
-                    Colors.lightBlue.shade300,
-                    Colors.lightBlue.shade700,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue.shade200,
+                Colors.blue.shade500,
+                Colors.blue.shade700
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SizedBox(height: screenHeight * 0.01),
+                    _buildLogo(screenHeight),
+                    SizedBox(height: screenHeight * 0.01),
+                    _buildTitle(),
+                    const SizedBox(height: 8),
+                    _buildSubtitle(),
+                    SizedBox(height: screenHeight * 0.04),
+                    _buildForm(screenHeight),
                   ],
-                  stops: const [0.1, 0.5, 0.9],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 15,
-                          spreadRadius: 5,
-                        ),
-                      ],
-                    ),
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildLogo(),
-                            const SizedBox(height: 16),
-                            _buildTitle(getFontSize),
-                            const SizedBox(height: 8),
-                            _buildSubtitle(getFontSize),
-                            const SizedBox(height: 20),
-                            _buildOtpField(),
-                            const SizedBox(height: 16),
-                            _buildVerifyButton(primaryColor, getFontSize),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
                 ),
               ),
             ),
-            Positioned(
-              top: 16,
-              left: 16,
-              child: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildLogo() {
+  Widget _buildLogo(double screenHeight) {
     return Image.asset(
-      "assets/images/logo.png",
-      height: 60,
+      'assets/images/logo.png',
+      height: screenHeight * 0.12,
       errorBuilder: (context, error, stackTrace) {
-        return const Icon(Icons.error, size: 60);
+        return const Icon(Icons.error, size: 100);
       },
     );
   }
 
-  Widget _buildTitle(double Function(double) getFontSize) {
-    return Text(
-      'OTP Verification',
-      style: TextStyle(
-        fontSize: getFontSize(26),
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
+  Widget _buildTitle() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        double fontSize = constraints.maxWidth * 0.08;
+        return AutoSizeText(
+          'Verify Your Phone Number',
+          style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+          maxLines: 1,
+        );
+      },
     );
   }
 
-  Widget _buildSubtitle(double Function(double) getFontSize) {
-    return Text(
-      'Enter the OTP sent to your email',
+  Widget _buildSubtitle() {
+    return const Text(
+      'We have sent a code to your phone number',
+      style: TextStyle(
+        fontSize: 16,
+        color: Colors.white70,
+      ),
       textAlign: TextAlign.center,
-      style: TextStyle(
-        color: Colors.black54,
-        fontSize: getFontSize(16),
-      ),
     );
   }
 
-  Widget _buildOtpField() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        OtpTextField(
-            enabledBorderColor: Colors.grey,
-          numberOfFields: 5,
-          cursorColor: Colors.blue,
-          borderColor: Color(0xFF512DA8),
-          showFieldAsBox: true,
-          fieldWidth: 40,
-          borderRadius: BorderRadius.circular(8),
-          onCodeChanged: (String code) {
-            //handle validation or checks here
-          },
-          onSubmit: (String verificationCode) {
-            showDialog(
+  Widget _buildForm(double screenHeight) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          OtpTextField(
+            numberOfFields: 5,
+            borderColor: const Color(0xFF512DA8),
+            showFieldAsBox: true,
+            onCodeChanged: (String code) {
+            },
+            onSubmit: (String verificationCode) {
+              showDialog(
                 context: context,
                 builder: (context) {
                   return AlertDialog(
-                    title: Text("Verification Code"),
-                    content: Text('Code entered is $verificationCode'),
+                    title: const Text("Verification Code"),
+                    content: Text('The entered code is $verificationCode'),
                   );
-                });
-          },
-        ),
-      ],
-    );
-  }
-
-  Widget _buildVerifyButton(
-      Color primaryColor, double Function(double) getFontSize) {
-    return CustomButton(
-      label: 'Verify',
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const HomePage()));
-        }
-      },
-      buttonColor: primaryColor,
-      labelFontSize: getFontSize(16),
-      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
-      borderRadius: 10,
-      labelColor: Colors.white,
+                },
+              );
+            },
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          _isLoading
+              ? const CircularProgressIndicator()
+              : CustomButton(
+                  label: 'Verify Code',
+                  onPressed: _verifyCode,
+                ),
+          SizedBox(height: screenHeight * 0.02),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                'Didn\'t receive the code? ',
+                style: TextStyle(fontSize: 14, color: Colors.white),
+              ),
+              GestureDetector(
+                onTap: _canResend ? _resendCode : null,
+                child: Text(
+                  _canResend ? 'Resend' : 'Resend in $_resendCounter seconds',
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.orange,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

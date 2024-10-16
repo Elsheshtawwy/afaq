@@ -17,16 +17,17 @@ class CustomButton extends StatelessWidget {
   final Widget? suffixIcon;
   final TextStyle? textStyle;
   final EdgeInsetsGeometry? padding;
+  final double elevation;
 
   const CustomButton({
     super.key,
     required this.label,
     required this.onPressed,
-    this.buttonColor,
+    this.buttonColor = const Color(0xFF0961F5),
     this.labelColor = Colors.white,
     this.contentPadding = const EdgeInsets.symmetric(horizontal: 60, vertical: 10),
     this.isLoading = false,
-    this.borderRadius = 8,
+    this.borderRadius = 12,
     this.labelFontSize = 20,
     this.horizontalPadding = 40,
     this.verticalPadding = 8,
@@ -36,6 +37,7 @@ class CustomButton extends StatelessWidget {
     this.suffixIcon,
     this.textStyle,
     this.padding,
+    this.elevation = 2.0, 
   });
 
   @override
@@ -55,6 +57,7 @@ class CustomButton extends StatelessWidget {
             fontSize: labelFontSize,
             fontWeight: labelFontWeight,
           ),
+          elevation: elevation, 
         ),
         onPressed: onPressed,
         child: isLoading

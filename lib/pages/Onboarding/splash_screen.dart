@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:afaq/helpers/functions.dart';
-import 'package:afaq/pages/auth/login_screen.dart';
+import 'package:afaq/pages/auth/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 
 
@@ -45,7 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(const Duration(seconds: 3), () {
       _loadingTimer.cancel();
       Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (context) => const LoginScreen()));
+          MaterialPageRoute(builder: (context) =>  WelcomeScreen()));
     });
   }
 

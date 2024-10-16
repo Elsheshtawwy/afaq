@@ -47,7 +47,7 @@ class TeacherTile extends StatelessWidget {
                   const SizedBox(height: 5),
                   Row(
                     children: [
-                      Icon(Icons.star, color: Colors.amber, size: 16),
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
                       const SizedBox(width: 5),
                       Text(
                         '$rating stars',

@@ -14,7 +14,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Afaq',
       theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF4F5F9),
+        scaffoldBackgroundColor: const Color(0xFFF5F9FF),
         primaryColor: const Color(0xFF4667FD),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

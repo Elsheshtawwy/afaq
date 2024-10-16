@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class CustomSearchBar extends StatelessWidget {
   final String hintText;
 
-  const CustomSearchBar({Key? key, required this.hintText}) : super(key: key);
+  const CustomSearchBar({super.key, required this.hintText});
 
   @override
   Widget build(BuildContext context) {

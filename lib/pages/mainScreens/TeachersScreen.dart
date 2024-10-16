@@ -95,9 +95,9 @@ class _TeachersScreenState extends State<TeachersScreen> {
               hintText: currentHintText,
             ),
             const SizedBox(height: 10),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: const Text(
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
                 'Top Teachers',
                 style: TextStyle(
                   fontSize: 24,

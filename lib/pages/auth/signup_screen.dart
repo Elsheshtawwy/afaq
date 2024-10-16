@@ -1,9 +1,11 @@
+import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/pages/auth/otpScreen.dart';
+import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -13,27 +15,17 @@ class SignUpScreen extends StatefulWidget {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
-  String? _role;
-
-  @override
-  void initState() {
-    super.initState();
-    _nameController.clear();
-    _emailController.clear();
-    _passwordController.clear();
-    _confirmPasswordController.clear();
-  }
+  bool _agreeToTerms = false;
 
   @override
   void dispose() {
-    _emailController.dispose();
+    _phoneController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     super.dispose();
@@ -41,305 +33,265 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final primaryColor = Theme.of(context).primaryColor;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            final screenWidth = constraints.maxWidth;
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Colors.blue.shade200,
+                Colors.blue.shade500,
+                Colors.blue.shade700
+              ],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            ),
+          ),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: screenHeight * 0.01),
+                  Image.asset(
+                    'assets/images/logo.png',
+                    height: screenHeight * 0.12,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Icon(Icons.error, size: 100);
+                    },
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  const Text(
+                    'Welcome!',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Create an account to access all features',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.white70,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: screenHeight * 0.04),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      children: [
+                        CustomTextField(
+                          controller: _phoneController,
+                          labelText: 'Phone Number',
+                          keyboardType: TextInputType.phone,
+                          prefixIcon: Icon(CupertinoIcons.phone,
+                              color: Colors.blue.shade600),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            if (!RegExp(r'^\d{10}$').hasMatch(value)) {
+                              return 'Please enter a valid phone number';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        CustomTextField(
+                          controller: _passwordController,
+                          labelText: 'Password',
+                          obscureText: _obscurePassword,
+                          prefixIcon: Icon(CupertinoIcons.lock,
+                              color: Colors.blue.shade600),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.blue.shade600),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            if (value.length < 6) {
+                              return 'Password must be at least 6 characters long';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        CustomTextField(
+                          controller: _confirmPasswordController,
+                          labelText: 'Confirm Password',
+                          obscureText: _obscureConfirmPassword,
+                          prefixIcon: Icon(CupertinoIcons.lock,
+                              color: Colors.blue.shade600),
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                                _obscureConfirmPassword
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.blue.shade600),
+                            onPressed: () {
+                              setState(() {
+                                _obscureConfirmPassword =
+                                    !_obscureConfirmPassword;
+                              });
+                            },
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please confirm your password';
+                            }
+                            if (value != _passwordController.text) {
+                              return 'Passwords do not match';
+                            }
+                            return null;
+                          },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        Row(
+                          children: [
+                            Checkbox(
+                              activeColor: Colors.white,
+                              checkColor: Colors.blue,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                                side: BorderSide(color: Colors.white),
+                              ),
+                              side: BorderSide(color: Colors.white),
+                              value: _agreeToTerms,
+                              onChanged: (value) {
+                                setState(() {
+                                  _agreeToTerms = value ?? false;
+                                });
+                              },
+                            ),
+                            const Text(
+                              'I agree to the Terms & Conditions',
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        CustomButton(
+                          label: 'Sign Up',
+                          onPressed: () {
+                            // if (!_agreeToTerms) {
+                            //   ScaffoldMessenger.of(context).showSnackBar(
+                            //     SnackBar(
+                            //       content: Text(
+                            //         'You must agree to the terms and conditions to sign up.',
+                            //       ),
+                            //       behavior: SnackBarBehavior.floating,
+                            //       shape: RoundedRectangleBorder(
+                            //         borderRadius: BorderRadius.circular(12),
+                            //       ),
+                            //     ),
+                            //   );
+                            //   return;
+                            // }
 
-            double getFontSize(double baseSize) {
-              return baseSize * (screenWidth / 375);
-            }
-
-            return Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Colors.lightBlue.shade100,
-                    Colors.lightBlue.shade300,
-                    Colors.lightBlue.shade700,
-                  ],
-                  stops: const [0.1, 0.5, 0.9],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomRight,
-                ),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.85),
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 15,
-                          spreadRadius: 5,
+                            // if (_formKey.currentState!.validate()) {
+                            //   Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //       builder: (context) => const HomePage(),
+                            //     ),
+                            //   );
+                            // }
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>  OtpScreen(),
+                              ),
+                            );
+                          },
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Or Sign Up With',
+                          style: TextStyle(color: Colors.white, fontSize: 14),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            buildSocialButtons(
+                              [
+                                'assets/socialLogos/light/google.png',
+                                'assets/socialLogos/light/facebook.png',
+                              ],
+                              [
+                                () {
+                                  // Google Sign In
+                                },
+                                () {
+                                  // Facebook Sign In
+                                }
+                              ],
+                            )
+                          ],
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Text(
+                              'Already have an account? ',
+                              style:
+                                  TextStyle(fontSize: 14, color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.pop(context);
+                              },
+                              child: TextButton(
+                                child: const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginScreen(),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _buildLogo(),
-                            const SizedBox(height: 8),
-                            _buildTitle(getFontSize),
-                            const SizedBox(height: 8),
-                            _buildNameField(),
-                            const SizedBox(height: 16),
-                            _buildEmailField(),
-                            const SizedBox(height: 16),
-                            _buildPasswordField(),
-                            const SizedBox(height: 16),
-                            _buildConfirmPasswordField(),
-                            const SizedBox(height: 16),
-                            _buildRoleDropdown(), // Add the role dropdown
-                            const SizedBox(height: 16),
-                            _buildSignUpButton(primaryColor, getFontSize),
-                            const SizedBox(height: 20),
-                            _buildDividerWithText(getFontSize),
-                            const SizedBox(height: 20),
-                            buildSocialButtons(
-                              [
-                                "assets/socialLogos/light/google.png",
-                                "assets/socialLogos/light/facebook.png",
-                              ],
-                              [
-                                () {},
-                                () {},
-                              ],
-                            ),
-                            const SizedBox(height: 20),
-                            _buildLoginRow(primaryColor, getFontSize),
-                          ],
-                        ),
-                      ),
-                    ),
                   ),
-                ),
+                ],
               ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLogo() {
-    return Image.asset(
-      "assets/images/logo.png",
-      height: 60,
-      errorBuilder: (context, error, stackTrace) {
-        return const Icon(Icons.error, size: 60);
-      },
-    );
-  }
-
-  Widget _buildTitle(double Function(double) getFontSize) {
-    return Text(
-      'Sign Up',
-      style: TextStyle(
-        fontSize: getFontSize(26),
-        fontWeight: FontWeight.bold,
-        color: Colors.black87,
-      ),
-    );
-  }
-
-  Widget _buildNameField() {
-    return CustomTextField(
-      controller: _nameController,
-      labelText: 'User name',
-      keyboardType: TextInputType.name,
-      prefixIcon: const Icon(Icons.person_outline),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your name';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildEmailField() {
-    return CustomTextField(
-      controller: _emailController,
-      labelText: 'Email',
-      keyboardType: TextInputType.emailAddress,
-      prefixIcon: const Icon(Icons.email_outlined),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your email';
-        }
-        if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-          return 'Please enter a valid email';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildPasswordField() {
-    return CustomTextField(
-      controller: _passwordController,
-      labelText: 'Password',
-      obscureText: _obscurePassword,
-      prefixIcon: const Icon(Icons.lock_outline),
-      suffixIcon: IconButton(
-        icon: Icon(
-          _obscurePassword ? Icons.visibility_off : Icons.visibility,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscurePassword = !_obscurePassword;
-          });
-        },
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please enter your password';
-        }
-        if (value.length < 6) {
-          return 'Password must be at least 6 characters long';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildConfirmPasswordField() {
-    return CustomTextField(
-      controller: _confirmPasswordController,
-      labelText: 'Confirm Password',
-      obscureText: _obscureConfirmPassword,
-      prefixIcon: const Icon(Icons.lock_outline),
-      suffixIcon: IconButton(
-        icon: Icon(
-          _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
-        ),
-        onPressed: () {
-          setState(() {
-            _obscureConfirmPassword = !_obscureConfirmPassword;
-          });
-        },
-      ),
-      validator: (value) {
-        if (value == null || value.isEmpty) {
-          return 'Please confirm your password';
-        }
-        if (value != _passwordController.text) {
-          return 'Passwords do not match';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildRoleDropdown() {
-    return DropdownButtonFormField<String>(
-      value: _role,
-      hint: const Text('Select your role'),
-      items: ['Learner', 'Teacher'].map((role) {
-        return DropdownMenuItem(
-          value: role,
-          child: Text(role),
-        );
-      }).toList(),
-      onChanged: (value) {
-        setState(() {
-          _role = value;
-        });
-      },
-      validator: (value) {
-        if (value == null) {
-          return 'Please select your role';
-        }
-        return null;
-      },
-    );
-  }
-
-  Widget _buildSignUpButton(
-      Color primaryColor, double Function(double) getFontSize) {
-    return CustomButton(
-      label: 'Sign Up',
-      onPressed: () {
-        // if (_formKey.currentState!.validate()) {
-        //   Navigator.pushReplacement(context,
-        //       MaterialPageRoute(builder: (context) => const HomePage()));
-        // }
-        Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const OtpScreen()));
-      },
-      buttonColor: primaryColor,
-      labelFontSize: getFontSize(16),
-      contentPadding: const EdgeInsets.symmetric(vertical: 16, horizontal: 64),
-      borderRadius: 10,
-      labelColor: Colors.white,
-    );
-  }
-
-  Widget _buildDividerWithText(double Function(double) getFontSize) {
-    return Row(
-      children: [
-        const Expanded(child: Divider()),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            'Or sign up with',
-            style: TextStyle(fontSize: getFontSize(14)),
-          ),
-        ),
-        const Expanded(child: Divider()),
-      ],
-    );
-  }
-
-  Widget _buildSocialLoginButtons(List<IconData> icons) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(icons.length, (index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: IconButton(
-            icon: FaIcon(icons[index]),
-            onPressed: () {},
-            iconSize: 32,
-          ),
-        );
-      }),
-    );
-  }
-
-  Widget _buildLoginRow(
-      Color primaryColor, double Function(double) getFontSize) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Already have an account?",
-          style: TextStyle(fontSize: getFontSize(14)),
-        ),
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text(
-            'Log In',
-            style: TextStyle(
-              color: primaryColor,
-              fontSize: getFontSize(14),
             ),
           ),
         ),
-      ],
+      ),
     );
   }
 }
