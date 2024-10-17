@@ -1,6 +1,5 @@
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/pages/auth/otpScreen.dart';
-import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
@@ -172,9 +171,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               checkColor: Colors.blue,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(5),
-                                side: BorderSide(color: Colors.white),
+                                side: const BorderSide(color: Colors.white),
                               ),
-                              side: BorderSide(color: Colors.white),
+                              side: const BorderSide(color: Colors.white),
                               value: _agreeToTerms,
                               onChanged: (value) {
                                 setState(() {
@@ -219,7 +218,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) =>  OtpScreen(),
+                                builder: (context) =>  const OtpScreen(),
                               ),
                             );
                           },

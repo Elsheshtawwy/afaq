@@ -1,13 +1,12 @@
-import 'dart:async';
 import 'package:afaq/pages/auth/login_screen.dart';
-import 'package:afaq/pages/mainScreens/TeachersScreen.dart';
+import 'package:afaq/pages/mainScreens/categoriesScreen.dart';
+import 'package:afaq/pages/mainScreens/popularCourses.dart';
+import 'package:afaq/pages/mainScreens/topMentor.dart';
 import 'package:afaq/widgets/SearchBar.dart';
-import 'package:afaq/widgets/cards/CourseCard.dart';
-import 'package:afaq/widgets/cards/TeacherTile.dart';
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:card_swiper/card_swiper.dart';
+import 'package:afaq/widgets/cards/CourseCardHome.dart';
+import 'package:afaq/widgets/categoryFilters.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:card_swiper/card_swiper.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,124 +16,93 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<String> searchHints = [
-    'Search for courses',
-    'Find your next adventure',
-    'Explore new skills',
-  ];
-  int currentHintIndex = 0;
-  String currentHintText = '';
-  late Timer _timer;
-  late Timer _typewriterTimer;
-  int _charIndex = 0;
-  int _selectedIndex = 0;
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _startTextChangeTimer();
-    _startTypewriterEffect();
-  }
-
-  void _startTextChangeTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
-      setState(() {
-        currentHintIndex = (currentHintIndex + 1) % searchHints.length;
-        _charIndex = 0;
-        currentHintText = '';
-        _startTypewriterEffect();
-      });
-    });
-  }
-
-  void _startTypewriterEffect() {
-    _typewriterTimer =
-        Timer.periodic(const Duration(milliseconds: 100), (Timer timer) {
-      if (_charIndex < searchHints[currentHintIndex].length) {
-        setState(() {
-          currentHintText += searchHints[currentHintIndex][_charIndex];
-          _charIndex++;
-        });
-      } else {
-        _typewriterTimer.cancel();
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _timer.cancel();
-    _typewriterTimer.cancel();
-    super.dispose();
-  }
+  String _selectedCategory = '';
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isLargeScreen = screenWidth > 600;
+
     return Scaffold(
-      backgroundColor: Colors.grey[100],
-      appBar: _buildAppBar(context),
+      appBar: _buildAppBar(),
       drawer: _buildDrawer(),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.only(top: 16),
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CustomSearchBar(
-                hintText: currentHintText,
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: CustomSearchBar(
+                  hintText: 'Search for',
+                ),
               ),
-              const SizedBox(height: 16),
-              _buildBanner(),
               const SizedBox(height: 20),
-              _buildMainTitle(context),
+              _buildSwiper(),
+              const SizedBox(height: 20),
+              _buildSectionHeader('Categories', () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CategoriesScreen()));
+              }),
+              const SizedBox(height: 10),
+              _buildCategories(),
+              const SizedBox(height: 20),
+              _buildSectionHeader('Popular Courses', () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => PopularCourses()));
+              }),
+              CategoryFilters(),
               const SizedBox(height: 8),
-              _buildSubtitle(),
+              _buildPopularCourses(isLargeScreen),
               const SizedBox(height: 20),
-              _buildPopularTeachersSection(context),
-              const SizedBox(height: 10),
-              _buildPopularTeachersList(),
-              _buildMoreCoursesSection(context),
-              const SizedBox(height: 10),
-              _buildCoursesGrid(),
+              _buildSectionHeader('Top Mentor', () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => TopMentorScreen()));
+              }),
+              const SizedBox(height: 8),
+              _buildTopMentors(),
             ],
           ),
         ),
       ),
-      bottomNavigationBar: _buildBottomNavigationBar(),
     );
   }
 
-  AppBar _buildAppBar(BuildContext context) {
+  AppBar _buildAppBar() {
     return AppBar(
-      flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          color: Colors.lightBlue,
-        ),
-      ),
       elevation: 0,
+      backgroundColor: Colors.white,
       leading: Builder(
         builder: (context) => IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white),
-          onPressed: () => Scaffold.of(context).openDrawer(),
+          icon: const Icon(Icons.menu, color: Color(0xff167F71)),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
         ),
       ),
+      title: const Text(
+        'AFAQ',
+        style: TextStyle(color: Color(0xff167F71), fontWeight: FontWeight.bold),
+      ),
+      centerTitle: true,
       actions: [
         IconButton(
-          icon: const FaIcon(FontAwesomeIcons.bell, color: Colors.white),
+          iconSize: 40,
+          padding: const EdgeInsets.all(0),
+          icon: const ImageIcon(
+            AssetImage("assets/notifiction.png"),
+            color: Color(0xff167F71),
+          ),
           onPressed: () {},
         ),
-        const Padding(
-          padding: EdgeInsets.only(right: 16.0),
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-                'https://i.pinimg.com/564x/b0/c7/af/b0c7af6be327de3d7f24ca2ae51eaf46.jpg'),
+        IconButton(
+          icon: const CircleAvatar(
+            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
           ),
+          onPressed: () {},
         ),
       ],
     );
@@ -166,18 +134,19 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          _buildDrawerItem(Icons.home, 'Home', context),
-          _buildDrawerItem(Icons.search, 'Search', context),
-          _buildDrawerItem(Icons.school, 'Courses', context),
-          _buildDrawerItem(Icons.person, 'Profile', context),
-          _buildDrawerItem(Icons.message, 'Messages', context),
+          _buildDrawerItem(Icons.home, 'Home'),
+          _buildDrawerItem(Icons.search, 'Search'),
+          _buildDrawerItem(Icons.school, 'Courses'),
+          _buildDrawerItem(Icons.person, 'Profile'),
+          _buildDrawerItem(Icons.message, 'Messages'),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
               Navigator.pop(context);
-              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
           ),
         ],
@@ -185,7 +154,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  ListTile _buildDrawerItem(IconData icon, String title, BuildContext context) {
+  ListTile _buildDrawerItem(IconData icon, String title) {
     return ListTile(
       leading: Icon(icon),
       title: Text(title),
@@ -195,292 +164,293 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBannerImage(String imageUrl) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        image: DecorationImage(
-          image: NetworkImage(imageUrl),
-          fit: BoxFit.cover,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
+  Widget _buildSearchBar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          gradient: LinearGradient(
-            colors: [Colors.black.withOpacity(0.5), Colors.transparent],
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-          ),
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              spreadRadius: 2,
+              blurRadius: 5,
+              offset: const Offset(0, 3),
+            ),
+          ],
         ),
-        child: Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              color: Colors.black.withOpacity(0.5),
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: const Text(
-                'Featured',
-                style:
-                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: const Row(
+          children: [
+            Icon(Icons.search, color: Colors.grey),
+            SizedBox(width: 8),
+            Expanded(
+              child: TextField(
+                decoration: InputDecoration(
+                  hintText: 'Search for...',
+                  border: InputBorder.none,
+                ),
               ),
             ),
-          ),
+            Icon(Icons.filter_list, color: Colors.blue),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildBanner() {
+  Widget _buildSwiper() {
     return SizedBox(
-      width: double.infinity,
       height: 200,
       child: Swiper(
-        autoplay: true,
-        autoplayDelay: 6000,
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return _buildBannerImage(
-              'https://wallpapers.com/images/high/machine-gun-kelly-album-cover-rajgn4dxu5kze3no.webp');
+        itemBuilder: (BuildContext context, int index) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: _buildSwiperItem(),
+          );
         },
-        viewportFraction: 0.8,
-        scale: 0.9,
+        itemCount: 3,
+        autoplay: true,
         pagination: const SwiperPagination(
-          alignment: Alignment.bottomCenter,
           builder: DotSwiperPaginationBuilder(
-            color: Colors.grey,
-            activeColor: Colors.lightBlue,
-            size: 6,
-            activeSize: 8,
+            color: Colors.white70,
+            activeColor: Colors.white,
+            size: 8.0,
+            activeSize: 10.0,
           ),
         ),
       ),
     );
   }
 
-  Widget _buildMainTitle(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: AutoSizeText(
-        "Learn what you need today to succeed tomorrow.",
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Colors.lightBlue.shade700,
+  Widget _buildSwiperItem() {
+    return Container(
+      height: 220,
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.5),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: const Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              '25% OFF*',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'Today’s Special',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Get a discount for every course order only valid for today!',
+              style: TextStyle(color: Colors.white, fontSize: 12),
+            ),
+          ],
         ),
-        maxLines: 2,
       ),
     );
   }
 
-  Widget _buildSubtitle() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Text(
-        "Learning that fits your life today and builds your future.",
-        style: TextStyle(color: Colors.grey[600]),
-      ),
-    );
-  }
-
-  Widget _buildPopularTeachersSection(BuildContext context) {
+  Widget _buildSectionHeader(String title, VoidCallback onSeeAllPressed) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            "Popular teachers",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.lightBlue.shade700),
+            title,
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          TextButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TeachersScreen()));
-            },
-            child: Text("see more",
-                style: TextStyle(color: Colors.lightBlue.shade700)),
+          Row(
+            children: [
+              TextButton(
+                onPressed: onSeeAllPressed,
+                child: const Text('SEE ALL',
+                    style: TextStyle(
+                      color: Color(0xff0961F5),
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+              const Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Color(0xff0961F5),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildPopularTeachersList() {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          height: 300,
-          width: double.infinity,
-          child: Swiper(
-            itemCount: 6,
-            itemBuilder: (context, index) {
-              return ListView(
-                physics: const BouncingScrollPhysics(),
-                children: const [
-                  TeacherTile(
-                    name: 'Omar Sharif',
-                    rating: '4.5',
-                    reviews: '13,657',
-                    avatarUrl: 'https://via.placeholder.com/50',
-                  ),
-                  SizedBox(height: 6),
-                  TeacherTile(
-                    name: 'Ali Omar Sharif',
-                    rating: '4.5',
-                    reviews: '13,657',
-                    avatarUrl: 'https://via.placeholder.com/50',
-                  ),
-                  SizedBox(height: 6),
-                  TeacherTile(
-                    name: 'John Doe',
-                    rating: '4.5',
-                    reviews: '13,657',
-                    avatarUrl: 'https://via.placeholder.com/50',
-                  ),
-                ],
-              );
-            },
-            viewportFraction: constraints.maxWidth > 600 ? 0.5 : 0.9,
-            scale: 0.9,
-            pagination: const SwiperPagination(
-              alignment: Alignment.bottomCenter,
-              builder: DotSwiperPaginationBuilder(
-                color: Colors.grey,
-                activeColor: Colors.lightBlue,
-                size: 6,
-                activeSize: 8,
+  Widget _buildCategories() {
+    return SizedBox(
+      height: 40,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        scrollDirection: Axis.horizontal,
+        children: [
+          _buildCategoryChip('All', Colors.blue, () {}),
+          _buildCategoryChip('3D Design', Colors.grey, () {}),
+          _buildCategoryChip('Arts & Humanities', Colors.grey, () {}),
+          _buildCategoryChip('Graphic Design', Colors.grey, () {}),
+          _buildCategoryChip('Programming', Colors.grey, () {}),
+          _buildCategoryChip('Marketing', Colors.grey, () {}),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryChip(String label, Color color, VoidCallback onTap) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedCategory = label;
+          });
+          onTap();
+        },
+        child: Text(
+          label,
+          style: TextStyle(
+            color: _selectedCategory == label ||
+                    _selectedCategory == '' && label == 'All'
+                ? Colors.blue
+                : Colors.grey,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPopularCourses(bool isLargeScreen) {
+    return SizedBox(
+      height: 270,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        scrollDirection: Axis.horizontal,
+        children: [
+          CourseCardHome(
+            title: 'Graphic Design Advanced',
+            subtitle: 'Level Up Your Skills',
+            price: '\$28',
+            rating: 4.2,
+            students: 7830,
+            imageUrl: 'https://via.placeholder.com/150',
+            bgColor: Colors.teal[50]!,
+            width: isLargeScreen ? 300 : 270,
+          ),
+          CourseCardHome(
+            title: 'Advertisement Design',
+            subtitle: 'Creative Ad Mastery',
+            price: '\$42',
+            rating: 4.8,
+            students: 5890,
+            imageUrl: 'https://via.placeholder.com/150',
+            bgColor: Colors.pink[50]!,
+            width: isLargeScreen ? 300 : 270,
+          ),
+          CourseCardHome(
+            title: 'UI/UX Design',
+            subtitle: 'From Basics to Pro',
+            price: '\$35',
+            rating: 4.5,
+            students: 9500,
+            imageUrl: 'https://via.placeholder.com/150',
+            bgColor: Colors.blue[50]!,
+            width: isLargeScreen ? 300 : 270,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTopMentors() {
+    return SizedBox(
+      height: 150,
+      child: ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        scrollDirection: Axis.horizontal,
+        children: const [
+          MentorAvatar(
+            name: 'Sonja',
+            avatarUrl:
+                'https://www.nmspacemuseum.org/wp-content/uploads/2019/03/Elon_Musk.jpg',
+          ),
+          MentorAvatar(
+            name: 'Jensen',
+            avatarUrl:
+                'https://www.nmspacemuseum.org/wp-content/uploads/2019/03/Elon_Musk.jpg',
+          ),
+          MentorAvatar(
+            name: 'Victoria',
+            avatarUrl:
+                'https://www.nmspacemuseum.org/wp-content/uploads/2019/03/Elon_Musk.jpg',
+          ),
+          MentorAvatar(
+            name: 'Castaldo',
+            avatarUrl:
+                'https://www.nmspacemuseum.org/wp-content/uploads/2019/03/Elon_Musk.jpg',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class MentorAvatar extends StatelessWidget {
+  final String name;
+  final String avatarUrl;
+
+  const MentorAvatar({super.key, required this.name, required this.avatarUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 100,
+      child: Column(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              image: DecorationImage(
+                image: NetworkImage(avatarUrl),
+                fit: BoxFit.cover,
               ),
             ),
           ),
-        );
-      },
-    );
-  }
-
-  Widget _buildMoreCoursesSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Courses",
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.lightBlue.shade700),
-          ),
-          TextButton(
-            onPressed: () {},
-            child: Text("see more",
-                style: TextStyle(color: Colors.lightBlue.shade700)),
-          ),
+          const SizedBox(height: 8),
+          Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          const Text('Top Mentor',
+              style: TextStyle(color: Colors.grey, fontSize: 12)),
         ],
       ),
-    );
-  }
-
-  Widget _buildCoursesGrid() {
-    final courses = [
-      {
-        "courseName": "Learn Flutter",
-        "price": "429.29",
-        "description": "A comprehensive Flutter course",
-        "rating": "4.8",
-        "reviews": "1500",
-      },
-      {
-        "courseName": "Learn Dart",
-        "price": "329.29",
-        "description": "A comprehensive Dart course",
-        "rating": "4.5",
-        "reviews": "1000",
-      },
-      {
-        "courseName": "Learn Firebase",
-        "price": "229.29",
-        "description": "A comprehensive Firebase course",
-        "rating": "4.7",
-        "reviews": "1200",
-      },
-    ];
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SizedBox(
-          height: 330,
-          width: double.infinity,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: courses.length,
-            itemBuilder: (context, index) {
-              final course = courses[index];
-              return Container(
-                margin: const EdgeInsets.only(left: 16, bottom: 16),
-                width: constraints.maxWidth > 600 ? 400 : 300,
-                child: CourseCard(
-                  courseName: course["courseName"]!,
-                  price: course["price"]!,
-                  description: course["description"]!,
-                  rating: course["rating"]!,
-                  reviews: course["reviews"]!,
-                  imageUrl:
-                      'https://wallpapers.com/images/high/machine-gun-kelly-album-cover-rajgn4dxu5kze3no.webp',
-                ),
-              );
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  BottomNavigationBar _buildBottomNavigationBar() {
-    return BottomNavigationBar(
-      items: const <BottomNavigationBarItem>[
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.search),
-          label: 'Search',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.school),
-          label: 'Courses',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.message),
-          label: 'Messages',
-        ),
-      ],
-      currentIndex: _selectedIndex,
-      selectedItemColor: Colors.lightBlue.shade700,
-      unselectedItemColor: Colors.grey.shade600,
-      onTap: _onItemTapped,
-      selectedFontSize: 14,
-      unselectedFontSize: 12,
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: Colors.white,
-      elevation: 8,
-      showSelectedLabels: true,
-      showUnselectedLabels: true,
     );
   }
 }

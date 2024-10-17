@@ -6,7 +6,6 @@ import 'package:afaq/widgets/buttons/socialIcons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -136,7 +135,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           alignment: Alignment.centerRight,
                           child: TextButton(
                             onPressed: () {},
-                            child: Text(
+                            child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
                                 color: Colors.white,
@@ -153,7 +152,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
+                                  builder: (context) => HomePage(),
                                 ),
                               );
                             }

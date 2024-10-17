@@ -2,7 +2,6 @@ import 'package:afaq/pages/auth/signup_screen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {

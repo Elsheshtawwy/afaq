@@ -69,6 +69,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/categories/
     - assets/socialLogos/dark/
     - assets/socialLogos/light/
     # - assets/socialLogos/google/

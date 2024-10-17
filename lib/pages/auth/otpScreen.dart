@@ -4,7 +4,6 @@ import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -40,7 +39,7 @@ class _OtpScreenState extends State<OtpScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const HomePage(),
+            builder: (context) =>  HomePage(),
           ),
         );
       });
@@ -164,10 +163,10 @@ class _OtpScreenState extends State<OtpScreen> {
         children: [
           OtpTextField(
             numberOfFields: 5,
-            borderColor: const Color(0xFF512DA8),
+            cursorColor: Colors.white,
+            borderColor: const Color(0xFF0961F5),
             showFieldAsBox: true,
-            onCodeChanged: (String code) {
-            },
+            onCodeChanged: (String code) {},
             onSubmit: (String verificationCode) {
               showDialog(
                 context: context,
