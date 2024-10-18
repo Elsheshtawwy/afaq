@@ -9,7 +9,7 @@ class CategoryFilters extends StatefulWidget {
   final double verticalPadding;
   final double borderRadius;
 
-  CategoryFilters({
+  const CategoryFilters({super.key, 
     this.activeColor = Colors.green,
     this.inactiveColor = const Color(0xFFEEEEEE),
     this.activeTextColor = Colors.white,
@@ -37,7 +37,7 @@ class _CategoryFiltersState extends State<CategoryFilters> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         scrollDirection: Axis.horizontal,
         child: Row(
           children:

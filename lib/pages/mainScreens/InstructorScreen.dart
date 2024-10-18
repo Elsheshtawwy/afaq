@@ -1,45 +1,45 @@
-import 'package:afaq/widgets/cards/mentorCard.dart';
+import 'package:afaq/widgets/cards/instructorCard.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class TopMentorScreen extends StatefulWidget {
-  const TopMentorScreen({Key? key}) : super(key: key);
+class InstructorScreen extends StatefulWidget {
+  const InstructorScreen({super.key});
 
   @override
-  _TopMentorScreenState createState() => _TopMentorScreenState();
+  _InstructorScreenState createState() => _InstructorScreenState();
 }
 
-class _TopMentorScreenState extends State<TopMentorScreen> {
-  final List<MentorCard> mentors = [
-    const MentorCard(
+class _InstructorScreenState extends State<InstructorScreen> {
+  final List<InstructorCard> instructors = [
+    const InstructorCard(
         name: 'John Doe',
         title: 'Software Engineer',
         profilePicture: 'https://example.com/images/john_doe.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Jane Smith',
         title: 'Data Scientist',
         profilePicture: 'https://example.com/images/jane_smith.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Alice Johnson',
         title: 'Product Manager',
         profilePicture: 'https://example.com/images/alice_johnson.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Bob Brown',
         title: 'UX Designer',
         profilePicture: 'https://example.com/images/bob_brown.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Charlie Davis',
         title: 'DevOps Engineer',
         profilePicture: 'https://example.com/images/charlie_davis.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Diana Evans',
         title: 'AI Researcher',
         profilePicture: 'https://example.com/images/diana_evans.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Ethan Foster',
         title: 'Cybersecurity Expert',
         profilePicture: 'https://example.com/images/ethan_foster.png'),
-    const MentorCard(
+    const InstructorCard(
         name: 'Fiona Green',
         title: 'Cloud Architect',
         profilePicture: 'https://example.com/images/fiona_green.png')
@@ -71,15 +71,15 @@ class _TopMentorScreenState extends State<TopMentorScreen> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: mentors.length,
+              itemCount: instructors.length,
               itemBuilder: (context, index) {
                 return Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: MentorCard(
-                    name: mentors[index].name,
-                    title: mentors[index].title,
-                    profilePicture: mentors[index].profilePicture,
+                  child: InstructorCard(
+                    name: instructors[index].name,
+                    title: instructors[index].title,
+                    profilePicture: instructors[index].profilePicture,
                   ),
                 );
               },

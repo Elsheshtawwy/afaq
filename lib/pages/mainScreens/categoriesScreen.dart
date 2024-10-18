@@ -1,8 +1,11 @@
 import 'package:afaq/widgets/SearchBar.dart';
+import 'package:afaq/widgets/cards/categoryItem.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatelessWidget {
+  const CategoriesScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,12 +13,12 @@ class CategoriesScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           'All Categories',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
@@ -24,7 +27,7 @@ class CategoriesScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Column(
           children: [
-            CustomSearchBar(
+            const CustomSearchBar(
               hintText: 'Search for',
             ),
             Expanded(child: _CategoryGrid()),
@@ -36,73 +39,73 @@ class CategoriesScreen extends StatelessWidget {
 }
 
 class _CategoryGrid extends StatelessWidget {
-  final List<_CategoryItem> categories = const [
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+  final List<CategoryItem> categories = const [
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
-    _CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    _CategoryItem(
+    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
+    CategoryItem(
         name: 'Graphic Design',
         imageUrl: 'assets/categories/graphicDesign.png'),
   ];
@@ -110,7 +113,7 @@ class _CategoryGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: 10.0,
         childAspectRatio: 1,
@@ -123,35 +126,3 @@ class _CategoryGrid extends StatelessWidget {
   }
 }
 
-class _CategoryItem extends StatelessWidget {
-  final String name;
-  final String imageUrl;
-
-  const _CategoryItem({required this.name, required this.imageUrl});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          width: 60,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15.0),
-            color: Colors.transparent,
-          ),
-          child: Image.asset(imageUrl),
-        ),
-        SizedBox(height: 16),
-        Text(
-          name,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-            color: Colors.black87,
-          ),
-        ),
-      ],
-    );
-  }
-}

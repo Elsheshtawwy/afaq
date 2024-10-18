@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class MentorCard extends StatelessWidget {
+class InstructorCard extends StatelessWidget {
   final String name;
   final String title;
   final String profilePicture;
 
-  const MentorCard({
-    Key? key,
+  const InstructorCard({
+    super.key,
     required this.name,
     required this.title,
     required this.profilePicture,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class MentorCard extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.more_vert),
+              icon: const Icon(Icons.more_vert),
               onPressed: () {
                 // Add your onPressed code here!
               },

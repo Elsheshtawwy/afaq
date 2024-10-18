@@ -8,11 +8,11 @@ class CustomSearchBar extends StatelessWidget {
   final VoidCallback? onFilterTap;
 
   const CustomSearchBar({
-    Key? key,
+    super.key,
     this.hintText,
     this.onChanged,
     this.onFilterTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
