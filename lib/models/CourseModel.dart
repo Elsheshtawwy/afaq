@@ -1,8 +1,10 @@
+import 'package:afaq/models/InstructorModel.dart';
+
 class CourseModel {
   final String id;
   final String? title;
   final String? description;
-  final String? instructor;
+  final List<InstructorModel>? instructors;
   final DateTime? startDate;
   final DateTime? endDate;
   final String? category;
@@ -16,8 +18,6 @@ class CourseModel {
   final int? classes;
   final int? hours;
   final String? about;
-  final String? instructorName;
-  final String? instructorImage;
   final List<String>? features;
   final List<Map<String, String>>? reviewsList;
   final List<String>? objectives;
@@ -25,12 +25,14 @@ class CourseModel {
   final List<String>? lessons;
   final int? currentStudents;
   final int? targetStudents;
+  final String? level;
+  final String? deliveryMode;
 
   CourseModel({
     required this.id,
     this.title,
     this.description,
-    this.instructor,
+    this.instructors,
     this.startDate,
     this.endDate,
     this.category,
@@ -44,8 +46,6 @@ class CourseModel {
     this.classes,
     this.hours,
     this.about,
-    this.instructorName,
-    this.instructorImage,
     this.features,
     this.reviewsList,
     this.objectives,
@@ -53,6 +53,8 @@ class CourseModel {
     this.lessons,
     this.currentStudents,
     this.targetStudents,
+    this.level,
+    this.deliveryMode,
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
@@ -60,31 +62,46 @@ class CourseModel {
       id: json['id'] as String,
       title: json['title'] as String?,
       description: json['description'] as String?,
-      instructor: json['instructor'] as String?,
-      startDate: json['startDate'] != null ? DateTime.parse(json['startDate'] as String) : null,
-      endDate: json['endDate'] != null ? DateTime.parse(json['endDate'] as String) : null,
+      instructors: (json['instructors'] as List<dynamic>?)
+          ?.map((e) => InstructorModel.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      startDate: json['startDate'] != null
+          ? DateTime.parse(json['startDate'] as String)
+          : null,
+      endDate: json['endDate'] != null
+          ? DateTime.parse(json['endDate'] as String)
+          : null,
       category: json['category'] as String?,
       subtitle: json['subtitle'] as String?,
       price: (json['price'] as num?)?.toDouble(),
       oldPrice: (json['oldPrice'] as num?)?.toDouble(),
       rating: (json['rating'] as num?)?.toDouble(),
       students: json['students'] as int?,
-      imageUrl: (json['imageUrl'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      imageUrl: (json['imageUrl'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       reviews: json['reviews'] as int?,
       classes: json['classes'] as int?,
       hours: json['hours'] as int?,
       about: json['about'] as String?,
-      instructorName: json['instructorName'] as String?,
-      instructorImage: json['instructorImage'] as String?,
-      features: (json['features'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      features: (json['features'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       reviewsList: (json['reviewsList'] as List<dynamic>?)
           ?.map((e) => Map<String, String>.from(e as Map))
           .toList(),
-      objectives: (json['objectives'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      requirements: (json['requirements'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      lessons: (json['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      objectives: (json['objectives'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      requirements: (json['requirements'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      lessons:
+          (json['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
       currentStudents: json['currentStudents'] as int?,
       targetStudents: json['targetStudents'] as int?,
+      level: json['level'] as String?,
+      deliveryMode: json['deliveryMode'] as String?,
     );
   }
 
@@ -93,7 +110,7 @@ class CourseModel {
       'id': id,
       'title': title,
       'description': description,
-      'instructor': instructor,
+      'instructors': instructors?.map((e) => e.toJson()).toList(),
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
       'category': category,
@@ -107,8 +124,6 @@ class CourseModel {
       'classes': classes,
       'hours': hours,
       'about': about,
-      'instructorName': instructorName,
-      'instructorImage': instructorImage,
       'features': features,
       'reviewsList': reviewsList,
       'objectives': objectives,
@@ -116,6 +131,8 @@ class CourseModel {
       'lessons': lessons,
       'currentStudents': currentStudents,
       'targetStudents': targetStudents,
+      'level': level,
+      'deliveryMode': deliveryMode,
     };
   }
 
@@ -123,7 +140,7 @@ class CourseModel {
     String? id,
     String? title,
     String? description,
-    String? instructor,
+    List<InstructorModel>? instructors,
     DateTime? startDate,
     DateTime? endDate,
     String? category,
@@ -137,8 +154,6 @@ class CourseModel {
     int? classes,
     int? hours,
     String? about,
-    String? instructorName,
-    String? instructorImage,
     List<String>? features,
     List<Map<String, String>>? reviewsList,
     List<String>? objectives,
@@ -146,12 +161,14 @@ class CourseModel {
     List<String>? lessons,
     int? currentStudents,
     int? targetStudents,
+    String? level,
+    String? deliveryMode,
   }) {
     return CourseModel(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
-      instructor: instructor ?? this.instructor,
+      instructors: instructors ?? this.instructors,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       category: category ?? this.category,
@@ -165,8 +182,6 @@ class CourseModel {
       classes: classes ?? this.classes,
       hours: hours ?? this.hours,
       about: about ?? this.about,
-      instructorName: instructorName ?? this.instructorName,
-      instructorImage: instructorImage ?? this.instructorImage,
       features: features ?? this.features,
       reviewsList: reviewsList ?? this.reviewsList,
       objectives: objectives ?? this.objectives,
@@ -174,6 +189,8 @@ class CourseModel {
       lessons: lessons ?? this.lessons,
       currentStudents: currentStudents ?? this.currentStudents,
       targetStudents: targetStudents ?? this.targetStudents,
+      level: level ?? this.level,
+      deliveryMode: deliveryMode ?? this.deliveryMode,
     );
   }
 }

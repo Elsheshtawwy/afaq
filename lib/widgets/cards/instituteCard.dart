@@ -1,22 +1,12 @@
-
+import 'package:afaq/models/InstituteModel.dart';
 import 'package:flutter/material.dart';
 
 class InstituteCard extends StatelessWidget {
-  final String name;
-  final String imageUrl;
-  final String location;
-  final double rating;
-  final int numberOfRatings; 
-  final String description;
+  final InstituteModel institute;
 
   const InstituteCard({
     super.key,
-    required this.name,
-    required this.imageUrl,
-    required this.location,
-    required this.rating,
-    required this.numberOfRatings, 
-    required this.description,
+    required this.institute,
   });
 
   @override
@@ -44,7 +34,9 @@ class InstituteCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: AssetImage(imageUrl),
+                  image: institute.logoUrl != null
+                      ? NetworkImage(institute.logoUrl!)
+                      : const AssetImage('assets/default_logo.png') as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -56,7 +48,7 @@ class InstituteCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  name,
+                  institute.name,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
@@ -64,7 +56,7 @@ class InstituteCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  location,
+                  institute.address,
                   style: TextStyle(
                     color: Colors.grey[600],
                     fontSize: 14,
@@ -76,17 +68,15 @@ class InstituteCard extends StatelessWidget {
                     Icon(Icons.star, color: Colors.yellow[700], size: 16),
                     const SizedBox(width: 3),
                     Text(
-                      rating.toStringAsFixed(1), // Display rating to 1 decimal
+                      institute.rating?.toStringAsFixed(1) ?? 'N/A',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
                       ),
                     ),
-                    const SizedBox(
-                        width:
-                            4), // Spacing between rating and number of ratings
+                    const SizedBox(width: 4),
                     Text(
-                      '($numberOfRatings)', // Display the number of ratings
+                      '(${institute.reviews ?? 0})',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
@@ -96,7 +86,7 @@ class InstituteCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  description,
+                  institute.accreditation ?? 'No accreditation info',
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: TextStyle(

@@ -1,15 +1,12 @@
+import 'package:afaq/models/InstructorModel.dart';
 import 'package:flutter/material.dart';
 
 class InstructorCard extends StatelessWidget {
-  final String name;
-  final String title;
-  final String profilePicture;
+  final InstructorModel instructor;
 
   const InstructorCard({
     super.key,
-    required this.name,
-    required this.title,
-    required this.profilePicture,
+    required this.instructor,
   });
 
   @override
@@ -25,7 +22,7 @@ class InstructorCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 32,
-              backgroundImage: NetworkImage(profilePicture),
+              backgroundImage: NetworkImage(instructor.profilePicture), // Assuming profilePicture is part of InstructorModel
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -33,7 +30,7 @@ class InstructorCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    name,
+                    instructor.name,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -42,7 +39,7 @@ class InstructorCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    title,
+                    instructor.department, // Displaying department instead of title
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 16,

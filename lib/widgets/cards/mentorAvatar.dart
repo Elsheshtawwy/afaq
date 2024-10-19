@@ -1,10 +1,10 @@
+import 'package:afaq/models/InstructorModel.dart';
 import 'package:flutter/material.dart';
 
 class MentorAvatar extends StatelessWidget {
-  final String name;
-  final String avatarUrl;
+  final InstructorModel instructor;
 
-  const MentorAvatar({super.key, required this.name, required this.avatarUrl});
+  const MentorAvatar({super.key, required this.instructor});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,14 @@ class MentorAvatar extends StatelessWidget {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
               image: DecorationImage(
-                image: NetworkImage(avatarUrl),
+                image: NetworkImage(instructor.profilePicture),
                 fit: BoxFit.cover,
               ),
             ),
           ),
           const SizedBox(height: 8),
-          Text(name, style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text(instructor.name,
+              style: const TextStyle(fontWeight: FontWeight.bold)),
           const Text('Top Mentor',
               style: TextStyle(color: Colors.grey, fontSize: 12)),
         ],

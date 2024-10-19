@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:afaq/models/CategoryModel.dart';
+import 'package:afaq/models/CourseModel.dart';
+import 'package:afaq/models/InstituteModel.dart';
+import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -7,7 +11,11 @@ import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 import 'package:flutter/material.dart';
 
 class OtpScreen extends StatefulWidget {
-  const OtpScreen({super.key});
+    final List<CourseModel> courses;
+  final List<InstructorModel> instructors;
+  final List<InstituteModel> institutes;
+  final List<CategoryModel> categories;
+  const OtpScreen({super.key, required this.courses, required this.instructors, required this.institutes, required this.categories});
 
   @override
   _OtpScreenState createState() => _OtpScreenState();
@@ -39,7 +47,12 @@ class _OtpScreenState extends State<OtpScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>  const HomePage(),
+            builder: (context) =>  HomePage(
+              courses: widget.courses,
+              instructors: widget.instructors,
+              institutes: widget.institutes,
+              categories: widget.categories,
+            ),
           ),
         );
       });

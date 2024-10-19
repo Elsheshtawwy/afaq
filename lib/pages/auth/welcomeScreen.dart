@@ -1,3 +1,7 @@
+import 'package:afaq/models/CategoryModel.dart';
+import 'package:afaq/models/CourseModel.dart';
+import 'package:afaq/models/InstituteModel.dart';
+import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/auth/signup_screen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
@@ -5,7 +9,16 @@ import 'package:afaq/widgets/buttons/socialIcons.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  const WelcomeScreen({super.key});
+  final List<CourseModel> courses;
+  final List<InstructorModel> instructors;
+  final List<InstituteModel> institutes;
+  final List<CategoryModel> categories;
+  const WelcomeScreen(
+      {super.key,
+      required this.courses,
+      required this.instructors,
+      required this.institutes,
+      required this.categories});
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +96,12 @@ class WelcomeScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const SignUpScreen(),
+                          builder: (context) => SignUpScreen(
+                            courses: courses,
+                            instructors: instructors,
+                            institutes: institutes,
+                            categories: categories,
+                          ),
                         ),
                       );
                     },
@@ -104,7 +122,12 @@ class WelcomeScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const LoginScreen(),
+                          builder: (context) => LoginScreen(
+                            courses: courses,
+                            instructors: instructors,
+                            institutes: institutes,
+                            categories: categories,
+                          ),
                         ),
                       );
                     },

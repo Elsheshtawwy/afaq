@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "748880713592",
+    "project_id": "afaq-d4f1c",
+    "storage_bucket": "afaq-d4f1c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748880713592:android:9ddcd39aa391ec58955a8d",
+        "android_client_info": {
+          "package_name": "com.example.afaq"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMG-xABm0T9Mfo6CMu6SY-wfFHX2nbQtM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

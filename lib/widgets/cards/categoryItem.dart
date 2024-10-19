@@ -1,10 +1,10 @@
+import 'package:afaq/models/CategoryModel.dart';
 import 'package:flutter/material.dart';
 
 class CategoryItem extends StatelessWidget {
-  final String name;
-  final String imageUrl;
+  final CategoryModel category;
 
-  const CategoryItem({super.key, required this.name, required this.imageUrl});
+  const CategoryItem({super.key, required this.category});
 
   @override
   Widget build(BuildContext context) {
@@ -17,11 +17,11 @@ class CategoryItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(15.0),
             color: Colors.transparent,
           ),
-          child: Image.asset(imageUrl),
+          child: Image.asset(category.imageUrl),
         ),
         const SizedBox(height: 16),
         Text(
-          name,
+          category.name,
           style: const TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 16,

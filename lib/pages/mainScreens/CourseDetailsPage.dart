@@ -1,12 +1,17 @@
 import 'package:afaq/models/CourseModel.dart';
+import 'package:afaq/models/InstructorModel.dart';
+import 'package:afaq/widgets/cards/instructorCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:card_swiper/card_swiper.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final CourseModel course;
+    final List<InstructorModel> instructors;
 
-  const CourseDetailsScreen({super.key, required this.course});
+
+
+  const CourseDetailsScreen({super.key, required this.course, required this.instructors});
 
   @override
   _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
@@ -15,7 +20,7 @@ class CourseDetailsScreen extends StatefulWidget {
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   @override
   Widget build(BuildContext context) {
-    final course = widget.course; // Access course from widget
+    final course = widget.course; 
 
     return Scaffold(
       appBar: AppBar(
@@ -196,20 +201,25 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           fontSize: 18,
                         ),
                       ),
-                      const SizedBox(height: 8),
-                      ListTile(
-                        leading: CircleAvatar(
-                          radius: 30,
-                          backgroundImage:
-                              NetworkImage(course.instructorImage ?? ''),
-                        ),
-                        title: Text(course.instructorName ?? 'No Name'),
-                        subtitle: Text(course.instructor ?? 'No Information'),
-                        trailing: IconButton(
-                          icon: const Icon(FontAwesomeIcons.playCircle),
-                          onPressed: () {},
-                        ),
+                    ListView.builder(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              itemCount: widget.instructors.length,
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 8,),
+                    Padding(
+                      padding:
+                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      child: InstructorCard(
+                        instructor: widget.instructors[index],
                       ),
+                    ),
+                  ],
+                );
+              },
+            ),
+
                       const SizedBox(height: 16),
                       // Reviews Section
                       Row(
@@ -248,7 +258,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           onPressed: () {
                             _addReview(context);
                           },
-                          child: Text(
+                          child: const Text(
                             "Add Review",
                             style: TextStyle(
                               color: Colors.blue,
@@ -322,12 +332,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
+                                const Row(
                                   children: [
-                                    const Icon(Icons.calendar_today,
+                                    Icon(Icons.calendar_today,
                                         color: Colors.blue),
-                                    const SizedBox(width: 8),
-                                    const Text(
+                                    SizedBox(width: 8),
+                                    Text(
                                       "Course Dates",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
@@ -365,12 +375,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
+                                const Row(
                                   children: [
-                                    const Icon(Icons.category,
+                                    Icon(Icons.category,
                                         color: Colors.blue),
-                                    const SizedBox(width: 8),
-                                    const Text(
+                                    SizedBox(width: 8),
+                                    Text(
                                       "Category",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,

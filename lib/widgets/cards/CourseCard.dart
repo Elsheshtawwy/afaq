@@ -1,24 +1,13 @@
+import 'package:afaq/models/CourseModel.dart';
 import 'package:flutter/material.dart';
 
 class CourseCard extends StatelessWidget {
-  final String title;
-  final String category;
-  final String price;
-  final String oldPrice;
-  final double rating;
-  final int students;
-  final String imageUrl;
+  final CourseModel course;
   final VoidCallback onTap;
 
   const CourseCard({
     super.key,
-    required this.title,
-    required this.category,
-    required this.price,
-    required this.oldPrice,
-    required this.rating,
-    required this.students,
-    required this.imageUrl,
+    required this.course,
     required this.onTap,
   });
 
@@ -48,7 +37,7 @@ class CourseCard extends StatelessWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(imageUrl),
+                  image: NetworkImage(course.imageUrl?.toString() ?? ''),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -59,7 +48,7 @@ class CourseCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    category,
+                    course.category ?? '',
                     style: const TextStyle(
                       color: Colors.orange,
                       fontSize: 12,
@@ -68,7 +57,7 @@ class CourseCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    title,
+                    course.title ?? '',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -78,7 +67,7 @@ class CourseCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        price,
+                        course.price?.toString() ?? '',
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
@@ -86,7 +75,7 @@ class CourseCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        oldPrice,
+                        course.oldPrice?.toString() ?? '',
                         style: const TextStyle(
                           color: Colors.grey,
                           decoration: TextDecoration.lineThrough,
@@ -99,9 +88,9 @@ class CourseCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.star, color: Colors.yellow, size: 16),
                       const SizedBox(width: 4),
-                      Text('$rating'),
+                      Text('${course.rating ?? 0}'),
                       const Spacer(),
-                      Text('$students Std'),
+                      Text('${course.students ?? 0} Std'),
                     ],
                   ),
                 ],

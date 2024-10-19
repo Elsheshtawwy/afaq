@@ -1,3 +1,7 @@
+import 'package:afaq/models/CategoryModel.dart';
+import 'package:afaq/models/CourseModel.dart';
+import 'package:afaq/models/InstituteModel.dart';
+import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/auth/signup_screen.dart';
 import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
@@ -7,7 +11,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+    final List<CourseModel> courses;
+  final List<InstructorModel> instructors;
+  final List<InstituteModel> institutes;
+  final List<CategoryModel> categories;
+  const LoginScreen({super.key, required this.courses, required this.instructors, required this.institutes, required this.categories});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -152,7 +160,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const HomePage(),
+                                  builder: (context) => HomePage(
+                                    courses: widget.courses,
+                                    instructors: widget.instructors,
+                                    institutes: widget.institutes,
+                                    categories: widget.categories,
+                                    
+                                  ),
                                 ),
                               );
                             }
@@ -197,7 +211,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const SignUpScreen(),
+                                    builder: (context) =>  SignUpScreen(
+                                      courses: widget.courses,
+                                      instructors: widget.instructors,
+                                      institutes: widget.institutes,
+                                      categories: widget.categories,
+                                    ),
                                   ),
                                 );
                               },

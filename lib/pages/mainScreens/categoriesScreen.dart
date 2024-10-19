@@ -1,9 +1,12 @@
+import 'package:afaq/models/CategoryModel.dart';
 import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/categoryItem.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  final List<CategoryModel> categories;
+
+  const CategoriesScreen({super.key, required this.categories});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class CategoriesScreen extends StatelessWidget {
             const CustomSearchBar(
               hintText: 'Search for',
             ),
-            Expanded(child: _CategoryGrid()),
+            Expanded(child: _CategoryGrid(categories: categories)),
           ],
         ),
       ),
@@ -38,76 +41,9 @@ class CategoriesScreen extends StatelessWidget {
 }
 
 class _CategoryGrid extends StatelessWidget {
-  final List<CategoryItem> categories = const [
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-    CategoryItem(name: '3D Design', imageUrl: 'assets/categories/design.png'),
-    CategoryItem(
-        name: 'Graphic Design',
-        imageUrl: 'assets/categories/graphicDesign.png'),
-  ];
+  final List<CategoryModel> categories;
+
+  const _CategoryGrid({required this.categories});
 
   @override
   Widget build(BuildContext context) {
@@ -119,9 +55,9 @@ class _CategoryGrid extends StatelessWidget {
       ),
       itemCount: categories.length,
       itemBuilder: (context, index) {
-        return categories[index];
+        final category = categories[index];
+        return CategoryItem(category: category);
       },
     );
   }
 }
-

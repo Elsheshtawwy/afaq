@@ -1,20 +1,13 @@
+import 'package:afaq/models/InstituteModel.dart';
 import 'package:flutter/material.dart';
 
 class InstituteCardHome extends StatelessWidget {
-  final String name;
-  final String imageUrl;
-  final String location;
-  final String rating;
-  final String description;
+  final InstituteModel institute;
 
   const InstituteCardHome({
-    Key? key,
-    required this.name,
-    required this.imageUrl,
-    required this.location,
-    required this.rating,
-    required this.description,
-  }) : super(key: key);
+    super.key,
+    required this.institute,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +36,7 @@ class InstituteCardHome extends StatelessWidget {
               topRight: Radius.circular(16),
             ),
             child: Image.asset(
-              imageUrl,
+              institute.logoUrl ?? 'assets/default_logo.png',
               height: 120,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -54,7 +47,7 @@ class InstituteCardHome extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  name,
+                  institute.name,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
@@ -63,7 +56,7 @@ class InstituteCardHome extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  location,
+                  institute.address,
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -72,7 +65,7 @@ class InstituteCardHome extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  rating,
+                  institute.rating.toString() ?? 'No rating',
                   style: const TextStyle(
                     fontSize: 14,
                     color: Colors.grey,
@@ -81,7 +74,7 @@ class InstituteCardHome extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  description,
+                  institute.accreditation ?? 'No accreditation',
                   style: const TextStyle(
                     fontSize: 12,
                     color: Colors.black,

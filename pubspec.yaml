@@ -38,6 +38,16 @@ dependencies:
   font_awesome_flutter:  
   card_swiper: 
   flutter_otp_text_field:
+  firebase_core: 
+  firebase_auth: 
+  cloud_firestore:
+  firebase_storage:
+  firebase_messaging:
+  google_sign_in:
+  flutter_facebook_auth:
+  shared_preferences:
+
+
  
    
   
