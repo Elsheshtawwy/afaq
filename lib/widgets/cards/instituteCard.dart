@@ -10,14 +10,14 @@ class InstituteCard extends StatelessWidget {
   final String description;
 
   const InstituteCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.imageUrl,
     required this.location,
     required this.rating,
     required this.numberOfRatings, 
     required this.description,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

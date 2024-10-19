@@ -2,13 +2,15 @@ class Institute {
   final String id;
   final String name;
   final String address;
-  final String contactNumber;
+  final List<String> contactNumbers;
+  final String? email;
 
   Institute({
     required this.id,
     required this.name,
     required this.address,
-    required this.contactNumber,
+    required this.contactNumbers,
+    this.email,
   });
 
   factory Institute.fromMap(Map<String, dynamic> map) {
@@ -16,7 +18,8 @@ class Institute {
       id: map['id'],
       name: map['name'],
       address: map['address'],
-      contactNumber: map['contactNumber'],
+      contactNumbers: List<String>.from(map['contactNumbers']),
+      email: map['email'],
     );
   }
 
@@ -25,7 +28,8 @@ class Institute {
       'id': id,
       'name': name,
       'address': address,
-      'contactNumber': contactNumber,
+      'contactNumbers': contactNumbers,
+      'email': email,
     };
   }
 }

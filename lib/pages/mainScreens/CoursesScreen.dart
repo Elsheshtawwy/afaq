@@ -39,7 +39,7 @@ class CoursesScreen extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            CategoryFilters(),
+            const CategoryFilters(),
             Expanded(
               child: _buildCourseList(context),
             ),
@@ -55,13 +55,13 @@ class CoursesScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final course = courses[index];
         return CourseCard(
-          title: course.title,
-          category: course.category,
+          title: course.title!,
+          category: course.category!,
           price: '\$${course.price}',
           oldPrice: '\$${course.oldPrice}',
-          rating: course.rating,
-          students: course.students,
-          imageUrl: course.imageUrl,
+          rating: course.rating!,
+          students: course.students!,
+          imageUrl: course.imageUrl!.isNotEmpty ? course.imageUrl![0] : '',
           onTap: () {
             Navigator.push(
               context,

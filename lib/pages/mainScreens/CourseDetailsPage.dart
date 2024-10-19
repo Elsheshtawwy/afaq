@@ -1,232 +1,434 @@
 import 'package:afaq/models/CourseModel.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:card_swiper/card_swiper.dart';
 
-class CourseDetailsScreen extends StatelessWidget {
+class CourseDetailsScreen extends StatefulWidget {
   final CourseModel course;
 
-  CourseDetailsScreen({required this.course});
+  const CourseDetailsScreen({super.key, required this.course});
 
   @override
+  _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
+}
+
+class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
+  @override
   Widget build(BuildContext context) {
+    final course = widget.course; // Access course from widget
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                course.title ?? 'No Title',
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(Icons.star, color: Colors.yellow[700], size: 20),
-                  const SizedBox(width: 4),
-                  Text(course.rating?.toString() ?? '0.0', style: TextStyle(fontSize: 16)),
-                  const SizedBox(width: 4),
-                  Text("(${course.reviews ?? 0} reviews)", style: TextStyle(color: Colors.grey)),
-                  Spacer(),
-                  Text(
-                    "\$${course.price ?? 0}",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header Image
+                if (course.imageUrl != null && course.imageUrl!.isNotEmpty)
+                  SizedBox(
+                    height: constraints.maxWidth > 600 ? 300 : 200,
+                    child: Swiper(
+                      itemBuilder: (BuildContext context, int index) {
+                        return Image.network(
+                          course.imageUrl![index],
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        );
+                      },
+                      itemCount: course.imageUrl!.length,
+                      pagination: const SwiperPagination(),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Icon(Icons.class_, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text("${course.classes ?? 0} Classes", style: TextStyle(color: Colors.grey)),
-                  const SizedBox(width: 16),
-                  Icon(Icons.schedule, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text("${course.hours ?? 0} Hours", style: TextStyle(color: Colors.grey)),
-                ],
-              ),
-              const SizedBox(height: 16),
-              // Tab Bar
-              DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    TabBar(
-                      tabs: [
-                        Tab(text: "About"),
-                        Tab(text: "Curriculum"),
-                      ],
-                      labelColor: Colors.black,
-                      indicatorColor: Colors.blue,
-                    ),
-                    Container(
-                      height: 150, // Tab content height
-                      child: TabBarView(
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        course.title ?? 'No Title',
+                        style: TextStyle(
+                          fontSize: constraints.maxWidth > 600 ? 32 : 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        course.subtitle ?? '',
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.grey),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
                         children: [
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              course.about ?? 'No information available',
-                              style: TextStyle(color: Colors.grey),
+                          Icon(Icons.star, color: Colors.yellow[700], size: 20),
+                          const SizedBox(width: 4),
+                          Text(course.rating.toString(),
+                              style: const TextStyle(fontSize: 16)),
+                          const SizedBox(width: 4),
+                          Text("(${course.reviews ?? 0} reviews)",
+                              style: const TextStyle(color: Colors.grey)),
+                          const Spacer(),
+                          if (course.oldPrice != null)
+                            Text(
+                              "\$${course.oldPrice}",
+                              style: TextStyle(
+                                fontSize: constraints.maxWidth > 600 ? 24 : 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.red,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                          const SizedBox(width: 8),
+                          Text(
+                            "\$${course.price ?? 0}",
+                            style: TextStyle(
+                              fontSize: constraints.maxWidth > 600 ? 32 : 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.blue,
                             ),
                           ),
-                          Center(child: Text("Curriculum content here")),
                         ],
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
-              Text(
-                "What You'll Get",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Column(
-                children: course.features?.map((feature) {
-                  return _buildFeatureItem(Icons.play_circle_fill, feature);
-                }).toList() ?? [],
-              ),
-              const SizedBox(height: 16),
-              // Instructor
-              Text(
-                "Instructor",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 8),
-              ListTile(
-                leading: CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(course.instructorImage ?? ''),
-                ),
-                title: Text(course.instructorName ?? 'No Name'),
-                subtitle: Text(course.instructor ?? 'No Information'),
-                trailing: IconButton(
-                  icon: Icon(Icons.play_circle_fill),
-                  onPressed: () {},
-                ),
-              ),
-              const SizedBox(height: 16),
-              // Reviews Section
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Reviews",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            children: [
+                              const Icon(Icons.class_, color: Colors.blue),
+                              const SizedBox(height: 4),
+                              Text("${course.classes ?? 0} Classes",
+                                  style: const TextStyle(color: Colors.black)),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const Icon(Icons.schedule, color: Colors.blue),
+                              const SizedBox(height: 4),
+                              Text("${course.hours ?? 0} Hours",
+                                  style: const TextStyle(color: Colors.black)),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              const Icon(Icons.people, color: Colors.blue),
+                              const SizedBox(height: 4),
+                              Text(
+                                  course.targetStudents != null
+                                      ? "${course.currentStudents ?? 0}/${course.targetStudents}"
+                                      : "${course.currentStudents ?? 0} Students",
+                                  style: const TextStyle(color: Colors.black)),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+                      // Tab Bar
+                      DefaultTabController(
+                        length: 2,
+                        child: Column(
+                          children: [
+                            const TabBar(
+                              tabs: [
+                                Tab(text: "About"),
+                                Tab(text: "Curriculum"),
+                              ],
+                              labelColor: Colors.black,
+                              indicatorColor: Colors.blue,
+                            ),
+                            SizedBox(
+                              height: constraints.maxWidth > 600
+                                  ? 300
+                                  : 150, // Tab content height
+                              child: TabBarView(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      course.about ??
+                                          'No information available',
+                                      style:
+                                          const TextStyle(color: Colors.grey),
+                                    ),
+                                  ),
+                                  const Center(
+                                      child: Text("Curriculum content here")),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        "What You'll Get",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Column(
+                        children: course.features?.map((feature) {
+                              return _buildFeatureItem(
+                                  FontAwesomeIcons.playCircle, feature);
+                            }).toList() ??
+                            [],
+                      ),
+                      const SizedBox(height: 16),
+                      // Instructor
+                      const Text(
+                        "Instructor",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      ListTile(
+                        leading: CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                              NetworkImage(course.instructorImage ?? ''),
+                        ),
+                        title: Text(course.instructorName ?? 'No Name'),
+                        subtitle: Text(course.instructor ?? 'No Information'),
+                        trailing: IconButton(
+                          icon: const Icon(FontAwesomeIcons.playCircle),
+                          onPressed: () {},
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Reviews Section
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            "Reviews",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              _seeAllReviews(context);
+                            },
+                            child: const Text(
+                              "SEE ALL",
+                              style: TextStyle(color: Colors.blue),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Column(
+                        children: course.reviewsList?.map((review) {
+                              return _buildReviewItem(
+                                review['name'] ?? 'Anonymous',
+                                review['review'] ?? 'No review',
+                                review['timeAgo'] ?? 'Unknown',
+                                int.tryParse(review['likes'] ?? '0') ?? 0,
+                              );
+                            }).toList() ??
+                            [],
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            _addReview(context);
+                          },
+                          child: Text(
+                            "Add Review",
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 16,
+                            ),
+                          )),
+                      const SizedBox(height: 16),
+                      // Objectives Section
+                      const Text(
+                        "Objectives",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Column(
+                        children: course.objectives?.map((objective) {
+                              return _buildFeatureItem(
+                                  FontAwesomeIcons.checkCircle, objective);
+                            }).toList() ??
+                            [],
+                      ),
+                      const SizedBox(height: 16),
+                      // Requirements Section
+                      const Text(
+                        "Requirements",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Column(
+                        children: course.requirements?.map((requirement) {
+                              return _buildFeatureItem(
+                                  FontAwesomeIcons.checkCircle, requirement);
+                            }).toList() ??
+                            [],
+                      ),
+                      const SizedBox(height: 16),
+                      // Lessons Section
+                      const Text(
+                        "Lessons",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Column(
+                        children: course.lessons?.map((lesson) {
+                              return _buildFeatureItem(
+                                  FontAwesomeIcons.book, lesson);
+                            }).toList() ??
+                            [],
+                      ),
+                      const SizedBox(height: 16),
+                      // Course Dates
+                      // Course Dates Section
+                      if (course.startDate != null && course.endDate != null)
+                        Card(
+                          color: Colors.white,
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.calendar_today,
+                                        color: Colors.blue),
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      "Course Dates",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  "Start Date: ${course.startDate}",
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "End Date: ${course.endDate}",
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+// Course Category Section
+                      if (course.category != null)
+                        Card(
+                          elevation: 4,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          color: Colors.white, // Added background color
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.category,
+                                        color: Colors.blue),
+                                    const SizedBox(width: 8),
+                                    const Text(
+                                      "Category",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  course.category!,
+                                  style: const TextStyle(color: Colors.black),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () {},
-                    child: Text("SEE ALL"),
-                  ),
-                ],
-              ),
-              Column(
-                children: course.reviewsList?.map((review) {
-                  return _buildReviewItem(
-                    review['name'] ?? 'Anonymous',
-                    review['review'] ?? 'No review',
-                    review['timeAgo'] ?? 'Unknown',
-                    review['likes'] ?? '0',
-                  );
-                }).toList() ?? [],
-              ),
-              const SizedBox(height: 16),
-              // Objectives Section
-              Text(
-                "Objectives",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
                 ),
-              ),
-              const SizedBox(height: 8),
-              Column(
-                children: course.objectives?.map((objective) {
-                  return _buildFeatureItem(Icons.check_circle, objective);
-                }).toList() ?? [],
-              ),
-              const SizedBox(height: 16),
-              // Requirements Section
-              Text(
-                "Requirements",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Column(
-                children: course.requirements?.map((requirement) {
-                  return _buildFeatureItem(Icons.check_circle_outline, requirement);
-                }).toList() ?? [],
-              ),
-              const SizedBox(height: 16),
-              // Lessons Section
-              Text(
-                "Lessons",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Column(
-                children: course.lessons?.map((lesson) {
-                  return _buildFeatureItem(Icons.book, lesson);
-                }).toList() ?? [],
-              ),
-            ],
-          ),
-        ),
+              ],
+            ),
+          );
+        },
       ),
-      // Sticky enroll button at the bottom
-      bottomNavigationBar: Padding(
+      bottomNavigationBar: Container(
         padding: const EdgeInsets.all(16.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 5,
+              blurRadius: 7,
+              offset: const Offset(0, 3),
+            ),
+          ],
+        ),
         child: ElevatedButton(
           onPressed: () {
-            // Enroll action
+            // Handle enrollment logic here
           },
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
+            backgroundColor: Colors.blue,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.play_circle_fill),
+              const Icon(FontAwesomeIcons.playCircle, color: Colors.white),
               const SizedBox(width: 8),
-              Text("Enroll Course - \$${course.price ?? 0}", style: TextStyle(fontSize: 18)),
+              Text(
+                "Enroll Course - \$${course.price ?? 0}",
+                style: const TextStyle(fontSize: 18, color: Colors.white),
+              ),
             ],
           ),
         ),
@@ -240,52 +442,278 @@ class CourseDetailsScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: Row(
         children: [
-          Icon(icon, color: Colors.blue),
+          Container(
+            padding: const EdgeInsets.all(12.0),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(12.0),
+            ),
+            child: Icon(icon, color: Colors.blue, size: 20),
+          ),
           const SizedBox(width: 16),
-          Text(text, style: TextStyle(fontSize: 16)),
+          Expanded(
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
         ],
       ),
     );
   }
 
-  // Helper method to build review list item
-  Widget _buildReviewItem(String name, String review, String timeAgo, String likes) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          CircleAvatar(
-            radius: 20,
-            backgroundImage: AssetImage('assets/reviewer.jpg'), // Replace with actual image
+  Widget _buildReviewItem(
+      String name, String review, String timeAgo, int likes) {
+    bool isLiked = false;
+    bool isDisliked = false;
+
+    return StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return Card(
+          color: Colors.white,
+          elevation: 4,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
+          margin: const EdgeInsets.symmetric(vertical: 10),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Text(name, style: TextStyle(fontWeight: FontWeight.bold)),
-                    const SizedBox(width: 8),
-                    Icon(Icons.star, color: Colors.yellow[700], size: 16),
-                    const SizedBox(width: 4),
-                    Text("4.5", style: TextStyle(fontSize: 14)),
-                  ],
+                // Avatar with border
+                ClipOval(
+                  child: Container(
+                    width: 50,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.blue, width: 2),
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.asset(
+                      'assets/reviewer.jpg', // Replace with actual image
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
-                Text(review, maxLines: 2, overflow: TextOverflow.ellipsis),
-                Row(
-                  children: [
-                    Text("$likes Likes", style: TextStyle(color: Colors.grey, fontSize: 12)),
-                    const SizedBox(width: 16),
-                    Text(timeAgo, style: TextStyle(color: Colors.grey, fontSize: 12)),
-                  ],
+                const SizedBox(width: 16),
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        review,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.black87),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isLiked = !isLiked;
+                                if (isLiked) {
+                                  likes++;
+                                  if (isDisliked) {
+                                    isDisliked = false;
+                                    likes++;
+                                  }
+                                } else {
+                                  likes--;
+                                }
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              transform: Matrix4.identity()
+                                ..scale(isLiked ? 1.1 : 1.0),
+                              child: Icon(
+                                isLiked
+                                    ? Icons.thumb_up
+                                    : Icons.thumb_up_alt_outlined,
+                                color: isLiked ? Colors.blue : Colors.grey[600],
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                isDisliked = !isDisliked;
+                                if (isDisliked) {
+                                  likes--;
+                                  if (isLiked) {
+                                    isLiked = false;
+                                    likes--;
+                                  }
+                                } else {
+                                  likes++;
+                                }
+                              });
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 200),
+                              transform: Matrix4.identity()
+                                ..scale(isDisliked ? 1.1 : 1.0),
+                              child: Icon(
+                                isDisliked
+                                    ? Icons.thumb_down
+                                    : Icons.thumb_down_alt_outlined,
+                                color:
+                                    isDisliked ? Colors.red : Colors.grey[600],
+                                size: 16,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+
+                          // Like count
+                          Text(
+                            "$likes Likes",
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
+                          ),
+                          const Spacer(),
+
+                          // Time ago
+                          Row(
+                            children: [
+                              Icon(Icons.access_time,
+                                  color: Colors.grey[600], size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                timeAgo,
+                                style: const TextStyle(
+                                    color: Colors.grey, fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        );
+      },
+    );
+  }
+
+  // Method to add a new review
+  void _addReview(BuildContext context) {
+    final TextEditingController reviewController = TextEditingController();
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+      return Padding(
+        padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+          const Text(
+            'Add Review',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 16),
+          TextField(
+            controller: reviewController,
+            decoration: const InputDecoration(
+            labelText: 'Review',
+            border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+            setState(() {
+              widget.course.reviewsList?.add({
+              'name': 'Current User',
+              'review': reviewController.text,
+              'timeAgo': 'Just now',
+              'likes': '0',
+              });
+            });
+            Navigator.of(context).pop();
+            },
+            child: const Text('Add Review'),
+          ),
+          ],
+        ),
+        ),
+      );
+      },
+    );
+  }
+
+  void _seeAllReviews(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'All Reviews',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ListView(
+                    children: widget.course.reviewsList?.map((review) {
+                          return _buildReviewItem(
+                            review['name'] ?? 'Anonymous',
+                            review['review'] ?? 'No review',
+                            review['timeAgo'] ?? 'Unknown',
+                            int.tryParse(review['likes'] ?? '0') ?? 0,
+                          );
+                        }).toList() ??
+                        [],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Close'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 }

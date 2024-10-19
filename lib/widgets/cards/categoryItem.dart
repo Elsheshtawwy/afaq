@@ -4,7 +4,7 @@ class CategoryItem extends StatelessWidget {
   final String name;
   final String imageUrl;
 
-  const CategoryItem({required this.name, required this.imageUrl});
+  const CategoryItem({super.key, required this.name, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

@@ -1,6 +1,5 @@
 import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/categoryItem.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesScreen extends StatelessWidget {
