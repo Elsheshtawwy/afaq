@@ -17,6 +17,7 @@ import 'package:afaq/widgets/categoryFilters.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -175,6 +176,7 @@ class _HomePageState extends State<HomePage> {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
+              GoogleSignIn().signOut();
               final authProvider =
                   Provider.of<Auth_Provider>(context, listen: false);
               authProvider.logout(context);

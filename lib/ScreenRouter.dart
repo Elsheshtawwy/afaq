@@ -12,11 +12,11 @@ class ScreenRouter extends StatefulWidget {
 
 class _ScreenRouterState extends State<ScreenRouter> {
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  
 
   @override
   Widget build(BuildContext context) {
-    return firebaseAuth.currentUser != null
+    return (firebaseAuth.currentUser != null &&
+            firebaseAuth.currentUser!.emailVerified)
         ? const HomePage()
         : const WelcomeScreen();
   }

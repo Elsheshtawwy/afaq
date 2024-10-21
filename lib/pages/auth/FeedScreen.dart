@@ -1,5 +1,7 @@
+import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +22,7 @@ class _FeedScreenState extends State<FeedScreen> {
   late TextEditingController _experiencesController;
   late List<String> _interests;
   String _selectedPreference = "Academic Courses";
+  bool _isEmailVerified = false;
 
   @override
   void initState() {
@@ -43,6 +46,29 @@ class _FeedScreenState extends State<FeedScreen> {
       _experiencesController.dispose();
     }
     super.dispose();
+  }
+
+  Future<bool> _checkAccountStatus() async {
+    await Future.delayed(const Duration(seconds: 1));
+
+    // التحقق من حالة البريد الإلكتروني عبر Firebase
+    bool emailVerified = await _fetchEmailVerificationStatus();
+
+    setState(() {
+      _isEmailVerified = emailVerified;
+    });
+
+    return _isEmailVerified;
+  }
+
+  Future<bool> _fetchEmailVerificationStatus() async {
+    User? user = FirebaseAuth.instance.currentUser;
+
+    if (user != null) {
+      await user.reload(); // تحديث حالة المستخدم
+      return user.emailVerified; // تحقق مما إذا كان البريد الإلكتروني تم التحقق منه
+    }
+    return false;
   }
 
   Widget _buildPreferencesDropdown() {
@@ -231,17 +257,36 @@ class _FeedScreenState extends State<FeedScreen> {
                                       ? const CircularProgressIndicator()
                                       : CustomButton(
                                           label: 'Continue',
-                                          onPressed: () {
+                                          onPressed: () async {
                                             setState(() {
                                               _isLoading = true;
                                             });
-                                            // Simulate a network request
-                                            Future.delayed(
-                                                const Duration(seconds: 2), () {
-                                              setState(() {
-                                                _isLoading = false;
-                                              });
+
+                                            bool isAccountValid =
+                                                await _checkAccountStatus();
+
+                                            setState(() {
+                                              _isLoading = false;
                                             });
+
+                                            if (isAccountValid) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      HomePage(),
+                                                ),
+                                              );
+                                            } else {
+                                              // عرض رسالة خطأ أو تنفيذ إجراء آخر
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Text(
+                                                      'Please verify your email first.'),
+                                                ),
+                                              );
+                                            }
                                           },
                                         ),
                                 ],

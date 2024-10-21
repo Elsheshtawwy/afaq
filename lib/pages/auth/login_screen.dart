@@ -4,9 +4,12 @@ import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -20,12 +23,30 @@ class _LoginScreenState extends State<LoginScreen> {
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
+  final _forgotPasswordController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
@@ -136,7 +157,89 @@ class _LoginScreenState extends State<LoginScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                            AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.info,
+                              animType: AnimType.bottomSlide,
+                              title: 'Forgot Password',
+                              body: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text('Please enter your email to reset your password:'),
+                                TextField(
+                                controller: _forgotPasswordController,
+                                decoration: const InputDecoration(
+                                  labelText: 'Email',
+                                  hintText: 'Enter your email',
+                                ),
+                                ),
+                              ],
+                              ),
+                              btnCancelOnPress: () {
+                              _forgotPasswordController.clear();
+                              },
+                              btnOkText: 'Submit',
+                              btnOkOnPress: () async {
+                              final email = _forgotPasswordController.text.trim();
+                              if (email.isNotEmpty) {
+                                if (RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(email)) {
+                                try {
+                                  final methods = await FirebaseAuth.instance.fetchSignInMethodsForEmail(email);
+                                  if (methods.isNotEmpty) {
+                                  await FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.success,
+                                    animType: AnimType.bottomSlide,
+                                    title: 'Success',
+                                    desc: 'Password reset email sent',
+                                    btnOkOnPress: () {},
+                                  ).show();
+                                  _forgotPasswordController.clear();
+                                  } else {
+                                  AwesomeDialog(
+                                    context: context,
+                                    dialogType: DialogType.warning,
+                                    animType: AnimType.bottomSlide,
+                                    title: 'Warning',
+                                    desc: 'This email is not registered',
+                                    btnOkOnPress: () {},
+                                  ).show();
+                                  }
+                                } catch (e) {
+                                  AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.error,
+                                  animType: AnimType.bottomSlide,
+                                  title: 'Error',
+                                  desc: 'Failed to send password reset email',
+                                  btnOkOnPress: () {},
+                                  ).show();
+                                }
+                                } else {
+                                AwesomeDialog(
+                                  context: context,
+                                  dialogType: DialogType.warning,
+                                  animType: AnimType.bottomSlide,
+                                  title: 'Warning',
+                                  desc: 'Please enter a valid email address',
+                                  btnOkOnPress: () {},
+                                ).show();
+                                }
+                              } else {
+                                AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.warning,
+                                animType: AnimType.bottomSlide,
+                                title: 'Warning',
+                                desc: 'Please enter an email address',
+                                btnOkOnPress: () {},
+                                ).show();
+                              }
+                              },
+                            ).show();
+                            },
                             child: const Text(
                               'Forgot Password?',
                               style: TextStyle(
@@ -190,8 +293,20 @@ class _LoginScreenState extends State<LoginScreen> {
                                 'assets/socialLogos/light/facebook.png',
                               ],
                               [
-                                () {
-                                  // Google Sign In
+                                () async {
+                                  try {
+                                    await signInWithGoogle();
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => HomePage(),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('Google Sign-In failed')),
+                                    );
+                                  }
                                 },
                                 () {
                                   // Facebook Sign In

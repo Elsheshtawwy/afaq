@@ -1,5 +1,5 @@
+import 'package:afaq/pages/auth/UserInfoScreen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
-import 'package:afaq/pages/auth/otpScreen.dart';
 import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
@@ -7,6 +7,8 @@ import 'package:afaq/widgets/buttons/socialIcons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -45,15 +47,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (result) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => OtpScreen()),
+            MaterialPageRoute(builder: (context) => UserInfoScreen()),
           );
-        } else {
-          _showSnackBar('The email already exists.');
         }
       } catch (e) {
         _showSnackBar('An error occurred. Please try again.');
       }
     }
+  }
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   void _showSnackBar(String message) {
@@ -267,7 +284,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               ],
               [
                 () {
-                  // Google Sign In
+                  signInWithGoogle();
                 },
                 () {
                   // Facebook Sign In

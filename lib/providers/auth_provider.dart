@@ -14,15 +14,21 @@ class Auth_Provider extends BaseProvider {
     try {
       UserCredential userCred = await _firebaseAuth.signInWithEmailAndPassword(
           email: email, password: password);
-      setBusy(false);
-      return userCred.user != null;
+      if (userCred.user != null && userCred.user!.emailVerified) {
+        setBusy(false);
+        return true;
+      } else {
+        setBusy(false);
+        _showErrorDialog(context, 'Email Not Verified', 'Please verify your email before logging in.');
+        return false;
+      }
     } on FirebaseAuthException catch (e) {
       setBusy(false);
-      _showErrorDialog(context, 'FirebaseAuthException', e.message);
+      _showErrorDialog(context, 'Login Error', 'An error occurred while trying to log in: ${e.message}');
       return false;
     } catch (e) {
       setBusy(false);
-      _showErrorDialog(context, 'Exception', e.toString());
+      _showErrorDialog(context, 'Unexpected Error', 'An unexpected error occurred: ${e.toString()}');
       return false;
     }
   }
@@ -35,11 +41,11 @@ class Auth_Provider extends BaseProvider {
       return true;
     } on FirebaseAuthException catch (e) {
       setBusy(false);
-      _showErrorDialog(context, 'FirebaseAuthException', e.message);
+      _showErrorDialog(context, 'Password Reset Error', 'An error occurred while trying to reset the password: ${e.message}');
       return false;
     } catch (e) {
       setBusy(false);
-      _showErrorDialog(context, 'Exception', e.toString());
+      _showErrorDialog(context, 'Unexpected Error', 'An unexpected error occurred: ${e.toString()}');
       return false;
     }
   }
@@ -57,6 +63,7 @@ class Auth_Provider extends BaseProvider {
           "email": email,
           "user_uid": userCred.user!.uid,
         });
+        await userCred.user!.sendEmailVerification(); // Send email verification
         setBusy(false);
         return true;
       } else {
@@ -66,16 +73,16 @@ class Auth_Provider extends BaseProvider {
     } on FirebaseAuthException catch (e) {
       setBusy(false);
       if (e.code == 'weak-password') {
-        _showErrorDialog(context, 'Weak Password', 'The password provided is too weak.');
+        _showErrorDialog(context, 'Weak Password', 'The password you entered is too weak. Please choose a stronger password.');
       } else if (e.code == 'email-already-in-use') {
-        _showErrorDialog(context, 'Email Already In Use', 'The account already exists for that email.');
+        _showErrorDialog(context, 'Email Already In Use', 'The email you entered is already in use. Please use a different email.');
       } else {
-        _showErrorDialog(context, 'FirebaseAuthException', e.message);
+        _showErrorDialog(context, 'Account Creation Error', 'An error occurred while trying to create the account: ${e.message}');
       }
       return false;
     } catch (e) {
       setBusy(false);
-      _showErrorDialog(context, 'Exception', e.toString());
+      _showErrorDialog(context, 'Unexpected Error', 'An unexpected error occurred: ${e.toString()}');
       return false;
     }
   }
@@ -85,10 +92,10 @@ class Auth_Provider extends BaseProvider {
       await _firebaseAuth.signOut();
       return true;
     } on FirebaseAuthException catch (e) {
-      _showErrorDialog(context, 'FirebaseAuthException', e.message);
+      _showErrorDialog(context, 'Logout Error', 'An error occurred while trying to log out: ${e.message}');
       return false;
     } catch (e) {
-      _showErrorDialog(context, 'Exception', e.toString());
+      _showErrorDialog(context, 'Unexpected Error', 'An unexpected error occurred: ${e.toString()}');
       return false;
     }
   }
@@ -99,9 +106,9 @@ class Auth_Provider extends BaseProvider {
       dialogType: DialogType.error,
       animType: AnimType.rightSlide,
       title: title,
-      desc: description ?? 'An error occurred',
-      btnCancelOnPress: () {},
-      btnOkOnPress: () {},
+      desc: description ?? 'An unexpected error occurred',
+      // btnCancelOnPress: () {},
+      // btnOkOnPress: () {},
     )..show();
   }
 }
