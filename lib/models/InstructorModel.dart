@@ -12,6 +12,10 @@ class InstructorModel {
   final List<String>? qualifications;
   final String? bio;
   final int? experienceYears;
+  final String? gender;
+  final List<String>? experiences; 
+  final String? specialization; 
+  final bool? isVerified; 
 
   InstructorModel({
     required this.id,
@@ -25,6 +29,10 @@ class InstructorModel {
     this.qualifications,
     this.bio,
     this.experienceYears,
+    this.gender, 
+    this.experiences, 
+    this.specialization, 
+    this.isVerified, 
   });
 
   factory InstructorModel.fromJson(Map<String, dynamic> json) {
@@ -44,6 +52,10 @@ class InstructorModel {
       qualifications: json['qualifications'] != null ? List<String>.from(json['qualifications']) : null,
       bio: json['bio'],
       experienceYears: json['experienceYears'],
+      gender: json['gender'], // Added gender field
+      experiences: json['experiences'] != null ? List<String>.from(json['experiences']) : null, // Added experiences field
+      specialization: json['specialization'], // Added specialization field
+      isVerified: json['isVerified'], // Added isVerified field
     );
   }
 
@@ -60,6 +72,10 @@ class InstructorModel {
       'qualifications': qualifications,
       'bio': bio,
       'experienceYears': experienceYears,
+      'gender': gender,
+      'experiences': experiences, // Added experiences field
+      'specialization': specialization, // Added specialization field
+      'isVerified': isVerified, // Added isVerified field
     };
   }
 }

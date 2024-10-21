@@ -1,21 +1,15 @@
-import 'package:afaq/models/CategoryModel.dart';
-import 'package:afaq/models/CourseModel.dart';
-import 'package:afaq/models/InstituteModel.dart';
-import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/auth/signup_screen.dart';
 import 'package:afaq/pages/mainScreens/home_screen.dart';
+import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginScreen extends StatefulWidget {
-    final List<CourseModel> courses;
-  final List<InstructorModel> instructors;
-  final List<InstituteModel> institutes;
-  final List<CategoryModel> categories;
-  const LoginScreen({super.key, required this.courses, required this.instructors, required this.institutes, required this.categories});
+  const LoginScreen({super.key});
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
@@ -155,20 +149,29 @@ class _LoginScreenState extends State<LoginScreen> {
                         SizedBox(height: screenHeight * 0.01),
                         CustomButton(
                           label: 'Log In',
-                          onPressed: () {
+                          onPressed: () async {
                             if (_formKey.currentState!.validate()) {
-                              Navigator.pushReplacement(
+                              final authProvider = Provider.of<Auth_Provider>(
+                                  context,
+                                  listen: false);
+                              bool success = await authProvider.login(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomePage(
-                                    courses: widget.courses,
-                                    instructors: widget.instructors,
-                                    institutes: widget.institutes,
-                                    categories: widget.categories,
-                                    
-                                  ),
-                                ),
+                                _emailController.text,
+                                _passwordController.text,
                               );
+                              if (success) {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => HomePage(),
+                                  ),
+                                );
+                              } else {
+                                // Handle login failure (e.g., show a snackbar)
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text('Login failed')),
+                                );
+                              }
                             }
                           },
                         ),
@@ -211,12 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) =>  SignUpScreen(
-                                      courses: widget.courses,
-                                      instructors: widget.instructors,
-                                      institutes: widget.institutes,
-                                      categories: widget.categories,
-                                    ),
+                                    builder: (context) => SignUpScreen(),
                                   ),
                                 );
                               },

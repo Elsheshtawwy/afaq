@@ -1,4 +1,3 @@
-
 class UserModel {
   final String id;
   final String name;
@@ -6,19 +5,17 @@ class UserModel {
   final String? phoneNumber;
   final String password;
   final String? profilePicture;
-  final String role; // "student", "instructor", "admin"
+  final String role; 
   final List<String>? coursesEnrolled;
   final List<String>? wishlist;
   final String? bio;
-  final double? rating;
   final List<String>? reviews;
-  final String? location;
   final List<String>? notifications;
   final Map<String, dynamic>? preferences;
   final DateTime joinedDate;
   final Map<String, dynamic>? paymentDetails;
   final bool isVerified;
-  final DateTime lastLogin;
+  final String? gender; // Added gender field
 
   UserModel({
     required this.id,
@@ -32,14 +29,12 @@ class UserModel {
     this.coursesEnrolled,
     this.wishlist,
     this.bio,
-    this.rating,
     this.reviews,
-    this.location,
     this.notifications,
     this.preferences,
     this.paymentDetails,
     this.isVerified = false,
-    required this.lastLogin,
+    this.gender, // Added gender field
   });
 
   // JSON serialization
@@ -56,14 +51,12 @@ class UserModel {
       coursesEnrolled: List<String>.from(json['coursesEnrolled'] ?? []),
       wishlist: List<String>.from(json['wishlist'] ?? []),
       bio: json['bio'],
-      rating: json['rating']?.toDouble(),
       reviews: List<String>.from(json['reviews'] ?? []),
-      location: json['location'],
       notifications: List<String>.from(json['notifications'] ?? []),
       preferences: json['preferences'],
       paymentDetails: json['paymentDetails'],
       isVerified: json['isVerified'] ?? false,
-      lastLogin: DateTime.parse(json['lastLogin']),
+      gender: json['gender'], // Added gender field
     );
   }
 
@@ -79,15 +72,13 @@ class UserModel {
       'coursesEnrolled': coursesEnrolled,
       'wishlist': wishlist,
       'bio': bio,
-      'rating': rating,
       'reviews': reviews,
-      'location': location,
       'notifications': notifications,
       'preferences': preferences,
       'joinedDate': joinedDate.toIso8601String(),
       'paymentDetails': paymentDetails,
       'isVerified': isVerified,
-      'lastLogin': lastLogin.toIso8601String(),
+      'gender': gender, // Added gender field
     };
   }
 
@@ -103,15 +94,13 @@ class UserModel {
     List<String>? coursesEnrolled,
     List<String>? wishlist,
     String? bio,
-    double? rating,
     List<String>? reviews,
-    String? location,
     List<String>? notifications,
     Map<String, dynamic>? preferences,
     DateTime? joinedDate,
     Map<String, dynamic>? paymentDetails,
     bool? isVerified,
-    DateTime? lastLogin,
+    String? gender, // Added gender field
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -125,14 +114,12 @@ class UserModel {
       coursesEnrolled: coursesEnrolled ?? this.coursesEnrolled,
       wishlist: wishlist ?? this.wishlist,
       bio: bio ?? this.bio,
-      rating: rating ?? this.rating,
       reviews: reviews ?? this.reviews,
-      location: location ?? this.location,
       notifications: notifications ?? this.notifications,
       preferences: preferences ?? this.preferences,
       paymentDetails: paymentDetails ?? this.paymentDetails,
       isVerified: isVerified ?? this.isVerified,
-      lastLogin: lastLogin ?? this.lastLogin,
+      gender: gender ?? this.gender, // Added gender field
     );
   }
 }

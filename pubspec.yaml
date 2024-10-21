@@ -46,6 +46,8 @@ dependencies:
   google_sign_in:
   flutter_facebook_auth:
   shared_preferences:
+  provider:
+  awesome_dialog:
 
 
  

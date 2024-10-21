@@ -1,11 +1,12 @@
-import 'package:afaq/models/CategoryModel.dart';
-import 'package:afaq/models/CourseModel.dart';
-import 'package:afaq/models/InstituteModel.dart';
-import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/Onboarding/splash_screen.dart';
+import 'package:afaq/providers/auth_provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:provider/provider.dart';
+import 'package:afaq/providers/base_provider.dart';
+import 'package:afaq/providers/dark_mode_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,31 +14,38 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  List<CourseModel> courses = [];
-  List<InstructorModel> instructors = [];
-  List<InstituteModel> institutes = [];
-  List<CategoryModel> categories = [];
-
-  runApp(MyApp(
-    courses: courses,
-    instructors: instructors,
-    institutes: institutes,
-    categories: categories,
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<BaseProvider>(create: (_) => BaseProvider()),
+        ChangeNotifierProvider<DarkModeProvider>(
+            create: (_) => DarkModeProvider()),
+        ChangeNotifierProvider<Auth_Provider>(create: (_) => Auth_Provider())
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
-class MyApp extends StatelessWidget {
-  final List<CourseModel> courses;
-  final List<InstructorModel> instructors;
-  final List<InstituteModel> institutes;
-  final List<CategoryModel> categories;
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
 
-  const MyApp(
-      {super.key,
-      required this.courses,
-      required this.instructors,
-      required this.institutes,
-      required this.categories});
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    FirebaseAuth.instance.authStateChanges().listen((User? user) {
+      if (user == null) {
+        print('***********************User is currently signed out!');
+      } else {
+        print('***********************User is signed in!');
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,12 +62,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4667FD)),
         useMaterial3: true,
       ),
-      home: SplashScreen(
-        courses: courses,
-        instructors: instructors,
-        institutes: institutes,
-        categories: categories,
-      ),
+      home: SplashScreen(),
     );
   }
 }

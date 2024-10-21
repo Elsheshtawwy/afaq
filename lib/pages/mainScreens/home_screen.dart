@@ -8,31 +8,29 @@ import 'package:afaq/pages/mainScreens/InstitutesScreen.dart';
 import 'package:afaq/pages/mainScreens/categoriesScreen.dart';
 import 'package:afaq/pages/mainScreens/CoursesScreen.dart';
 import 'package:afaq/pages/mainScreens/InstructorScreen.dart';
+import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/CourseCardHome.dart';
 import 'package:afaq/widgets/cards/instituteCardHome.dart';
 import 'package:afaq/widgets/cards/mentorAvatar.dart';
 import 'package:afaq/widgets/categoryFilters.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
-  final List<CourseModel> courses;
-  final List<InstructorModel> instructors;
-  final List<InstituteModel> institutes;
-  final List<CategoryModel> categories;
-  const HomePage(
-      {super.key,
-      required this.courses,
-      required this.instructors,
-      required this.institutes,
-      required this.categories});
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  final List<CategoryModel> categories = [];
+  final List<CourseModel> courses = [];
+  final List<InstructorModel> instructors = [];
+  final List<InstituteModel> institutes = [];
   String _selectedCategory = '';
 
   @override
@@ -63,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            CategoriesScreen(categories: widget.categories)));
+                            CategoriesScreen(categories: categories)));
               }),
               const SizedBox(height: 10),
               _buildCategories(),
@@ -73,26 +71,25 @@ class _HomePageState extends State<HomePage> {
                     context,
                     MaterialPageRoute(
                         builder: (context) => CoursesScreen(
-                            courses: widget.courses,
-                            instructors: widget.instructors)));
+                            courses: courses, instructors: instructors)));
               }),
               const CategoryFilters(),
               const SizedBox(height: 8),
-              _buildPopularCourses(isLargeScreen, widget.courses),
+              _buildPopularCourses(isLargeScreen, courses),
               const SizedBox(height: 20),
               _buildSectionHeader('Top Instructors', () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            InstructorScreen(instructors: widget.instructors)));
+                            InstructorScreen(instructors: instructors)));
               }),
               const SizedBox(height: 8),
               _buildTopMentors(),
               const SizedBox(height: 20),
               _buildSectionHeader('Popular Institutes', () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return InstitutesScreen(Institutes: widget.institutes);
+                  return InstitutesScreen(Institutes: institutes);
                 }));
               }),
               const SizedBox(height: 8),
@@ -178,16 +175,14 @@ class _HomePageState extends State<HomePage> {
             leading: const Icon(Icons.logout),
             title: const Text('Logout'),
             onTap: () {
+              final authProvider =
+                  Provider.of<Auth_Provider>(context, listen: false);
+              authProvider.logout(context);
               Navigator.pop(context);
               Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => LoginScreen(
-                            courses: widget.courses,
-                            instructors: widget.instructors,
-                            institutes: widget.institutes,
-                            categories: widget.categories,
-                          )));
+                context,
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+              );
             },
           ),
         ],
@@ -379,14 +374,14 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(
                   builder: (context) => CourseDetailsScreen(
                     course: course,
-                    instructors: widget.instructors,
+                    instructors: instructors,
                   ),
                 ),
               );
             },
             child: CourseCardHome(
               course: course,
-              bgColor: Colors.white, // Add the required bgColor parameter
+              bgColor: Colors.white,
             ),
           );
         },
@@ -400,10 +395,10 @@ class _HomePageState extends State<HomePage> {
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         scrollDirection: Axis.horizontal,
-        itemCount: widget.instructors.length, // عدد المدربين
+        itemCount: instructors.length,
         itemBuilder: (context, index) {
           return MentorAvatar(
-            instructor: widget.instructors[index], // تمرير البيانات الديناميكية
+            instructor: instructors[index],
           );
         },
       ),
@@ -416,10 +411,10 @@ class _HomePageState extends State<HomePage> {
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         scrollDirection: Axis.horizontal,
-        itemCount: widget.institutes.length, // عدد المعاهد
+        itemCount: institutes.length,
         itemBuilder: (context, index) {
           return InstituteCardHome(
-            institute: widget.institutes[index], // تمرير البيانات الديناميكية
+            institute: institutes[index],
           );
         },
       ),

@@ -1,24 +1,13 @@
 import 'dart:async';
 
+import 'package:afaq/ScreenRouter.dart';
 import 'package:afaq/helpers/functions.dart';
-import 'package:afaq/models/CategoryModel.dart';
-import 'package:afaq/models/CourseModel.dart';
-import 'package:afaq/models/InstituteModel.dart';
-import 'package:afaq/models/InstructorModel.dart';
-import 'package:afaq/pages/auth/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
-  final List<CourseModel> courses;
-  final List<InstructorModel> instructors;
-  final List<InstituteModel> institutes;
-  final List<CategoryModel> categories;
-  const SplashScreen(
-      {super.key,
-      required this.courses,
-      required this.instructors,
-      required this.institutes,
-      required this.categories});
+  const SplashScreen({
+    super.key,
+  });
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -56,14 +45,7 @@ class _SplashScreenState extends State<SplashScreen>
     Timer(const Duration(seconds: 3), () {
       _loadingTimer.cancel();
       Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => WelcomeScreen(
-                    courses: widget.courses,
-                    instructors: widget.instructors,
-                    institutes: widget.institutes,
-                    categories: widget.categories,
-                  )));
+          context, MaterialPageRoute(builder: (context) => ScreenRouter()));
     });
   }
 
