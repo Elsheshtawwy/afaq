@@ -1,10 +1,9 @@
-import 'package:afaq/models/InstructorModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CourseModel {
   final String id;
   final String? title;
   final String? description;
-  final List<InstructorModel>? instructors;
   final DateTime? startDate;
   final DateTime? endDate;
   final String? category;
@@ -12,8 +11,8 @@ class CourseModel {
   final double? price;
   final double? oldPrice;
   final double? rating;
-  final int? students;
   final List<String>? imageUrl;
+  final String? mainImage; 
   final int? reviews;
   final int? classes;
   final int? hours;
@@ -26,13 +25,15 @@ class CourseModel {
   final int? currentStudents;
   final int? targetStudents;
   final String? level;
-  final String? deliveryMode;
+  final bool? isOnline;
+  final List<String>? instructorIds;
+  final String? address;
+  final int? numberOfRatings; 
 
   CourseModel({
     required this.id,
     this.title,
     this.description,
-    this.instructors,
     this.startDate,
     this.endDate,
     this.category,
@@ -40,8 +41,8 @@ class CourseModel {
     this.price,
     this.oldPrice,
     this.rating,
-    this.students,
     this.imageUrl,
+    this.mainImage, // Added field
     this.reviews,
     this.classes,
     this.hours,
@@ -54,17 +55,17 @@ class CourseModel {
     this.currentStudents,
     this.targetStudents,
     this.level,
-    this.deliveryMode,
+    this.isOnline,
+    this.instructorIds,
+    this.address,
+    this.numberOfRatings, // Added field
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
     return CourseModel(
-      id: json['id'] as String,
+      id: json['id'] as String? ?? '',
       title: json['title'] as String?,
       description: json['description'] as String?,
-      instructors: (json['instructors'] as List<dynamic>?)
-          ?.map((e) => InstructorModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
       startDate: json['startDate'] != null
           ? DateTime.parse(json['startDate'] as String)
           : null,
@@ -76,10 +77,12 @@ class CourseModel {
       price: (json['price'] as num?)?.toDouble(),
       oldPrice: (json['oldPrice'] as num?)?.toDouble(),
       rating: (json['rating'] as num?)?.toDouble(),
-      students: json['students'] as int?,
-      imageUrl: (json['imageUrl'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      imageUrl: json['imageUrl'] is String
+          ? [json['imageUrl'] as String]
+          : (json['imageUrl'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
+      mainImage: json['mainImage'] as String?, // Added field
       reviews: json['reviews'] as int?,
       classes: json['classes'] as int?,
       hours: json['hours'] as int?,
@@ -101,8 +104,18 @@ class CourseModel {
       currentStudents: json['currentStudents'] as int?,
       targetStudents: json['targetStudents'] as int?,
       level: json['level'] as String?,
-      deliveryMode: json['deliveryMode'] as String?,
+      isOnline: json['isOnline'] as bool?,
+      instructorIds: (json['instructorIds'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      address: json['address'] as String?,
+      numberOfRatings: json['numberOfRatings'] as int?, // Added field
     );
+  }
+
+  factory CourseModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return CourseModel.fromJson(data);
   }
 
   Map<String, dynamic> toJson() {
@@ -110,7 +123,6 @@ class CourseModel {
       'id': id,
       'title': title,
       'description': description,
-      'instructors': instructors?.map((e) => e.toJson()).toList(),
       'startDate': startDate?.toIso8601String(),
       'endDate': endDate?.toIso8601String(),
       'category': category,
@@ -118,8 +130,8 @@ class CourseModel {
       'price': price,
       'oldPrice': oldPrice,
       'rating': rating,
-      'students': students,
       'imageUrl': imageUrl,
+      'mainImage': mainImage, // Added field
       'reviews': reviews,
       'classes': classes,
       'hours': hours,
@@ -132,15 +144,21 @@ class CourseModel {
       'currentStudents': currentStudents,
       'targetStudents': targetStudents,
       'level': level,
-      'deliveryMode': deliveryMode,
+      'isOnline': isOnline,
+      'instructorIds': instructorIds,
+      'address': address,
+      'numberOfRatings': numberOfRatings, // Added field
     };
+  }
+
+  Map<String, dynamic> toFirestore() {
+    return toJson();
   }
 
   CourseModel copyWith({
     String? id,
     String? title,
     String? description,
-    List<InstructorModel>? instructors,
     DateTime? startDate,
     DateTime? endDate,
     String? category,
@@ -148,8 +166,8 @@ class CourseModel {
     double? price,
     double? oldPrice,
     double? rating,
-    int? students,
     List<String>? imageUrl,
+    String? mainImage, // Added field
     int? reviews,
     int? classes,
     int? hours,
@@ -162,13 +180,15 @@ class CourseModel {
     int? currentStudents,
     int? targetStudents,
     String? level,
-    String? deliveryMode,
+    bool? isOnline,
+    List<String>? instructorIds,
+    String? address,
+    int? numberOfRatings, // Added field
   }) {
     return CourseModel(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
-      instructors: instructors ?? this.instructors,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       category: category ?? this.category,
@@ -176,8 +196,8 @@ class CourseModel {
       price: price ?? this.price,
       oldPrice: oldPrice ?? this.oldPrice,
       rating: rating ?? this.rating,
-      students: students ?? this.students,
       imageUrl: imageUrl ?? this.imageUrl,
+      mainImage: mainImage ?? this.mainImage, // Added field
       reviews: reviews ?? this.reviews,
       classes: classes ?? this.classes,
       hours: hours ?? this.hours,
@@ -190,7 +210,10 @@ class CourseModel {
       currentStudents: currentStudents ?? this.currentStudents,
       targetStudents: targetStudents ?? this.targetStudents,
       level: level ?? this.level,
-      deliveryMode: deliveryMode ?? this.deliveryMode,
+      isOnline: isOnline ?? this.isOnline,
+      instructorIds: instructorIds ?? this.instructorIds,
+      address: address ?? this.address,
+      numberOfRatings: numberOfRatings ?? this.numberOfRatings, 
     );
   }
 }

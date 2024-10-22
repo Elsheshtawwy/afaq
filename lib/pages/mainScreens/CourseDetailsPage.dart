@@ -1,26 +1,40 @@
+import 'dart:io';
 import 'package:afaq/models/CourseModel.dart';
 import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/widgets/cards/instructorCard.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:card_swiper/card_swiper.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class CourseDetailsScreen extends StatefulWidget {
   final CourseModel course;
-    final List<InstructorModel> instructors;
+  final List<InstructorModel> instructors;
 
-
-
-  const CourseDetailsScreen({super.key, required this.course, required this.instructors});
+  const CourseDetailsScreen(
+      {super.key, required this.course, required this.instructors});
 
   @override
   _CourseDetailsScreenState createState() => _CourseDetailsScreenState();
 }
 
 class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
+  initState() {
+    super.initState();
+    final file =
+        DefaultCacheManager().getSingleFile(widget.course.imageUrl.toString());
+    print(file);
+    clearCache();
+  }
+
+  Future<void> clearCache() async {
+    await DefaultCacheManager().emptyCache();
+    print("Cache cleared!");
+  }
+
   @override
   Widget build(BuildContext context) {
-    final course = widget.course; 
+    final course = widget.course;
 
     return Scaffold(
       appBar: AppBar(
@@ -201,24 +215,29 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                           fontSize: 18,
                         ),
                       ),
-                    ListView.builder(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              itemCount: widget.instructors.length,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    const SizedBox(height: 8,),
-                    Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: InstructorCard(
-                        instructor: widget.instructors[index],
+                      SizedBox(
+                        height: 200, // Set a fixed height for the ListView
+                        child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          itemCount: widget.instructors.length,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                const SizedBox(
+                                  height: 8,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 8),
+                                  child: InstructorCard(
+                                    instructor: widget.instructors[index],
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
-                );
-              },
-            ),
 
                       const SizedBox(height: 16),
                       // Reviews Section
@@ -377,8 +396,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                               children: [
                                 const Row(
                                   children: [
-                                    Icon(Icons.category,
-                                        color: Colors.blue),
+                                    Icon(Icons.category, color: Colors.blue),
                                     SizedBox(width: 8),
                                     Text(
                                       "Category",
@@ -502,8 +520,9 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
                       border: Border.all(color: Colors.blue, width: 2),
                       shape: BoxShape.circle,
                     ),
-                    child: Image.asset(
-                      'assets/reviewer.jpg', // Replace with actual image
+                    child: Image(
+                      image: FileImage(
+                          File(widget.course.imageUrl.toString() ?? '')),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -635,47 +654,47 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-      return Padding(
-        padding: EdgeInsets.only(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        child: Container(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-          const Text(
-            'Add Review',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          const SizedBox(height: 16),
-          TextField(
-            controller: reviewController,
-            decoration: const InputDecoration(
-            labelText: 'Review',
-            border: OutlineInputBorder(),
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'Add Review',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: reviewController,
+                  decoration: const InputDecoration(
+                    labelText: 'Review',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      widget.course.reviewsList?.add({
+                        'name': 'Current User',
+                        'review': reviewController.text,
+                        'timeAgo': 'Just now',
+                        'likes': '0',
+                      });
+                    });
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Add Review'),
+                ),
+              ],
             ),
-            maxLines: 3,
           ),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () {
-            setState(() {
-              widget.course.reviewsList?.add({
-              'name': 'Current User',
-              'review': reviewController.text,
-              'timeAgo': 'Just now',
-              'likes': '0',
-              });
-            });
-            Navigator.of(context).pop();
-            },
-            child: const Text('Add Review'),
-          ),
-          ],
-        ),
-        ),
-      );
+        );
       },
     );
   }

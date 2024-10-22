@@ -37,7 +37,7 @@ class InstructorScreen extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      const EdgeInsets.symmetric(horizontal: 16),
                   child: InstructorCard(
                     instructor: instructors[index],
                   ),

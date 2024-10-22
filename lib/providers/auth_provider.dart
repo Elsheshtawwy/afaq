@@ -109,6 +109,6 @@ class Auth_Provider extends BaseProvider {
       desc: description ?? 'An unexpected error occurred',
       // btnCancelOnPress: () {},
       // btnOkOnPress: () {},
-    )..show();
+    ).show();
   }
 }

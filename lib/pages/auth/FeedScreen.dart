@@ -1,3 +1,4 @@
+import 'package:afaq/pages/Onboarding/onboarding1.dart';
 import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
@@ -274,14 +275,14 @@ class _FeedScreenState extends State<FeedScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      HomePage(),
+                                                       OnboardingScreen(),
                                                 ),
                                               );
                                             } else {
                                               // عرض رسالة خطأ أو تنفيذ إجراء آخر
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
-                                                SnackBar(
+                                                const SnackBar(
                                                   content: Text(
                                                       'Please verify your email first.'),
                                                 ),

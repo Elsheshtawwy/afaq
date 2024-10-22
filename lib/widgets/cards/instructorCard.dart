@@ -1,4 +1,5 @@
 import 'package:afaq/models/InstructorModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class InstructorCard extends StatelessWidget {
@@ -12,6 +13,7 @@ class InstructorCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      color: Colors.white,
       elevation: 8,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
@@ -21,8 +23,8 @@ class InstructorCard extends StatelessWidget {
         child: Row(
           children: [
             CircleAvatar(
-              radius: 32,
-              backgroundImage: NetworkImage(instructor.profilePicture), // Assuming profilePicture is part of InstructorModel
+                radius: 32,
+                backgroundImage: CachedNetworkImageProvider(instructor.profilePicture), // Assuming profilePicture is part of InstructorModel
             ),
             const SizedBox(width: 16),
             Expanded(

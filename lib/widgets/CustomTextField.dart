@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
   final Color fillColor;
   final BorderRadius borderRadius;
   final String? Function(String?)? validator;
+  final VoidCallback? onTap;
 
   const CustomTextField({
     super.key,
@@ -22,26 +23,32 @@ class CustomTextField extends StatelessWidget {
     this.fillColor = Colors.white,
     this.borderRadius = const BorderRadius.all(Radius.circular(12)),
     this.validator,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      validator: validator,
-      decoration: InputDecoration(
-        labelText: labelText,
-        filled: true,
-        fillColor: fillColor,
-        border: OutlineInputBorder(
-          borderRadius: borderRadius,
-          borderSide: BorderSide.none,
+    return GestureDetector(
+      onTap: onTap,
+      child: AbsorbPointer(
+        absorbing: onTap != null,
+        child: TextFormField(
+          controller: controller,
+          obscureText: obscureText,
+          keyboardType: keyboardType,
+          validator: validator,
+          decoration: InputDecoration(
+            labelText: labelText,
+            filled: true,
+            fillColor: fillColor,
+            border: OutlineInputBorder(
+              borderRadius: borderRadius,
+              borderSide: BorderSide.none,
+            ),
+            prefixIcon: prefixIcon,
+            suffixIcon: suffixIcon,
+          ),
         ),
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
       ),
     );
   }

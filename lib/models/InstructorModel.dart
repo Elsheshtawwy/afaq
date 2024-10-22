@@ -1,4 +1,3 @@
-import 'package:afaq/models/InstituteModel.dart';
 
 class InstructorModel {
   final String id;
@@ -7,7 +6,7 @@ class InstructorModel {
   final String phoneNumber;
   final String department;
   final String profilePicture;
-  final List<InstituteModel> institutes;
+  final List<String> institutesID;
   final List<String>? coursesTaught;
   final List<String>? qualifications;
   final String? bio;
@@ -24,7 +23,7 @@ class InstructorModel {
     required this.phoneNumber,
     required this.department,
     required this.profilePicture,
-    required this.institutes,
+    required this.institutesID,
     this.coursesTaught,
     this.qualifications,
     this.bio,
@@ -36,10 +35,6 @@ class InstructorModel {
   });
 
   factory InstructorModel.fromJson(Map<String, dynamic> json) {
-    var institutesFromJson = json['institutes'] as List;
-    List<InstituteModel> instituteList =
-        institutesFromJson.map((i) => InstituteModel.fromJson(i)).toList();
-
     return InstructorModel(
       id: json['id'],
       name: json['name'],
@@ -47,15 +42,15 @@ class InstructorModel {
       phoneNumber: json['phoneNumber'],
       department: json['department'],
       profilePicture: json['profilePicture'],
-      institutes: instituteList,
+      institutesID: List<String>.from(json['institutesID']),
       coursesTaught: json['coursesTaught'] != null ? List<String>.from(json['coursesTaught']) : null,
       qualifications: json['qualifications'] != null ? List<String>.from(json['qualifications']) : null,
       bio: json['bio'],
       experienceYears: json['experienceYears'],
-      gender: json['gender'], // Added gender field
-      experiences: json['experiences'] != null ? List<String>.from(json['experiences']) : null, // Added experiences field
-      specialization: json['specialization'], // Added specialization field
-      isVerified: json['isVerified'], // Added isVerified field
+      gender: json['gender'],
+      experiences: json['experiences'] != null ? List<String>.from(json['experiences']) : null,
+      specialization: json['specialization'],
+      isVerified: json['isVerified'],
     );
   }
 
@@ -67,15 +62,15 @@ class InstructorModel {
       'phoneNumber': phoneNumber,
       'department': department,
       'profilePicture': profilePicture,
-      'institutes': institutes.map((i) => i.toJson()).toList(),
+      'institutesID': institutesID,
       'coursesTaught': coursesTaught,
       'qualifications': qualifications,
       'bio': bio,
       'experienceYears': experienceYears,
       'gender': gender,
-      'experiences': experiences, // Added experiences field
-      'specialization': specialization, // Added specialization field
-      'isVerified': isVerified, // Added isVerified field
+      'experiences': experiences,
+      'specialization': specialization,
+      'isVerified': isVerified,
     };
   }
 }

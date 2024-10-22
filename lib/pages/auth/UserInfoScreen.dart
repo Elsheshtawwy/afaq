@@ -1,8 +1,14 @@
 import 'package:afaq/pages/auth/FeedScreen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'dart:io';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -14,20 +20,70 @@ class UserInfoScreen extends StatefulWidget {
 class _UserInfoScreenState extends State<UserInfoScreen> {
   final _fullNameController = TextEditingController();
   final _phoneController = TextEditingController();
-  final _profilePictureController = TextEditingController();
   final _bioController = TextEditingController();
   String _selectedUserType = "Learner";
   String _selectedGender = "Male";
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
+  File? _profileImage;
 
   @override
   void dispose() {
     _fullNameController.dispose();
     _phoneController.dispose();
-    _profilePictureController.dispose();
     _bioController.dispose();
     super.dispose();
+  }
+
+  Future<void> requestStoragePermission() async {
+    if (await Permission.storage.request().isGranted) {
+      // Permission granted
+    } else {
+      // Permission denied
+      openAppSettings();
+    }
+  }
+
+  Future<void> _pickImage() async {
+    await requestStoragePermission();
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _profileImage = File(pickedFile.path);
+      });
+    }
+  }
+
+  Future<String?> _uploadImage(File image) async {
+    try {
+      final storageRef = FirebaseStorage.instance.ref().child(
+          'profile_pictures/${DateTime.now().millisecondsSinceEpoch}.jpg');
+      final uploadTask = storageRef.putFile(image);
+      final snapshot = await uploadTask.whenComplete(() => {});
+      return await snapshot.ref.getDownloadURL();
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
+  }
+
+  Future<void> _saveUserData(String imageUrl) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'fullName': _fullNameController.text,
+          'phone': _phoneController.text,
+          'profilePicture': imageUrl,
+          'bio': _bioController.text,
+          'userType': _selectedUserType,
+          'gender': _selectedGender,
+        });
+      }
+    } catch (e) {
+      print('Error saving user data: $e');
+    }
   }
 
   @override
@@ -87,6 +143,24 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                               key: _formKey,
                               child: Column(
                                 children: [
+                                  GestureDetector(
+                                    onTap: _pickImage,
+                                    child: CircleAvatar(
+                                      radius: 50,
+                                      backgroundColor: Colors.white,
+                                      backgroundImage: _profileImage != null
+                                          ? FileImage(_profileImage!)
+                                          : null,
+                                      child: _profileImage == null
+                                          ? Icon(
+                                              CupertinoIcons.photo_camera,
+                                              size: 50,
+                                              color: Colors.blue.shade600,
+                                            )
+                                          : null,
+                                    ),
+                                  ),
+                                  SizedBox(height: screenHeight * 0.02),
                                   CustomTextField(
                                     controller: _fullNameController,
                                     labelText: 'Full Name',
@@ -117,13 +191,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                   _buildDropdownButtonFormField(),
                                   SizedBox(height: screenHeight * 0.02),
                                   CustomTextField(
-                                    controller: _profilePictureController,
-                                    labelText: 'Profile Picture URL',
-                                    prefixIcon: Icon(CupertinoIcons.photo,
-                                        color: Colors.blue.shade600),
-                                  ),
-                                  SizedBox(height: screenHeight * 0.02),
-                                  CustomTextField(
                                     controller: _bioController,
                                     labelText: 'Bio',
                                     prefixIcon: Icon(CupertinoIcons.info,
@@ -136,12 +203,26 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                       ? const CircularProgressIndicator()
                                       : CustomButton(
                                           label: 'Continue',
-                                          onPressed: () {
+                                          onPressed: () async {
                                             if (_formKey.currentState!
                                                 .validate()) {
                                               setState(() {
                                                 _isLoading = true;
                                               });
+
+                                              String? imageUrl;
+                                              if (_profileImage != null) {
+                                                imageUrl = await _uploadImage(
+                                                    _profileImage!);
+                                              }
+
+                                              await _saveUserData(
+                                                  imageUrl ?? '');
+
+                                              setState(() {
+                                                _isLoading = false;
+                                              });
+
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -151,13 +232,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                                                           _selectedUserType,
                                                     ),
                                                   ));
-                                              Future.delayed(
-                                                  const Duration(seconds: 2),
-                                                  () {
-                                                setState(() {
-                                                  _isLoading = false;
-                                                });
-                                              });
                                             }
                                           },
                                         ),
@@ -184,6 +258,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       items: const [
         DropdownMenuItem(value: "Learner", child: Text("Learner")),
         DropdownMenuItem(value: "Instructor", child: Text("Instructor")),
+        DropdownMenuItem(
+            value: "Institute Owner", child: Text("Institute Owner")),
       ],
       onChanged: (value) {
         setState(() {

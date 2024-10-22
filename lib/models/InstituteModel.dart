@@ -1,4 +1,3 @@
-import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/models/CourseModel.dart';
 
 class InstituteModel {
@@ -11,8 +10,9 @@ class InstituteModel {
   final double? rating;
   final List<String>? reviews;
   final String? accreditation;
-  final List<InstructorModel> instructors;
-  final List<CourseModel> courses;
+  final String? bio; 
+  final List<String> instructorsID;
+  final List<String> coursesID;
 
   InstituteModel({
     required this.id,
@@ -24,8 +24,9 @@ class InstituteModel {
     this.rating,
     this.reviews,
     this.accreditation,
-    required this.instructors,
-    required this.courses,
+    this.bio, 
+    required this.instructorsID,
+    required this.coursesID,
   });
 
   factory InstituteModel.fromJson(Map<String, dynamic> json) {
@@ -39,10 +40,9 @@ class InstituteModel {
       rating: json['rating'],
       reviews: List<String>.from(json['reviews'] ?? []),
       accreditation: json['accreditation'],
-      instructors: List<InstructorModel>.from(
-          json['instructors']?.map((x) => InstructorModel.fromJson(x))),
-      courses: List<CourseModel>.from(
-          json['courses']?.map((x) => CourseModel.fromJson(x))),
+      bio: json['bio'], 
+      instructorsID: List<String>.from(json['instructorsID']),
+      coursesID: List<String>.from(json['coursesID']),
     );
   }
 
@@ -57,8 +57,9 @@ class InstituteModel {
       'rating': rating,
       'reviews': reviews,
       'accreditation': accreditation,
-      'instructors': instructors.map((x) => x.toJson()).toList(),
-      'courses': courses.map((x) => x.toJson()).toList(),
+      'bio': bio, 
+      'instructorsID': instructorsID,
+      'coursesID': coursesID,
     };
   }
 }

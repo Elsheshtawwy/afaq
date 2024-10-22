@@ -266,13 +266,13 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HomePage(),
+                                    builder: (context) => const HomePage(),
                                   ),
                                 );
                               } else {
                                 // Handle login failure (e.g., show a snackbar)
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text('Login failed')),
+                                  const SnackBar(content: Text('Login failed')),
                                 );
                               }
                             }
@@ -299,12 +299,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => HomePage(),
+                                        builder: (context) => const HomePage(),
                                       ),
                                     );
                                   } catch (e) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text('Google Sign-In failed')),
+                                      const SnackBar(content: Text('Google Sign-In failed')),
                                     );
                                   }
                                 },
@@ -329,7 +329,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => SignUpScreen(),
+                                    builder: (context) => const SignUpScreen(),
                                   ),
                                 );
                               },

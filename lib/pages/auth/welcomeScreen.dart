@@ -1,13 +1,34 @@
 import 'package:afaq/pages/auth/signup_screen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
+import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({
     super.key,
   });
+
+  Future<UserCredential> signInWithGoogle() async {
+    // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +106,7 @@ class WelcomeScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => SignUpScreen(),
+                          builder: (context) => const SignUpScreen(),
                         ),
                       );
                     },
@@ -106,7 +127,7 @@ class WelcomeScreen extends StatelessWidget {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
+                          builder: (context) => const LoginScreen(),
                         ),
                       );
                     },
@@ -134,9 +155,21 @@ class WelcomeScreen extends StatelessWidget {
                           'assets/socialLogos/light/facebook.png',
                         ],
                         [
-                          () {
-                            // Google Sign In
-                          },
+                          () async {
+                                  try {
+                                    await signInWithGoogle();
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => const HomePage(),
+                                      ),
+                                    );
+                                  } catch (e) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(content: Text('Google Sign-In failed')),
+                                    );
+                                  }
+                                },
                           () {
                             // Facebook Sign In
                           }

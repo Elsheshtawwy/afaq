@@ -3,5 +3,6 @@
     "cSpell.words": [
         "Categoriesscreen"
     ],
-    "java.configuration.updateBuildConfiguration": "automatic"
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "cmake.sourceDirectory": "C:/Users/Lenovo/flutter_projects/afaq/windows"
 }

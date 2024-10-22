@@ -1,4 +1,5 @@
 import 'package:afaq/models/InstituteModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class InstituteCardHome extends StatelessWidget {
@@ -35,8 +36,10 @@ class InstituteCardHome extends StatelessWidget {
               topLeft: Radius.circular(16),
               topRight: Radius.circular(16),
             ),
-            child: Image.asset(
-              institute.logoUrl ?? 'assets/default_logo.png',
+            child: CachedNetworkImage(
+              imageUrl: institute.logoUrl ?? 'assets/default_logo.png',
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => Image.asset('assets/default_logo.png'),
               height: 120,
               width: double.infinity,
               fit: BoxFit.cover,

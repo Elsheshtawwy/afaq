@@ -1,5 +1,6 @@
 import 'package:afaq/models/CourseModel.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CourseCard extends StatelessWidget {
   final CourseModel course;
@@ -32,12 +33,13 @@ class CourseCard extends StatelessWidget {
         child: Row(
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 90,
+              height: 90,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
-                  image: NetworkImage(course.imageUrl?.toString() ?? ''),
+                  image: CachedNetworkImageProvider(
+                      course.imageUrl![0].toString() ?? ''),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -67,20 +69,21 @@ class CourseCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        course.price?.toString() ?? '',
+                        '\$${course.price?.toString() ?? ''}',
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      Text(
-                        course.oldPrice?.toString() ?? '',
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough,
+                      if (course.oldPrice != null)
+                        Text(
+                          '\$${course.oldPrice?.toString() ?? ''}',
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            decoration: TextDecoration.lineThrough,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                   const SizedBox(height: 8),
@@ -90,7 +93,7 @@ class CourseCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Text('${course.rating ?? 0}'),
                       const Spacer(),
-                      Text('${course.students ?? 0} Std'),
+                      Text('${course.numberOfRatings ?? 0} Std'),
                     ],
                   ),
                 ],
@@ -98,7 +101,9 @@ class CourseCard extends StatelessWidget {
             ),
             IconButton(
               icon: const Icon(Icons.bookmark_border),
-              onPressed: () {},
+              onPressed: () {
+                // Add bookmark functionality here
+              },
             ),
           ],
         ),

@@ -22,7 +22,7 @@ void main() async {
             create: (_) => DarkModeProvider()),
         ChangeNotifierProvider<Auth_Provider>(create: (_) => Auth_Provider())
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -35,6 +35,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+
+  
   @override
   void initState() {
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
@@ -62,7 +64,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4667FD)),
         useMaterial3: true,
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

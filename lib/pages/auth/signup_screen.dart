@@ -1,5 +1,6 @@
 import 'package:afaq/pages/auth/UserInfoScreen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
+import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
@@ -47,7 +48,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
         if (result) {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => UserInfoScreen()),
+            MaterialPageRoute(builder: (context) => const UserInfoScreen()),
           );
         }
       } catch (e) {
@@ -61,7 +62,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -140,8 +142,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Widget _buildWelcomeText() {
-    return Column(
-      children: const [
+    return const Column(
+      children: [
         Text(
           'Welcome!',
           style: TextStyle(
@@ -283,8 +285,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 'assets/socialLogos/light/facebook.png',
               ],
               [
-                () {
-                  signInWithGoogle();
+                () async {
+                  try {
+                    await signInWithGoogle();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
+                  } catch (e) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Google Sign-In failed')),
+                    );
+                  }
                 },
                 () {
                   // Facebook Sign In
@@ -319,7 +333,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginScreen()));
+                  MaterialPageRoute(builder: (context) => const LoginScreen()));
             },
           ),
         ),

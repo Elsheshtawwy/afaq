@@ -48,6 +48,12 @@ dependencies:
   shared_preferences:
   provider:
   awesome_dialog:
+  image_picker: 
+  cached_network_image:
+  flutter_cache_manager:
+  sqflite:
+  path_provider:
+  permission_handler:
 
 
  
@@ -81,6 +87,7 @@ flutter:
   assets:
     - assets/
     - assets/images/
+    - assets/icons/
     - assets/categories/
     - assets/socialLogos/dark/
     - assets/socialLogos/light/

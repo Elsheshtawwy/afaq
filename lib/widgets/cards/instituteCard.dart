@@ -1,4 +1,5 @@
 import 'package:afaq/models/InstituteModel.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class InstituteCard extends StatelessWidget {
@@ -35,8 +36,9 @@ class InstituteCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
                   image: institute.logoUrl != null
-                      ? NetworkImage(institute.logoUrl!)
-                      : const AssetImage('assets/default_logo.png') as ImageProvider,
+                      ? CachedNetworkImageProvider(institute.logoUrl!)
+                      : const AssetImage('assets/default_logo.png')
+                          as ImageProvider,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -69,14 +71,6 @@ class InstituteCard extends StatelessWidget {
                     const SizedBox(width: 3),
                     Text(
                       institute.rating?.toStringAsFixed(1) ?? 'N/A',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '(${institute.reviews ?? 0})',
                       style: TextStyle(
                         color: Colors.grey[600],
                         fontSize: 14,
