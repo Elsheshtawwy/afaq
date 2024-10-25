@@ -8,10 +8,10 @@ import 'package:flutter/material.dart';
 
 class CoursesScreen extends StatelessWidget {
   final List<CourseModel> courses;
-    final List<InstructorModel> instructors;
+  final List<InstructorModel> instructors;
 
-
-  const CoursesScreen({super.key, required this.courses, required this.instructors});
+  const CoursesScreen(
+      {super.key, required this.courses, required this.instructors});
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +58,12 @@ class CoursesScreen extends StatelessWidget {
       itemBuilder: (context, index) {
         final course = courses[index];
         return CourseCard(
-         course: courses[index],
+          course: courses[index],
           onTap: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => CourseDetailsScreen(course: course, instructors: instructors),
+                builder: (context) => CourseDetailsScreen(course: course),
               ),
             );
           },

@@ -15,7 +15,7 @@ class UserModel {
   final DateTime joinedDate;
   final Map<String, dynamic>? paymentDetails;
   final bool isVerified;
-  final String? gender; // Added gender field
+  final String? gender; 
 
   UserModel({
     required this.id,
@@ -34,7 +34,7 @@ class UserModel {
     this.preferences,
     this.paymentDetails,
     this.isVerified = false,
-    this.gender, // Added gender field
+    this.gender, 
   });
 
   // JSON serialization
@@ -56,7 +56,7 @@ class UserModel {
       preferences: json['preferences'],
       paymentDetails: json['paymentDetails'],
       isVerified: json['isVerified'] ?? false,
-      gender: json['gender'], // Added gender field
+      gender: json['gender'], 
     );
   }
 
@@ -78,7 +78,7 @@ class UserModel {
       'joinedDate': joinedDate.toIso8601String(),
       'paymentDetails': paymentDetails,
       'isVerified': isVerified,
-      'gender': gender, // Added gender field
+      'gender': gender, 
     };
   }
 
@@ -100,7 +100,7 @@ class UserModel {
     DateTime? joinedDate,
     Map<String, dynamic>? paymentDetails,
     bool? isVerified,
-    String? gender, // Added gender field
+    String? gender, 
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -119,7 +119,7 @@ class UserModel {
       preferences: preferences ?? this.preferences,
       paymentDetails: paymentDetails ?? this.paymentDetails,
       isVerified: isVerified ?? this.isVerified,
-      gender: gender ?? this.gender, // Added gender field
+      gender: gender ?? this.gender, 
     );
   }
 }

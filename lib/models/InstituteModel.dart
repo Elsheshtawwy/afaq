@@ -1,4 +1,5 @@
 import 'package:afaq/models/CourseModel.dart';
+import 'package:afaq/models/InstructorModel.dart';
 
 class InstituteModel {
   final String id;
@@ -10,9 +11,10 @@ class InstituteModel {
   final double? rating;
   final List<String>? reviews;
   final String? accreditation;
-  final String? bio; 
-  final List<String> instructorsID;
-  final List<String> coursesID;
+  final String? bio;
+  final List<InstructorModel>? instructors;
+  final List<CourseModel>? courses;
+  final List<String>? images; 
 
   InstituteModel({
     required this.id,
@@ -24,25 +26,31 @@ class InstituteModel {
     this.rating,
     this.reviews,
     this.accreditation,
-    this.bio, 
-    required this.instructorsID,
-    required this.coursesID,
+    this.bio,
+    this.instructors,
+    this.courses,
+    this.images, 
   });
 
   factory InstituteModel.fromJson(Map<String, dynamic> json) {
     return InstituteModel(
-      id: json['id'],
-      name: json['name'],
-      address: json['address'],
-      contactNumbers: List<String>.from(json['contactNumbers']),
-      email: json['email'],
-      logoUrl: json['logoUrl'],
-      rating: json['rating'],
+      id: json['id'] as String,
+      name: json['name'] as String,
+      address: json['address'] as String,
+      contactNumbers: List<String>.from(json['contactNumbers'] ?? []),
+      email: json['email'] as String?,
+      logoUrl: json['logoUrl'] as String?,
+      rating: (json['rating'] as num?)?.toDouble(),
       reviews: List<String>.from(json['reviews'] ?? []),
-      accreditation: json['accreditation'],
-      bio: json['bio'], 
-      instructorsID: List<String>.from(json['instructorsID']),
-      coursesID: List<String>.from(json['coursesID']),
+      accreditation: json['accreditation'] as String?,
+      bio: json['bio'] as String?,
+      instructors: (json['instructors'] as List<dynamic>?)
+          ?.map((i) => InstructorModel.fromJson(i as Map<String, dynamic>))
+          .toList(),
+      courses: (json['courses'] as List<dynamic>?)
+          ?.map((c) => CourseModel.fromJson(c as Map<String, dynamic>))
+          .toList(),
+      images: List<String>.from(json['images'] ?? []), 
     );
   }
 
@@ -57,9 +65,10 @@ class InstituteModel {
       'rating': rating,
       'reviews': reviews,
       'accreditation': accreditation,
-      'bio': bio, 
-      'instructorsID': instructorsID,
-      'coursesID': coursesID,
+      'bio': bio,
+      'instructors': instructors?.map((i) => i.toJson()).toList(),
+      'courses': courses?.map((c) => c.toJson()).toList(),
+      'images': images, 
     };
   }
 }

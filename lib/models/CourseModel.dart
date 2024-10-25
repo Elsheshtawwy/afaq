@@ -1,3 +1,4 @@
+import 'package:afaq/models/InstructorModel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CourseModel {
@@ -12,7 +13,6 @@ class CourseModel {
   final double? oldPrice;
   final double? rating;
   final List<String>? imageUrl;
-  final String? mainImage; 
   final int? reviews;
   final int? classes;
   final int? hours;
@@ -26,9 +26,9 @@ class CourseModel {
   final int? targetStudents;
   final String? level;
   final bool? isOnline;
-  final List<String>? instructorIds;
+  final List<InstructorModel>? instructors;
   final String? address;
-  final int? numberOfRatings; 
+  final int? numberOfRatings;
 
   CourseModel({
     required this.id,
@@ -42,7 +42,6 @@ class CourseModel {
     this.oldPrice,
     this.rating,
     this.imageUrl,
-    this.mainImage, // Added field
     this.reviews,
     this.classes,
     this.hours,
@@ -56,9 +55,9 @@ class CourseModel {
     this.targetStudents,
     this.level,
     this.isOnline,
-    this.instructorIds,
+    this.instructors,
     this.address,
-    this.numberOfRatings, // Added field
+    this.numberOfRatings,
   });
 
   factory CourseModel.fromJson(Map<String, dynamic> json) {
@@ -79,43 +78,28 @@ class CourseModel {
       rating: (json['rating'] as num?)?.toDouble(),
       imageUrl: json['imageUrl'] is String
           ? [json['imageUrl'] as String]
-          : (json['imageUrl'] as List<dynamic>?)
-              ?.map((e) => e as String)
-              .toList(),
-      mainImage: json['mainImage'] as String?, // Added field
+          : (json['imageUrl'] as List<dynamic>?)?.map((e) => e as String).toList(),
       reviews: json['reviews'] as int?,
       classes: json['classes'] as int?,
       hours: json['hours'] as int?,
       about: json['about'] as String?,
-      features: (json['features'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
+      features: (json['features'] as List<dynamic>?)?.map((e) => e as String).toList(),
       reviewsList: (json['reviewsList'] as List<dynamic>?)
           ?.map((e) => Map<String, String>.from(e as Map))
           .toList(),
-      objectives: (json['objectives'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      requirements: (json['requirements'] as List<dynamic>?)
-          ?.map((e) => e as String)
-          .toList(),
-      lessons:
-          (json['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      objectives: (json['objectives'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      requirements: (json['requirements'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      lessons: (json['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
       currentStudents: json['currentStudents'] as int?,
       targetStudents: json['targetStudents'] as int?,
       level: json['level'] as String?,
       isOnline: json['isOnline'] as bool?,
-      instructorIds: (json['instructorIds'] as List<dynamic>?)
-          ?.map((e) => e as String)
+      instructors: (json['instructors'] as List<dynamic>?)
+          ?.map((e) => InstructorModel.fromJson(e as Map<String, dynamic>))
           .toList(),
       address: json['address'] as String?,
-      numberOfRatings: json['numberOfRatings'] as int?, // Added field
+      numberOfRatings: json['numberOfRatings'] as int?,
     );
-  }
-
-  factory CourseModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return CourseModel.fromJson(data);
   }
 
   Map<String, dynamic> toJson() {
@@ -131,7 +115,6 @@ class CourseModel {
       'oldPrice': oldPrice,
       'rating': rating,
       'imageUrl': imageUrl,
-      'mainImage': mainImage, // Added field
       'reviews': reviews,
       'classes': classes,
       'hours': hours,
@@ -145,10 +128,15 @@ class CourseModel {
       'targetStudents': targetStudents,
       'level': level,
       'isOnline': isOnline,
-      'instructorIds': instructorIds,
+      'instructors': instructors?.map((e) => e.toJson()).toList(),
       'address': address,
-      'numberOfRatings': numberOfRatings, // Added field
+      'numberOfRatings': numberOfRatings,
     };
+  }
+
+  factory CourseModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return CourseModel.fromJson(data);
   }
 
   Map<String, dynamic> toFirestore() {
@@ -167,7 +155,6 @@ class CourseModel {
     double? oldPrice,
     double? rating,
     List<String>? imageUrl,
-    String? mainImage, // Added field
     int? reviews,
     int? classes,
     int? hours,
@@ -181,9 +168,9 @@ class CourseModel {
     int? targetStudents,
     String? level,
     bool? isOnline,
-    List<String>? instructorIds,
+    List<InstructorModel>? instructors,
     String? address,
-    int? numberOfRatings, // Added field
+    int? numberOfRatings,
   }) {
     return CourseModel(
       id: id ?? this.id,
@@ -197,7 +184,6 @@ class CourseModel {
       oldPrice: oldPrice ?? this.oldPrice,
       rating: rating ?? this.rating,
       imageUrl: imageUrl ?? this.imageUrl,
-      mainImage: mainImage ?? this.mainImage, // Added field
       reviews: reviews ?? this.reviews,
       classes: classes ?? this.classes,
       hours: hours ?? this.hours,
@@ -211,9 +197,9 @@ class CourseModel {
       targetStudents: targetStudents ?? this.targetStudents,
       level: level ?? this.level,
       isOnline: isOnline ?? this.isOnline,
-      instructorIds: instructorIds ?? this.instructorIds,
+      instructors: instructors ?? this.instructors,
       address: address ?? this.address,
-      numberOfRatings: numberOfRatings ?? this.numberOfRatings, 
+      numberOfRatings: numberOfRatings ?? this.numberOfRatings,
     );
   }
 }

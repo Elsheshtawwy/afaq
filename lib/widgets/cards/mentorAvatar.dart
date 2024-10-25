@@ -31,14 +31,14 @@ class MentorAvatar extends StatelessWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(50),
-              child: instructor.profilePicture != null && instructor.profilePicture.isNotEmpty
+              child: instructor.profilePicture.isNotEmpty
                   ? CachedNetworkImage(
                       imageUrl: instructor.profilePicture,
-                      placeholder: (context, url) => CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => Icon(Icons.error),
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
                       fit: BoxFit.cover,
                     )
-                  : Icon(Icons.person, size: 50, color: Colors.grey),
+                  : const Icon(Icons.person, size: 50, color: Colors.grey),
             ),
           ),
           const SizedBox(height: 12),

@@ -1,10 +1,18 @@
-import 'package:afaq/pages/Onboarding/splash_screen.dart';
-import 'package:afaq/providers/auth_provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:afaq/pages/auth/FeedScreen.dart';
+import 'package:afaq/pages/auth/UserInfoScreen.dart';
+import 'package:afaq/pages/mainScreens/InstitutesDetailsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
+
+import 'firebase_options.dart';
+import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
+import 'package:afaq/pages/splash/splash_screen.dart';
+import 'package:afaq/pages/auth/login_screen.dart';
+import 'package:afaq/pages/auth/signup_screen.dart';
+import 'package:afaq/pages/mainScreens/home_screen.dart';
+import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/providers/base_provider.dart';
 import 'package:afaq/providers/dark_mode_provider.dart';
 
@@ -20,7 +28,7 @@ void main() async {
         ChangeNotifierProvider<BaseProvider>(create: (_) => BaseProvider()),
         ChangeNotifierProvider<DarkModeProvider>(
             create: (_) => DarkModeProvider()),
-        ChangeNotifierProvider<Auth_Provider>(create: (_) => Auth_Provider())
+        ChangeNotifierProvider<Auth_Provider>(create: (_) => Auth_Provider()),
       ],
       child: const MyApp(),
     ),
@@ -35,18 +43,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-  
   @override
   void initState() {
+    super.initState();
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user == null) {
-        print('***********************User is currently signed out!');
+        debugPrint('User is currently signed out!');
       } else {
-        print('***********************User is signed in!');
+        debugPrint('User is signed in!');
       }
     });
-    super.initState();
   }
 
   @override
@@ -54,17 +60,32 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Afaq',
-      theme: ThemeData(
-        scaffoldBackgroundColor: const Color(0xFFF5F9FF),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color(0xFFF5F9FF),
-          elevation: 0,
-        ),
-        primaryColor: const Color(0xFF4667FD),
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4667FD)),
-        useMaterial3: true,
+      theme: _buildThemeData(),
+      home:  const HomePage(),
+      routes: {
+        '/splash': (context) => const SplashScreen(),
+        '/login': (context) => const LoginScreen(),
+        '/signup': (context) => const SignUpScreen(),
+        '/onboarding': (context) => const OnboardingScreen(),
+        '/home': (context) => const HomePage(),
+        '/feed': (context) => const FeedScreen(
+              selectedUserType: 'Learner',
+            ),
+        '/userInfo': (context) => const UserInfoScreen(),
+      },
+    );
+  }
+
+  ThemeData _buildThemeData() {
+    return ThemeData(
+      scaffoldBackgroundColor: const Color(0xFFF5F9FF),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Color(0xFFF5F9FF),
+        elevation: 0,
       ),
-      home: const SplashScreen(),
+      primaryColor: const Color(0xFF4667FD),
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4667FD)),
+      useMaterial3: true,
     );
   }
 }

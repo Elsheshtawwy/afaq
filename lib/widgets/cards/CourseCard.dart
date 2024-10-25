@@ -1,8 +1,11 @@
 import 'package:afaq/models/CourseModel.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class CourseCard extends StatelessWidget {
+class CourseCard extends StatefulWidget {
   final CourseModel course;
   final VoidCallback onTap;
 
@@ -13,9 +16,66 @@ class CourseCard extends StatelessWidget {
   });
 
   @override
+  _CourseCardState createState() => _CourseCardState();
+}
+
+class _CourseCardState extends State<CourseCard> {
+  bool isBookmarked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkIfBookmarked();
+  }
+
+  Future<void> _checkIfBookmarked() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final snapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user.uid)
+        .get();
+
+    List<dynamic> likedCourses = snapshot.data()?['likedCourses'] ?? [];
+    setState(() {
+      isBookmarked = likedCourses.contains(widget.course.id);
+    });
+  }
+
+  void _toggleBookmark() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final userDoc = FirebaseFirestore.instance.collection('users').doc(user.uid);
+    final snapshot = await userDoc.get();
+    List<dynamic> likedCourses = snapshot.data()?['likedCourses'] ?? [];
+
+    setState(() {
+      if (isBookmarked) {
+        likedCourses.remove(widget.course.id);
+      } else {
+        likedCourses.add(widget.course.id);
+      }
+      isBookmarked = !isBookmarked;
+    });
+
+    await userDoc.update({'likedCourses': likedCourses});
+
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.bottomSlide,
+      title: 'Success',
+      desc: isBookmarked ? 'Added to bookmarks' : 'Removed from bookmarks',
+      btnOkOnPress: () {},
+    ).show();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: widget.onTap,
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         padding: const EdgeInsets.all(12.0),
@@ -39,7 +99,7 @@ class CourseCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(
-                      course.imageUrl![0].toString() ?? ''),
+                      widget.course.imageUrl![0].toString() ?? ''),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -50,7 +110,7 @@ class CourseCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    course.category ?? '',
+                    widget.course.category ?? '',
                     style: const TextStyle(
                       color: Colors.orange,
                       fontSize: 12,
@@ -59,7 +119,7 @@ class CourseCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    course.title ?? '',
+                    widget.course.title ?? '',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -69,16 +129,16 @@ class CourseCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        '\$${course.price?.toString() ?? ''}',
+                        '\$${widget.course.price?.toString() ?? ''}',
                         style: const TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(width: 8),
-                      if (course.oldPrice != null)
+                      if (widget.course.oldPrice != null)
                         Text(
-                          '\$${course.oldPrice?.toString() ?? ''}',
+                          '\$${widget.course.oldPrice?.toString() ?? ''}',
                           style: const TextStyle(
                             color: Colors.grey,
                             decoration: TextDecoration.lineThrough,
@@ -91,19 +151,20 @@ class CourseCard extends StatelessWidget {
                     children: [
                       const Icon(Icons.star, color: Colors.yellow, size: 16),
                       const SizedBox(width: 4),
-                      Text('${course.rating ?? 0}'),
+                      Text('${widget.course.rating ?? 0}'),
                       const Spacer(),
-                      Text('${course.numberOfRatings ?? 0} Std'),
+                      Text('${widget.course.numberOfRatings ?? 0} Std'),
                     ],
                   ),
                 ],
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.bookmark_border),
-              onPressed: () {
-                // Add bookmark functionality here
-              },
+              icon: Icon(
+                isBookmarked ? Icons.bookmark : Icons.bookmark_border,
+                color: isBookmarked ? Colors.green : null,
+              ),
+              onPressed: _toggleBookmark,
             ),
           ],
         ),

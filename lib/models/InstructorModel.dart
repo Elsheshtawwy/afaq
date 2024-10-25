@@ -1,37 +1,39 @@
+import 'dart:core';
+
+import 'package:afaq/models/InstituteModel.dart';
+import 'package:afaq/models/CourseModel.dart'; 
 
 class InstructorModel {
   final String id;
   final String name;
   final String email;
   final String phoneNumber;
-  final String department;
   final String profilePicture;
-  final List<String> institutesID;
-  final List<String>? coursesTaught;
+  final List<InstituteModel>? institutes;
+  final List<CourseModel>? coursesTaught; 
   final List<String>? qualifications;
   final String? bio;
   final int? experienceYears;
   final String? gender;
-  final List<String>? experiences; 
-  final String? specialization; 
-  final bool? isVerified; 
+  final List<String>? experiences;
+  final bool? isVerified;
+  final String? jobTitle;
 
   InstructorModel({
     required this.id,
     required this.name,
     required this.email,
     required this.phoneNumber,
-    required this.department,
     required this.profilePicture,
-    required this.institutesID,
+    this.institutes,
     this.coursesTaught,
     this.qualifications,
     this.bio,
     this.experienceYears,
-    this.gender, 
-    this.experiences, 
-    this.specialization, 
-    this.isVerified, 
+    this.gender,
+    this.experiences,
+    this.isVerified,
+    this.jobTitle,
   });
 
   factory InstructorModel.fromJson(Map<String, dynamic> json) {
@@ -40,17 +42,20 @@ class InstructorModel {
       name: json['name'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      department: json['department'],
       profilePicture: json['profilePicture'],
-      institutesID: List<String>.from(json['institutesID']),
-      coursesTaught: json['coursesTaught'] != null ? List<String>.from(json['coursesTaught']) : null,
+      institutes: (json['institutes'] as List)
+          .map((i) => InstituteModel.fromJson(i))
+          .toList(),
+      coursesTaught: (json['coursesTaught'] as List?)
+          ?.map((c) => CourseModel.fromJson(c))
+          .toList(), 
       qualifications: json['qualifications'] != null ? List<String>.from(json['qualifications']) : null,
       bio: json['bio'],
       experienceYears: json['experienceYears'],
       gender: json['gender'],
       experiences: json['experiences'] != null ? List<String>.from(json['experiences']) : null,
-      specialization: json['specialization'],
       isVerified: json['isVerified'],
+      jobTitle: json['jobTitle'],
     );
   }
 
@@ -60,17 +65,16 @@ class InstructorModel {
       'name': name,
       'email': email,
       'phoneNumber': phoneNumber,
-      'department': department,
       'profilePicture': profilePicture,
-      'institutesID': institutesID,
-      'coursesTaught': coursesTaught,
+      'institutes': institutes!.map((i) => i.toJson()).toList(),
+      'coursesTaught': coursesTaught?.map((c) => c.toJson()).toList(), 
       'qualifications': qualifications,
       'bio': bio,
       'experienceYears': experienceYears,
       'gender': gender,
       'experiences': experiences,
-      'specialization': specialization,
       'isVerified': isVerified,
+      'jobTitle': jobTitle,
     };
   }
 }

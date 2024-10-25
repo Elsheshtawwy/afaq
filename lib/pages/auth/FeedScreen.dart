@@ -1,5 +1,4 @@
-import 'package:afaq/pages/Onboarding/onboarding1.dart';
-import 'package:afaq/pages/mainScreens/home_screen.dart';
+import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -66,8 +65,8 @@ class _FeedScreenState extends State<FeedScreen> {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      await user.reload(); // تحديث حالة المستخدم
-      return user.emailVerified; // تحقق مما إذا كان البريد الإلكتروني تم التحقق منه
+      await user.reload(); 
+      return user.emailVerified; 
     }
     return false;
   }
@@ -275,11 +274,10 @@ class _FeedScreenState extends State<FeedScreen> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                       OnboardingScreen(),
+                                                       const OnboardingScreen(),
                                                 ),
                                               );
                                             } else {
-                                              // عرض رسالة خطأ أو تنفيذ إجراء آخر
                                               ScaffoldMessenger.of(context)
                                                   .showSnackBar(
                                                 const SnackBar(

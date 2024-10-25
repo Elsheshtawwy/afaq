@@ -1,4 +1,3 @@
-import 'package:afaq/pages/auth/FeedScreen.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -8,10 +7,11 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
 class UserEditInfoScreen extends StatefulWidget {
+  const UserEditInfoScreen({super.key});
+
   @override
   _UserEditInfoScreenState createState() => _UserEditInfoScreenState();
 }

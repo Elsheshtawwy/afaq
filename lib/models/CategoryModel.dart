@@ -9,7 +9,6 @@ class CategoryModel {
     required this.imageUrl,
   });
 
-  // Factory method to create a CategoryModel from a map
   factory CategoryModel.fromMap(Map<String, dynamic> map) {
     return CategoryModel(
       id: map['id'],
@@ -18,7 +17,6 @@ class CategoryModel {
     );
   }
 
-  // Method to convert a CategoryModel to a map
   Map<String, dynamic> toMap() {
     return {
       'id': id,

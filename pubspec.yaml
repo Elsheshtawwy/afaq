@@ -52,8 +52,11 @@ dependencies:
   cached_network_image:
   flutter_cache_manager:
   sqflite:
+  intl:
   path_provider:
   permission_handler:
+  path:
+  
 
 
  

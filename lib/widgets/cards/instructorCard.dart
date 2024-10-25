@@ -24,7 +24,7 @@ class InstructorCard extends StatelessWidget {
           children: [
             CircleAvatar(
                 radius: 32,
-                backgroundImage: CachedNetworkImageProvider(instructor.profilePicture), // Assuming profilePicture is part of InstructorModel
+                backgroundImage: CachedNetworkImageProvider(instructor.profilePicture), 
             ),
             const SizedBox(width: 16),
             Expanded(
@@ -41,7 +41,7 @@ class InstructorCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    instructor.department, // Displaying department instead of title
+                    instructor.jobTitle.toString(), // Displaying department instead of title
                     style: const TextStyle(
                       color: Colors.grey,
                       fontSize: 16,

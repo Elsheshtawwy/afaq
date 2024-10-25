@@ -4,7 +4,9 @@ import 'package:afaq/models/InstituteModel.dart';
 import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/pages/mainScreens/CourseDetailsPage.dart';
+import 'package:afaq/pages/mainScreens/InstitutesDetailsScreen.dart';
 import 'package:afaq/pages/mainScreens/InstitutesScreen.dart';
+import 'package:afaq/pages/mainScreens/InstructorDetailsScreen.dart';
 import 'package:afaq/pages/mainScreens/UserInfoScreen.dart';
 import 'package:afaq/pages/mainScreens/categoriesScreen.dart';
 import 'package:afaq/pages/mainScreens/CoursesScreen.dart';
@@ -13,6 +15,7 @@ import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/CourseCardHome.dart';
 import 'package:afaq/widgets/cards/instituteCardHome.dart';
+import 'package:afaq/widgets/cards/likedCourses.dart';
 import 'package:afaq/widgets/cards/mentorAvatar.dart';
 import 'package:afaq/widgets/categoryFilters.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -128,7 +131,7 @@ class _HomePageState extends State<HomePage> {
       id: '1',
       title: 'Introduction to Programming',
       description: 'Learn the basics of programming using Python.',
-      instructorIds: ['Ahmed Al-Farsi'],
+      instructors: [],
       startDate: DateTime(2023, 10, 1),
       endDate: DateTime(2023, 12, 1),
       category: 'Programming',
@@ -137,7 +140,11 @@ class _HomePageState extends State<HomePage> {
       oldPrice: 150.0,
       rating: 4.5,
       imageUrl: [
-        'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg'
+        'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg',
+        "https://modo3.com/thumbs/fit630x300/258361/1691981178/%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A7%D8%AA_%D8%AA%D8%B9%D9%84%D9%85_%D8%A7%D9%84%D9%84%D8%BA%D8%A9_%D8%A7%D9%84%D8%A5%D9%86%D8%AC%D9%84%D9%8A%D8%B2%D9%8A%D8%A9.jpg",
+        'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg',
+        "https://modo3.com/thumbs/fit630x300/258361/1691981178/%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A7%D8%AA_%D8%AA%D8%B9%D9%84%D9%85_%D8%A7%D9%84%D9%84%D8%BA%D8%A9_%D8%A7%D9%84%D8%A5%D9%86%D8%AC%D9%84%D9%8A%D8%B2%D9%8A%D8%A9.jpg",
+        'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg',
       ],
       reviews: 120,
       classes: 10,
@@ -163,7 +170,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Learn English',
       description:
           'Improve your English language skills with this comprehensive course.',
-      instructorIds: ['Fatima Al-Mansouri'],
+      instructors: [],
       startDate: DateTime(2023, 11, 1),
       endDate: DateTime(2024, 1, 1),
       category: 'English',
@@ -200,7 +207,7 @@ class _HomePageState extends State<HomePage> {
       id: '3',
       title: 'Data Science with Python',
       description: 'Learn data science concepts and techniques using Python.',
-      instructorIds: ['Hassan Al-Haddad'],
+      instructors: [],
       startDate: DateTime(2023, 12, 1),
       endDate: DateTime(2024, 2, 1),
       category: 'Data Science',
@@ -238,7 +245,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Web Development Bootcamp',
       description:
           'Become a full-stack web developer with this comprehensive bootcamp.',
-      instructorIds: ['Layla Al-Najjar'],
+      instructors: [],
       startDate: DateTime(2023, 10, 15),
       endDate: DateTime(2024, 1, 15),
       category: 'Web Development',
@@ -248,7 +255,7 @@ class _HomePageState extends State<HomePage> {
       rating: 4.9,
       imageUrl: [
         'https://camo.githubusercontent.com/db746ba4bb5946ea2c6646e6b758f9c036f59385449c92e02cdf63f0200429c8/68747470733a2f2f7777772e63726561746976656974696e737469747574652e636f6d2f696d616765732f636f757273652f636f757273655f313636333035323035362e6a7067',
-        'https://miro.medium.com/v2/resize:fit:1200/1*V-Jp13LvtVc2IiY2fp4qYw.jpeg'
+        'https://miro.medium.com/v2/resize:fit:1200/1*V-Jp13LvtVc2IiY2fp4qYw.jpeg',
       ],
       reviews: 250,
       classes: 25,
@@ -278,7 +285,7 @@ class _HomePageState extends State<HomePage> {
       title: 'Machine Learning with Python',
       description:
           'Master machine learning concepts and techniques using Python.',
-      instructorIds: ['Mohammed Al-Salem'],
+      instructors: [],
       startDate: DateTime(2023, 11, 15),
       endDate: DateTime(2024, 2, 15),
       category: 'Machine Learning',
@@ -323,100 +330,131 @@ class _HomePageState extends State<HomePage> {
       name: 'Ahmed Al-Farsi',
       email: 'ahmed.alfarsi@example.com',
       phoneNumber: '123-456-7890',
-      department: 'Computer Science',
       profilePicture:
-          'https://www.ascm.org/globalassets/ascm_website_assets/img/2-5-how-do-i-apply-block.jpg',
-      institutesID: ['Institute A', 'Institute B'],
+          'https://www.uned.es/universidad/.imaging/mte/home-nueva-theme/761x691/dam/recursos-corporativos/personas-genericas/profesores-(2).jpg/jcr:content/profesores-(2).jpg',
+      institutes: [],
+      coursesTaught: [
+        CourseModel(
+            id: '1',
+            title: 'Introduction to Programming',
+            description: 'Learn the basics of programming using Python.',
+            instructors: [],
+            startDate: DateTime(2023, 10, 1),
+            endDate: DateTime(2023, 12, 1),
+            category: 'Programming',
+            subtitle: 'A beginner-friendly course on programming.',
+            price: 100.0,
+            oldPrice: 150.0,
+            rating: 4.5,
+            imageUrl: [
+              'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg',
+              "https://modo3.com/thumbs/fit630x300/258361/1691981178/%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A7%D8%AA_%D8%AA%D8%B9%D9%84%D9%85_%D8%A7%D9%84%D9%84%D8%BA%D8%A9_%D8%A7%D9%84%D8%A5%D9%86%D8%AC%D9%84%D9%8A%D8%B2%D9%8A%D8%A9.jpg",
+              'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg',
+              'https://modo3.com/thumbs/fit630x300/258361/1691981178/%D8%A3%D8%B3%D8%A7%D8%B3%D9%8A%D8%A7%D8%AA_%D8%AA%D8%B9%D9%84%D9%85_%D8%A7%D9%84%D9%84%D8%BA%D8%A9_%D8%A7%D9%84%D8%A5%D9%86%D8%AC%D9%84%D9%8A%D8%B2%D9%8A%D8%A9.jpg',
+              'https://johnthecomputerman.co.uk/storage/2021/05/introtoprogramming-190909184629-thumbnail-4.jpg',
+            ],
+            reviews: 120,
+            classes: 10,
+            hours: 30,
+            about: 'This course covers the fundamentals of programming.')
+      ],
+      qualifications: ['PhD in Computer Science', 'MSc in Data Science'],
+      bio:
+          'Dr. Ahmed Al-Farsi is an experienced instructor in programming and data science.',
+      experienceYears: 10,
+      gender: 'Male',
+      experiences: ['Worked at XYZ University', 'Published 5 research papers'],
+      jobTitle: 'Computer Science',
     ),
     InstructorModel(
       id: '2',
       name: 'Fatima Al-Mansouri',
       email: 'fatima.almansouri@example.com',
       phoneNumber: '123-456-7891',
-      department: 'Mathematics',
+      jobTitle: 'Mathematics',
       profilePicture:
           'https://www.uned.es/universidad/.imaging/mte/home-nueva-theme/761x691/dam/recursos-corporativos/personas-genericas/profesores-(2).jpg/jcr:content/profesores-(2).jpg',
-      institutesID: ['Institute C', 'Institute D'],
+      institutes: [],
     ),
     InstructorModel(
       id: '3',
       name: 'Hassan Al-Haddad',
       email: 'hassan.alhaddad@example.com',
       phoneNumber: '123-456-7892',
-      department: 'Physics',
+      jobTitle: 'Physics',
       profilePicture:
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1TYP78ZMERVzy0ubkh42BY0jTYFKCklKa_pn2F538eYBhv0k3Xos6FI6VSGwpslYOerQ&usqp=CAU',
-      institutesID: ['Institute E', 'Institute F'],
+      institutes: [],
     ),
     InstructorModel(
       id: '4',
       name: 'Layla Al-Najjar',
       email: 'layla.alnajjar@example.com',
       phoneNumber: '123-456-7893',
-      department: 'Chemistry',
+      jobTitle: 'Chemistry',
       profilePicture:
           'https://www.uned.es/universidad/.imaging/mte/home-nueva-theme/761x691/dam/recursos-corporativos/personas-genericas/profesores-(2).jpg/jcr:content/profesores-(2).jpg',
-      institutesID: ['Institute G', 'Institute H'],
+      institutes: [],
     ),
     InstructorModel(
       id: '5',
       name: 'Mohammed Al-Salem',
       email: 'mohammed.alsalem@example.com',
       phoneNumber: '123-456-7894',
-      department: 'Biology',
+      jobTitle: 'Biology',
       profilePicture:
           'https://www.iwcf.org/wp-content/uploads/2018/12/Instructor-top-of-page-image-new.jpg',
-      institutesID: ['Institute I', 'Institute J'],
+      institutes: [],
     ),
     InstructorModel(
       id: '6',
       name: 'Noura Al-Harbi',
       email: 'noura.alharbi@example.com',
       phoneNumber: '123-456-7895',
-      department: 'Business Law',
+      jobTitle: 'Business Law',
       profilePicture:
           'https://www.lta.org.uk/4915f7/siteassets/in-your-area/iom---county-coaching.jpg?w=1200',
-      institutesID: ['Institute K', 'Institute L'],
+      institutes: [],
     ),
     InstructorModel(
       id: '7',
       name: 'Omar Al-Khalifa',
       email: 'omar.alkhalifa@example.com',
       phoneNumber: '123-456-7896',
-      department: 'Cybersecurity',
+      jobTitle: 'Cybersecurity',
       profilePicture:
           'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1TYP78ZMERVzy0ubkh42BY0jTYFKCklKa_pn2F538eYBhv0k3Xos6FI6VSGwpslYOerQ&usqp=CAU',
-      institutesID: ['Institute M', 'Institute N'],
+      institutes: [],
     ),
     InstructorModel(
       id: '8',
       name: 'Sara Al-Rashid',
       email: 'sara.alrashid@example.com',
       phoneNumber: '123-456-7897',
-      department: 'Digital Marketing',
+      jobTitle: 'Digital Marketing',
       profilePicture:
           'https://www.ascm.org/globalassets/ascm_website_assets/img/2-5-how-do-i-apply-block.jpg',
-      institutesID: ['Institute O', 'Institute P'],
+      institutes: [],
     ),
     InstructorModel(
       id: '9',
       name: 'Yousef Al-Zahrani',
       email: 'yousef.alzahrani@example.com',
       phoneNumber: '123-456-7898',
-      department: 'English',
+      jobTitle: 'English',
       profilePicture:
           'https://www.uned.es/universidad/.imaging/mte/home-nueva-theme/761x691/dam/recursos-corporativos/personas-genericas/profesores-(2).jpg/jcr:content/profesores-(2).jpg',
-      institutesID: ['Institute Q', 'Institute R'],
+      institutes: [],
     ),
     InstructorModel(
       id: '10',
       name: 'Zainab Al-Shehri',
       email: 'zainab.alshehri@example.com',
       phoneNumber: '123-456-7899',
-      department: 'Leadership',
+      jobTitle: 'Leadership',
       profilePicture:
           'https://www.iwcf.org/wp-content/uploads/2018/12/Instructor-top-of-page-image-new.jpg',
-      institutesID: ['Institute S', 'Institute T'],
+      institutes: [],
     ),
   ];
   final List<InstituteModel> institutes = [
@@ -432,8 +470,8 @@ class _HomePageState extends State<HomePage> {
       accreditation: 'Libyan Ministry of Higher Education',
       bio:
           'The Libyan International Medical University is a private university in Benghazi, Libya, founded in 2007.',
-      instructorsID: ['Ahmed Al-Farsi', 'Fatima Al-Mansouri'],
-      coursesID: ['Introduction to Programming', 'Learn English'],
+      instructors: [],
+      courses: [],
     ),
     InstituteModel(
       id: '2',
@@ -448,8 +486,8 @@ class _HomePageState extends State<HomePage> {
       accreditation: 'Libyan Ministry of Higher Education',
       bio:
           'The University of Tripoli is the largest and oldest university in Libya, established in 1957.',
-      instructorsID: ['Hassan Al-Haddad', 'Layla Al-Najjar'],
-      coursesID: ['Data Science with Python', 'Web Development Bootcamp'],
+      instructors: [],
+      courses: [],
     ),
     InstituteModel(
       id: '3',
@@ -464,8 +502,8 @@ class _HomePageState extends State<HomePage> {
       accreditation: 'Libyan Ministry of Higher Education',
       bio:
           'Misurata University is a public university located in Misurata, Libya, founded in 1984.',
-      instructorsID: ['Mohammed Al-Salem', 'Noura Al-Harbi'],
-      coursesID: ['Machine Learning with Python', 'Business Law'],
+      instructors: [],
+      courses: [],
     ),
     InstituteModel(
       id: '4',
@@ -480,8 +518,8 @@ class _HomePageState extends State<HomePage> {
       accreditation: 'Libyan Ministry of Higher Education',
       bio:
           'The University of Benghazi, formerly known as Garyounis University, is one of the largest public universities in Libya.',
-      instructorsID: ['Khaled Al-Obeidi', 'Sarah Al-Farsi'],
-      coursesID: ['Introduction to Artificial Intelligence', 'Cyber Security'],
+      instructors: [],
+      courses: [],
     ),
     InstituteModel(
       id: '5',
@@ -496,8 +534,8 @@ class _HomePageState extends State<HomePage> {
       accreditation: 'Libyan Ministry of Higher Education',
       bio:
           'Sirte University is a public university located in Sirte, Libya, and offers a variety of programs in multiple disciplines.',
-      instructorsID: ['Nabil Al-Amari', 'Aisha Al-Salem'],
-      coursesID: ['Civil Engineering', 'Economics and Finance'],
+      instructors: [],
+      courses: [],
     ),
   ];
 
@@ -607,19 +645,17 @@ class _HomePageState extends State<HomePage> {
           icon: CircleAvatar(
             backgroundImage: NetworkImage(
               FirebaseAuth.instance.currentUser?.photoURL ??
-            'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
+                  'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
             ),
             onBackgroundImageError: (_, __) {
-              setState(() {
-                
-              });
+              setState(() {});
             },
           ),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => UserEditInfoScreen(),
+                builder: (context) => const UserEditInfoScreen(),
               ),
             );
           },
@@ -659,6 +695,7 @@ class _HomePageState extends State<HomePage> {
           _buildDrawerItem(Icons.school, 'Courses'),
           _buildDrawerItem(Icons.person, 'Profile'),
           _buildDrawerItem(Icons.message, 'Messages'),
+          _buildDrawerItem(Icons.book, 'Liked Courses'),
           const Divider(),
           ListTile(
             leading: const Icon(Icons.logout),
@@ -685,7 +722,13 @@ class _HomePageState extends State<HomePage> {
       leading: Icon(icon),
       title: Text(title),
       onTap: () {
-        Navigator.pop(context);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => LikedCoursesScreen(
+                  userId: FirebaseAuth.instance.currentUser?.uid ?? '',
+                  instructors: instructors)),
+        );
       },
     );
   }
@@ -804,7 +847,7 @@ class _HomePageState extends State<HomePage> {
         itemCount: categories.length, // عدد الفئات
         itemBuilder: (context, index) {
           return _buildCategoryChip(
-            categories[index].name as String,
+            categories[index].name,
             Colors.blue,
             () {},
           );
@@ -853,7 +896,6 @@ class _HomePageState extends State<HomePage> {
                 MaterialPageRoute(
                   builder: (context) => CourseDetailsScreen(
                     course: course,
-                    instructors: instructors,
                   ),
                 ),
               );
@@ -876,8 +918,20 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         itemCount: instructors.length,
         itemBuilder: (context, index) {
-          return MentorAvatar(
-            instructor: instructors[index],
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InstructorDetailsScreen(
+                    instructor: instructors[index],
+                  ),
+                ),
+              );
+            },
+            child: MentorAvatar(
+              instructor: instructors[index],
+            ),
           );
         },
       ),
@@ -892,8 +946,20 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.horizontal,
         itemCount: institutes.length,
         itemBuilder: (context, index) {
-          return InstituteCardHome(
-            institute: institutes[index],
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => InstitutesDetailsScreen(
+                    institute: institutes[index],
+                  ),
+                ),
+              );
+            },
+            child: InstituteCardHome(
+              institute: institutes[index],
+            ),
           );
         },
       ),

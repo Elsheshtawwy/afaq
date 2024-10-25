@@ -3,9 +3,11 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Auth_Provider extends BaseProvider {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   bool loading = false;
 
@@ -13,7 +15,7 @@ class Auth_Provider extends BaseProvider {
     setBusy(true);
     try {
       UserCredential userCred = await _firebaseAuth.signInWithEmailAndPassword(
-          email: email, password: password);
+        email: email, password: password);
       if (userCred.user != null && userCred.user!.emailVerified) {
         setBusy(false);
         return true;
@@ -54,9 +56,9 @@ class Auth_Provider extends BaseProvider {
     setBusy(true);
     try {
       UserCredential userCred =
-          await _firebaseAuth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
+        await _firebaseAuth.createUserWithEmailAndPassword(
+      email: email,
+      password: password,
       );
       if (userCred.user != null) {
         await FirebaseFirestore.instance.collection("users").add({
@@ -100,6 +102,20 @@ class Auth_Provider extends BaseProvider {
     }
   }
 
+  Future<UserCredential> signInWithGoogle() async {
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
+
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    return await FirebaseAuth.instance.signInWithCredential(credential);
+  }
+
   void _showErrorDialog(BuildContext context, String title, String? description) {
     AwesomeDialog(
       context: context,
@@ -107,8 +123,6 @@ class Auth_Provider extends BaseProvider {
       animType: AnimType.rightSlide,
       title: title,
       desc: description ?? 'An unexpected error occurred',
-      // btnCancelOnPress: () {},
-      // btnOkOnPress: () {},
     ).show();
   }
 }

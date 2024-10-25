@@ -1,15 +1,13 @@
-import 'package:afaq/pages/auth/UserInfoScreen.dart';
-import 'package:afaq/pages/auth/login_screen.dart';
-import 'package:afaq/pages/mainScreens/home_screen.dart';
 import 'package:afaq/providers/auth_provider.dart';
+import 'package:afaq/providers/base_provider.dart';
 import 'package:afaq/widgets/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/buttons/socialIcons.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -26,6 +24,14 @@ class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
+  bool _isLoading = false;
+  late BaseProvider base_provider;
+
+  @override
+  void initState() {
+    super.initState();
+    base_provider = Provider.of<BaseProvider>(context, listen: false);
+  }
 
   @override
   void dispose() {
@@ -36,52 +42,91 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   Future<void> _signUp() async {
-    if (_formKey.currentState!.validate()) {
-      try {
-        final authProvider = Provider.of<Auth_Provider>(context, listen: false);
-        final result = await authProvider.createAccount(
-          context,
-          _emailController.text,
-          _passwordController.text,
-        );
-
-        if (result) {
-          Navigator.push(
+    if (_formKey.currentState!.validate() && _agreeToTerms) {
+      // Request storage permission
+      var status = await Permission.storage.request();
+      if (status.isGranted) {
+        setState(() {
+          _isLoading = true;
+        });
+        try {
+          final authProvider = Provider.of<Auth_Provider>(context, listen: false);
+          final result = await authProvider.createAccount(
             context,
-            MaterialPageRoute(builder: (context) => const UserInfoScreen()),
+            _emailController.text,
+            _passwordController.text,
           );
+
+          if (result) {
+            base_provider.setBusy(true);
+            Navigator.pushNamed(context, '/userInfo');
+            base_provider.setBusy(false);
+          }
+        } catch (e) {
+          _showAwesomeDialog(
+              'Error', 'An error occurred. Please try again.', DialogType.error);
+        } finally {
+          setState(() {
+            _isLoading = false;
+          });
         }
-      } catch (e) {
-        _showSnackBar('An error occurred. Please try again.');
+      } else {
+        _showAwesomeDialog('Permission Denied', 'Storage permission is required to proceed.', DialogType.warning);
       }
+    } else if (!_agreeToTerms) {
+      _showAwesomeDialog('Terms & Conditions',
+          'You must agree to the terms and conditions.', DialogType.warning);
     }
   }
 
-  Future<UserCredential> signInWithGoogle() async {
-    // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
-
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
-
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+  void _showAwesomeDialog(String title, String message, DialogType dialogType) {
+    AwesomeDialog(
+      context: context,
+      dialogType: dialogType,
+      animType: AnimType.bottomSlide,
+      title: title,
+      desc: message,
+      btnOkOnPress: () {},
+    ).show();
   }
 
-  void _showSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your email';
+    }
+    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter your password';
+    }
+    if (value.length < 6) {
+      return 'Password must be at least 6 characters long';
+    }
+    return null;
+  }
+
+  String? _validateConfirmPassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please confirm your password';
+    }
+    if (value != _passwordController.text) {
+      return 'Passwords do not match';
+    }
+    return null;
+  }
+
+  Widget _buildVisibilityIcon(bool obscureText, VoidCallback onPressed) {
+    return IconButton(
+      icon: Icon(
+        obscureText ? Icons.visibility : Icons.visibility_off,
+        color: Colors.blue.shade600,
       ),
+      onPressed: onPressed,
     );
   }
 
@@ -106,26 +151,28 @@ class _SignUpScreenState extends State<SignUpScreen> {
               end: Alignment.bottomCenter,
             ),
           ),
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(height: screenHeight * 0.01),
-                  _buildLogo(screenHeight),
-                  SizedBox(height: screenHeight * 0.01),
-                  _buildWelcomeText(),
-                  SizedBox(height: screenHeight * 0.04),
-                  _buildSignUpForm(screenHeight),
-                  SizedBox(height: screenHeight * 0.02),
-                  _buildSocialSignUpOptions(screenHeight),
-                  SizedBox(height: screenHeight * 0.02),
-                  _buildSignInOption(),
-                ],
-              ),
-            ),
-          ),
+          child: _isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SizedBox(height: screenHeight * 0.01),
+                        _buildLogo(screenHeight),
+                        SizedBox(height: screenHeight * 0.01),
+                        _buildWelcomeText(),
+                        SizedBox(height: screenHeight * 0.04),
+                        _buildSignUpForm(screenHeight),
+                        SizedBox(height: screenHeight * 0.02),
+                        _buildSocialSignUpOptions(screenHeight),
+                        SizedBox(height: screenHeight * 0.02),
+                        _buildSignInOption(),
+                      ],
+                    ),
+                  ),
+                ),
         ),
       ),
     );
@@ -169,15 +216,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             labelText: 'Email',
             keyboardType: TextInputType.emailAddress,
             prefixIcon: Icon(CupertinoIcons.mail, color: Colors.blue.shade600),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your email';
-              }
-              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                return 'Please enter a valid email address';
-              }
-              return null;
-            },
+            validator: _validateEmail,
           ),
           SizedBox(height: screenHeight * 0.02),
           CustomTextField(
@@ -185,25 +224,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             labelText: 'Password',
             obscureText: _obscurePassword,
             prefixIcon: Icon(CupertinoIcons.lock, color: Colors.blue.shade600),
-            suffixIcon: IconButton(
-              icon: Icon(
-                  _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.blue.shade600),
-              onPressed: () {
+            suffixIcon: _buildVisibilityIcon(
+              _obscurePassword,
+              () {
                 setState(() {
                   _obscurePassword = !_obscurePassword;
                 });
               },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter your password';
-              }
-              if (value.length < 6) {
-                return 'Password must be at least 6 characters long';
-              }
-              return null;
-            },
+            validator: _validatePassword,
           ),
           SizedBox(height: screenHeight * 0.02),
           CustomTextField(
@@ -211,27 +240,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             labelText: 'Confirm Password',
             obscureText: _obscureConfirmPassword,
             prefixIcon: Icon(CupertinoIcons.lock, color: Colors.blue.shade600),
-            suffixIcon: IconButton(
-              icon: Icon(
-                  _obscureConfirmPassword
-                      ? Icons.visibility
-                      : Icons.visibility_off,
-                  color: Colors.blue.shade600),
-              onPressed: () {
+            suffixIcon: _buildVisibilityIcon(
+              _obscureConfirmPassword,
+              () {
                 setState(() {
                   _obscureConfirmPassword = !_obscureConfirmPassword;
                 });
               },
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please confirm your password';
-              }
-              if (value != _passwordController.text) {
-                return 'Passwords do not match';
-              }
-              return null;
-            },
+            validator: _validateConfirmPassword,
           ),
           SizedBox(height: screenHeight * 0.02),
           _buildTermsAndConditionsCheckbox(),
@@ -287,17 +304,13 @@ class _SignUpScreenState extends State<SignUpScreen> {
               [
                 () async {
                   try {
-                    await signInWithGoogle();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomePage(),
-                      ),
-                    );
+                    base_provider.setBusy(true);
+                    await Auth_Provider().signInWithGoogle();
+                    Navigator.pushReplacementNamed(context, '/home');
+                    base_provider.setBusy(false);
                   } catch (e) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Google Sign-In failed')),
-                    );
+                    _showAwesomeDialog(
+                        'Error', 'Google Sign-In failed', DialogType.error);
                   }
                 },
                 () {
@@ -332,8 +345,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   color: Colors.orange),
             ),
             onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()));
+              Navigator.pushNamed(context, '/login');
             },
           ),
         ),
