@@ -51,8 +51,7 @@ class _FeedScreenState extends State<FeedScreen> {
   Future<bool> _checkAccountStatus() async {
     await Future.delayed(const Duration(seconds: 1));
 
-    // التحقق من حالة البريد الإلكتروني عبر Firebase
-    bool emailVerified = await _fetchEmailVerificationStatus();
+ bool emailVerified = await _fetchEmailVerificationStatus();
 
     setState(() {
       _isEmailVerified = emailVerified;

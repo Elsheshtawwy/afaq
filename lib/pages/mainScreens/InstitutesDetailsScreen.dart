@@ -126,9 +126,9 @@ class InstitutesDetailsScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 // TabBar
-                SizedBox(
+                const SizedBox(
                   height: 50,
-                  child: const TabBar(
+                  child: TabBar(
                     tabs: [
                       Tab(text: 'Courses'),
                       Tab(text: 'Instructors'),

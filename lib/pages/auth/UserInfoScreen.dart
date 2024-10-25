@@ -38,13 +38,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   Future<void> requestStoragePermission() async {
     final status = await Permission.photos.request();
+    print('Storage permission status: $status');
     if (!status.isGranted) {
       await openAppSettings();
     }
   }
 
   Future<void> _pickImage() async {
-    await requestStoragePermission();
+    // await requestStoragePermission();
+
     final XFile? pickedFile =
         await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -54,36 +56,30 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
+  Future<String?> _uploadImage(File image) async {
+    try {
+      String formattedDate =
+          DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      final filePath = image.path;
 
-Future<String?> _uploadImage(File image) async {
-  try {
-    // تنسيق التاريخ لتجنب الأحرف الخاصة
-    String formattedDate = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-    final filePath = 'profile_pictures/$formattedDate.png';
+      print('Selected image path : $filePath');
 
-    // طباعة المسار للتأكد
-    print('Uploading to path: $filePath');
+      Reference storageRef = FirebaseStorage.instance.ref('images');
+      // File compressedImage = await _compressImage(file: image);
 
-    Reference storageRef = FirebaseStorage.instance.ref(filePath);
-    File compressedImage = await _compressImage(file: image);
+      final mountainsRef = await storageRef.putFile(image);
 
-    // رفع الصورة
-    await storageRef.putFile(compressedImage);
+      final String downloadUrl = mountainsRef.metadata!.fullPath;
+      debugPrint('Image uploaded successfully: $downloadUrl');
 
-    // الحصول على رابط الصورة
-    final String downloadUrl = await storageRef.getDownloadURL();
-    debugPrint('Image uploaded successfully: $downloadUrl');
-
-    return downloadUrl;
-  } catch (e) {
-    debugPrint('Error uploading image: $e');
-    return null;
+      return downloadUrl;
+    } catch (e) {
+      debugPrint('Error uploading image: $e');
+      return null;
+    }
   }
-}
-
 
   Future<File> _compressImage({required File file}) async {
-    // Implement your image compression logic here
     return file;
   }
 

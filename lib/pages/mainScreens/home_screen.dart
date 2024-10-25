@@ -644,7 +644,7 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           icon: CircleAvatar(
             backgroundImage: NetworkImage(
-              FirebaseAuth.instance.currentUser?.photoURL ??
+              FirebaseAuth.instance.currentUser!.photoURL ??
                   'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
             ),
             onBackgroundImageError: (_, __) {

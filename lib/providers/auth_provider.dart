@@ -61,7 +61,7 @@ class Auth_Provider extends BaseProvider {
       password: password,
       );
       if (userCred.user != null) {
-        await FirebaseFirestore.instance.collection("users").add({
+        await FirebaseFirestore.instance.collection("uses").add({
           "email": email,
           "user_uid": userCred.user!.uid,
         });

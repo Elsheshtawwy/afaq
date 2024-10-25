@@ -7,7 +7,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // For icons
 class InstructorDetailsScreen extends StatefulWidget {
   final InstructorModel instructor;
 
-  InstructorDetailsScreen({required this.instructor});
+  const InstructorDetailsScreen({super.key, required this.instructor});
 
   @override
   _InstructorDetailsScreenState createState() =>
@@ -22,7 +22,7 @@ class _InstructorDetailsScreenState extends State<InstructorDetailsScreen> {
     final instructor = widget.instructor;
 
     return DefaultTabController(
-      length: 3, // Number of tabs
+      length: 3, 
       child: Scaffold(
         appBar: AppBar(
           title: Text(instructor.name ?? 'Instructor Details'),
@@ -71,7 +71,7 @@ class _InstructorDetailsScreenState extends State<InstructorDetailsScreen> {
         CircleAvatar(
           radius: 50,
           backgroundImage: instructor.profilePicture != null
-              ? NetworkImage(instructor.profilePicture!)
+              ? NetworkImage(instructor.profilePicture)
               : const AssetImage('assets/profile.png') as ImageProvider,
           backgroundColor: Colors.grey[200],
         ),
@@ -165,8 +165,8 @@ class _InstructorDetailsScreenState extends State<InstructorDetailsScreen> {
       children: [
         const Divider(thickness: 1),
         const SizedBox(height: 10),
-        Row(
-          children: const [
+        const Row(
+          children: [
             FaIcon(FontAwesomeIcons.infoCircle, color: Colors.blue),
             SizedBox(width: 10),
             Text(
