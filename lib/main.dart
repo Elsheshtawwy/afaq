@@ -1,4 +1,5 @@
 import 'package:afaq/pages/MyProfileScreens/EditProfile.dart';
+import 'package:afaq/pages/MyProfileScreens/Invite_Frineds.dart';
 import 'package:afaq/pages/MyProfileScreens/LanguageSelectionScreen.dart';
 import 'package:afaq/pages/MyProfileScreens/NotificationScreen.dart';
 import 'package:afaq/pages/MyProfileScreens/TermsAndConditions.dart';
@@ -79,6 +80,7 @@ class _MyAppState extends State<MyApp> {
         '/LanguageSelection': (context) => LanguageSelectionScreen(),
         '/editProfile': (context) => const EditProfile(),
         '/notifications': (context) => const NotificationScreen(),
+        '/inviteFriendsScreen' : (context) => const InviteFriendsScreen(),
       },
     );
   }

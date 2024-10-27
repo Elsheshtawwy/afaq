@@ -58,6 +58,7 @@ dependencies:
   path:
   lite_rolling_switch:
   toggle_switch:
+  share_plus:
   
 
 

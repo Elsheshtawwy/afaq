@@ -55,7 +55,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 onSwipe: () => print('swipe'),
                 onTap: () => print('tap'),
               )),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "Sound",
             trailing: Switch(
@@ -67,7 +67,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "Vibrate",
             trailing: Switch(
@@ -79,7 +79,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "General Notification",
             trailing: Switch(
@@ -91,7 +91,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "Promo & Discount",
             trailing: Switch(
@@ -103,7 +103,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "Payment Options",
             trailing: Switch(
@@ -115,7 +115,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "App Update",
             trailing: Switch(
@@ -127,7 +127,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "New Service Available",
             trailing: Switch(
@@ -139,7 +139,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
               },
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ProfileOption(
             text: "New Tips Available",
             trailing: Switch(

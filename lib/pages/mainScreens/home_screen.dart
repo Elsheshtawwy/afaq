@@ -643,7 +643,7 @@ class _HomePageState extends State<HomePage> {
         ),
         IconButton(
           padding: const EdgeInsets.only(right: 8),
-          icon: ProfilePicture(
+          icon: const ProfilePicture(
             size: 40,
           ),
           onPressed: () {

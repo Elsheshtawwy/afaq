@@ -7,7 +7,7 @@ import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:provider/provider.dart';
 
 class MyProfile extends StatelessWidget {
-  const MyProfile({Key? key}) : super(key: key);
+  const MyProfile({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class MyProfile extends StatelessWidget {
         centerTitle: true,
       ),
       body: currentUser == null
-          ? Center(child: Text('No user is currently signed in.'))
+          ? const Center(child: Text('No user is currently signed in.'))
           : Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -105,8 +105,14 @@ class MyProfile extends StatelessWidget {
                         ),
                         const ProfileOption(
                             icon: Icons.help, text: "Help Center"),
-                        const ProfileOption(
-                            icon: Icons.person_add, text: "Invite Friends"),
+                        ProfileOption(
+                          icon: Icons.person_add,
+                          text: "Invite Friends",
+                          onTap: () {
+                            Navigator.pushNamed(
+                                context, '/inviteFriendsScreen');
+                          },
+                        ),
                       ],
                     ),
                   ),
@@ -152,12 +158,12 @@ class ProfileOption extends StatelessWidget {
   final VoidCallback? onTap;
 
   const ProfileOption({
-    Key? key,
+    super.key,
     this.icon,
     required this.text,
     this.trailing,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -174,8 +180,7 @@ class ProfilePicture extends StatelessWidget {
   final double radius;
   final double size;
 
-  const ProfilePicture({Key? key, this.radius = 50, this.size = 100})
-      : super(key: key);
+  const ProfilePicture({super.key, this.radius = 50, this.size = 100});
 
   @override
   Widget build(BuildContext context) {
@@ -191,17 +196,17 @@ class ProfilePicture extends StatelessWidget {
           return CircleAvatar(
             radius: radius,
             backgroundImage:
-                AssetImage('assets/images/default_profile_picture.png'),
+                const AssetImage('assets/images/default_profile_picture.png'),
           );
         } else if (snapshot.hasError ||
             !snapshot.hasData ||
             snapshot.data == null) {
           return CircleAvatar(
             radius: radius,
-            child: Icon(Icons.person, size: radius, color: Colors.grey),
-            backgroundImage: NetworkImage(
+            backgroundImage: const NetworkImage(
               'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
             ),
+            child: Icon(Icons.person, size: radius, color: Colors.grey),
           );
         } else {
           return Container(

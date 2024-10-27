@@ -2,7 +2,7 @@ import 'package:afaq/helpers/functions.dart';
 import 'package:flutter/material.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
-  const TermsAndConditionsScreen({Key? key}) : super(key: key);
+  const TermsAndConditionsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -131,8 +131,7 @@ class SectionTitle extends StatelessWidget {
   final String title;
   final double fontSize;
 
-  const SectionTitle({Key? key, required this.title, required this.fontSize})
-      : super(key: key);
+  const SectionTitle({super.key, required this.title, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
@@ -152,8 +151,7 @@ class SectionContent extends StatelessWidget {
   final double fontSize;
 
   const SectionContent(
-      {Key? key, required this.content, required this.fontSize})
-      : super(key: key);
+      {super.key, required this.content, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {

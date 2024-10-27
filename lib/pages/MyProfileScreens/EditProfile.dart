@@ -125,19 +125,19 @@ class _EditProfileState extends State<EditProfile> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text(
+        title: const Text(
           'Edit Profile',
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
           child: Column(
@@ -164,7 +164,7 @@ class _EditProfileState extends State<EditProfile> {
                   ),
                 ],
               ),
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               // Form Fields
               CustomTextField(
@@ -188,12 +188,12 @@ class _EditProfileState extends State<EditProfile> {
               CustomTextField(
                 controller: _phoneController,
                 labelText: 'Phone Number',
-                prefixIcon: Icon(Icons.flag, color: Colors.red),
+                prefixIcon: const Icon(Icons.flag, color: Colors.red),
               ),
               CustomDropdownField(
                 labelText: 'Gender',
                 value: _selectedGender,
-                items: ['Male', 'Female', 'Other'],
+                items: const ['Male', 'Female', 'Other'],
                 onChanged: (value) {
                   setState(() {
                     _selectedGender = value ?? "Male";
@@ -205,7 +205,7 @@ class _EditProfileState extends State<EditProfile> {
                 labelText: 'Student',
               ),
 
-              SizedBox(height: 24),
+              const SizedBox(height: 24),
 
               _isLoading
                   ? const CircularProgressIndicator()
@@ -231,12 +231,12 @@ class _EditProfileState extends State<EditProfile> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         padding:
-                            EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                            const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(30.0),
                         ),
                       ),
-                      child: Row(
+                      child: const Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(
@@ -264,8 +264,8 @@ class CustomTextField extends StatelessWidget {
   final IconData? icon;
   final Widget? prefixIcon;
 
-  CustomTextField(
-      {required this.controller,
+  const CustomTextField(
+      {super.key, required this.controller,
       required this.labelText,
       this.icon,
       this.prefixIcon});
@@ -278,7 +278,7 @@ class CustomTextField extends StatelessWidget {
         controller: controller,
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(fontSize: 14),
+          labelStyle: const TextStyle(fontSize: 14),
           prefixIcon: prefixIcon,
           suffixIcon: icon != null ? Icon(icon) : null,
           filled: true,
@@ -287,7 +287,7 @@ class CustomTextField extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         ),
       ),
     );
@@ -301,8 +301,8 @@ class CustomDropdownField extends StatelessWidget {
   final List<String> items;
   final ValueChanged<String?> onChanged;
 
-  CustomDropdownField(
-      {required this.labelText,
+  const CustomDropdownField(
+      {super.key, required this.labelText,
       required this.value,
       required this.items,
       required this.onChanged});
@@ -314,20 +314,20 @@ class CustomDropdownField extends StatelessWidget {
       child: InputDecorator(
         decoration: InputDecoration(
           labelText: labelText,
-          labelStyle: TextStyle(fontSize: 14),
+          labelStyle: const TextStyle(fontSize: 14),
           filled: true,
           fillColor: Colors.white,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
             borderSide: BorderSide.none,
           ),
-          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
             isExpanded: true,
             value: value,
-            hint: Text(
+            hint: const Text(
               'Select',
               style: TextStyle(fontSize: 14),
             ),

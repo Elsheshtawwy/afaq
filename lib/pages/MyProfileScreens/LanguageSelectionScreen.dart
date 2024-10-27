@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
+  const LanguageSelectionScreen({super.key});
+
   @override
   _LanguageSelectionScreenState createState() =>
       _LanguageSelectionScreenState();
@@ -19,9 +21,9 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Language', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Language', style: TextStyle(fontWeight: FontWeight.bold)),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -30,18 +32,18 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
         foregroundColor: Colors.black,
       ),
       body: Container(
-        color: Color(0xFFF6F8FB),
-        padding: EdgeInsets.all(16.0),
+        color: const Color(0xFFF6F8FB),
+        padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
-            Text(
+            const Text(
               'SubCategories:',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ...subCategories.map((language) => LanguageOption(
                   language: language,
                   isSelected: selectedLanguage == language,
@@ -51,15 +53,15 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     });
                   },
                 )),
-            SizedBox(height: 24),
-            Text(
+            const SizedBox(height: 24),
+            const Text(
               'All Language',
               style: TextStyle(
                 fontSize: 16.0,
                 fontWeight: FontWeight.w600,
               ),
             ),
-            SizedBox(height: 8),
+            const SizedBox(height: 8),
             ...allLanguages.map((language) => LanguageOption(
                   language: language,
                   isSelected: selectedLanguage == language,
@@ -81,7 +83,7 @@ class LanguageOption extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  LanguageOption({
+  const LanguageOption({super.key, 
     required this.language,
     required this.isSelected,
     required this.onTap,
@@ -98,14 +100,14 @@ class LanguageOption extends StatelessWidget {
             Expanded(
               child: Text(
                 language,
-                style: TextStyle(fontSize: 14.0),
+                style: const TextStyle(fontSize: 14.0),
               ),
             ),
             Checkbox(
               value: isSelected,
               onChanged: (_) => onTap(),
               activeColor:
-                  Color(0xFF008B7D), // Green color for selected checkbox
+                  const Color(0xFF008B7D), // Green color for selected checkbox
               checkColor: Colors.white,
             ),
           ],
