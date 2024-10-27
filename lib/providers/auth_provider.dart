@@ -61,11 +61,11 @@ class Auth_Provider extends BaseProvider {
       password: password,
       );
       if (userCred.user != null) {
-        await FirebaseFirestore.instance.collection("uses").add({
+        await FirebaseFirestore.instance.collection("users").add({
           "email": email,
           "user_uid": userCred.user!.uid,
         });
-        await userCred.user!.sendEmailVerification(); // Send email verification
+        await userCred.user!.sendEmailVerification(); 
         setBusy(false);
         return true;
       } else {
@@ -125,4 +125,28 @@ class Auth_Provider extends BaseProvider {
       desc: description ?? 'An unexpected error occurred',
     ).show();
   }
+
+
+
+
+Future<String?> getProfilePicture(String userId) async {
+  try {
+    // Reference the 'users' collection and get the document by ID
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+
+    // Check if the document exists and retrieve the profilePicture field
+    if (userDoc.exists) {
+      return userDoc['profilePicture'] as String?;
+    } else {
+      print("User not found");
+      return null;
+    }
+  } catch (e) {
+    print("Error getting profile picture: $e");
+    return null;
+  }
+}
+
+
 }

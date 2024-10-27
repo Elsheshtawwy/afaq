@@ -1,5 +1,5 @@
 import 'package:afaq/models/InstituteModel.dart';
-import 'package:afaq/pages/mainScreens/CourseDetailsPage.dart';
+import 'package:afaq/pages/DetailsScreens.dart/CourseDetailsPage.dart';
 import 'package:afaq/widgets/cards/CourseCard.dart';
 import 'package:flutter/material.dart';
 

@@ -3,11 +3,12 @@ import 'package:afaq/models/CourseModel.dart';
 import 'package:afaq/models/InstituteModel.dart';
 import 'package:afaq/models/InstructorModel.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
-import 'package:afaq/pages/mainScreens/CourseDetailsPage.dart';
-import 'package:afaq/pages/mainScreens/InstitutesDetailsScreen.dart';
+import 'package:afaq/pages/DetailsScreens.dart/CourseDetailsPage.dart';
+import 'package:afaq/pages/mainScreens/MyProfile.dart';
+import 'package:afaq/pages/DetailsScreens.dart/InstitutesDetailsScreen.dart';
 import 'package:afaq/pages/mainScreens/InstitutesScreen.dart';
-import 'package:afaq/pages/mainScreens/InstructorDetailsScreen.dart';
-import 'package:afaq/pages/mainScreens/UserInfoScreen.dart';
+import 'package:afaq/pages/DetailsScreens.dart/InstructorDetailsScreen.dart';
+import 'package:afaq/pages/MyProfileScreens/EditProfile.dart';
 import 'package:afaq/pages/mainScreens/categoriesScreen.dart';
 import 'package:afaq/pages/mainScreens/CoursesScreen.dart';
 import 'package:afaq/pages/mainScreens/InstructorScreen.dart';
@@ -18,6 +19,7 @@ import 'package:afaq/widgets/cards/instituteCardHome.dart';
 import 'package:afaq/widgets/cards/likedCourses.dart';
 import 'package:afaq/widgets/cards/mentorAvatar.dart';
 import 'package:afaq/widgets/categoryFilters.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:card_swiper/card_swiper.dart';
@@ -368,23 +370,19 @@ class _HomePageState extends State<HomePage> {
     ),
     InstructorModel(
       id: '2',
-      name: 'Fatima Al-Mansouri',
-      email: 'fatima.almansouri@example.com',
+      name: 'Mr.Badr',
+      email: 'john.doe@example.com',
       phoneNumber: '123-456-7891',
-      jobTitle: 'Mathematics',
       profilePicture:
-          'https://www.uned.es/universidad/.imaging/mte/home-nueva-theme/761x691/dam/recursos-corporativos/personas-genericas/profesores-(2).jpg/jcr:content/profesores-(2).jpg',
+          'https://www.lta.org.uk/4915f7/siteassets/in-your-area/iom---county-coaching.jpg?w=1200+',
       institutes: [],
-    ),
-    InstructorModel(
-      id: '3',
-      name: 'Hassan Al-Haddad',
-      email: 'hassan.alhaddad@example.com',
-      phoneNumber: '123-456-7892',
-      jobTitle: 'Physics',
-      profilePicture:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ1TYP78ZMERVzy0ubkh42BY0jTYFKCklKa_pn2F538eYBhv0k3Xos6FI6VSGwpslYOerQ&usqp=CAU',
-      institutes: [],
+      coursesTaught: [],
+      qualifications: ['MSc in Computer Science'],
+      bio: 'John Doe is an experienced instructor in computer science.',
+      experienceYears: 5,
+      gender: 'Male',
+      experiences: ['Worked at ABC University'],
+      jobTitle: 'Computer Science',
     ),
     InstructorModel(
       id: '4',
@@ -393,7 +391,7 @@ class _HomePageState extends State<HomePage> {
       phoneNumber: '123-456-7893',
       jobTitle: 'Chemistry',
       profilePicture:
-          'https://www.uned.es/universidad/.imaging/mte/home-nueva-theme/761x691/dam/recursos-corporativos/personas-genericas/profesores-(2).jpg/jcr:content/profesores-(2).jpg',
+          'https://www.lta.org.uk/4915f7/siteassets/in-your-area/iom---county-coaching.jpg?w=1200',
       institutes: [],
     ),
     InstructorModel(
@@ -542,6 +540,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    getProfilePicture(FirebaseAuth.instance.currentUser?.uid ?? '');
+    return;
   }
 
   String _selectedCategory = '';
@@ -642,20 +642,15 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {},
         ),
         IconButton(
-          icon: CircleAvatar(
-            backgroundImage: NetworkImage(
-              FirebaseAuth.instance.currentUser!.photoURL ??
-                  'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
-            ),
-            onBackgroundImageError: (_, __) {
-              setState(() {});
-            },
+          padding: const EdgeInsets.only(right: 8),
+          icon: ProfilePicture(
+            size: 40,
           ),
           onPressed: () {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => const UserEditInfoScreen(),
+                builder: (context) => const MyProfile(),
               ),
             );
           },
@@ -964,5 +959,16 @@ class _HomePageState extends State<HomePage> {
         },
       ),
     );
+  }
+}
+
+Future<String?> getProfilePicture(String userId) async {
+  try {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    return userDoc.get('profilePicture');
+  } catch (e) {
+    print('Error fetching profile picture: $e');
+    return null;
   }
 }

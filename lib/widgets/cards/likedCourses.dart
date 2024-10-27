@@ -1,6 +1,6 @@
 import 'package:afaq/models/CourseModel.dart';
 import 'package:afaq/models/InstructorModel.dart';
-import 'package:afaq/pages/mainScreens/CourseDetailsPage.dart';
+import 'package:afaq/pages/DetailsScreens.dart/CourseDetailsPage.dart';
 import 'package:afaq/widgets/cards/CourseCard.dart';
 import 'package:afaq/widgets/categoryFilters.dart';
 import 'package:flutter/cupertino.dart';

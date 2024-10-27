@@ -56,6 +56,8 @@ dependencies:
   path_provider:
   permission_handler:
   path:
+  lite_rolling_switch:
+  toggle_switch:
   
 
 
@@ -96,7 +98,6 @@ flutter:
     - assets/socialLogos/light/
     # - assets/socialLogos/google/
     # - assets/socialLogos/google/light/
-  #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

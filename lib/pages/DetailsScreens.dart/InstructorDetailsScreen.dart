@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:afaq/models/InstructorModel.dart';
-import 'package:afaq/pages/mainScreens/CourseDetailsPage.dart';
+import 'package:afaq/pages/DetailsScreens.dart/CourseDetailsPage.dart';
 import 'package:afaq/widgets/cards/CourseCard.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart'; // For icons
 
@@ -15,14 +15,19 @@ class InstructorDetailsScreen extends StatefulWidget {
 }
 
 class _InstructorDetailsScreenState extends State<InstructorDetailsScreen> {
-  bool _isExpanded = false;
+  final bool _isExpanded = true; // Set to true to expand by default
+  bool _isQualificationsExpanded = true;
+  bool _isExperiencesExpanded = true;
+  bool _isGenderExpanded = true;
+  bool _isVerifiedExpanded = true;
+  bool _isInstitutesExpanded = true;
 
   @override
   Widget build(BuildContext context) {
     final instructor = widget.instructor;
 
     return DefaultTabController(
-      length: 3, 
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title: Text(instructor.name ?? 'Instructor Details'),
@@ -188,26 +193,47 @@ class _InstructorDetailsScreenState extends State<InstructorDetailsScreen> {
       children: [
         if (instructor.qualifications != null &&
             instructor.qualifications!.isNotEmpty)
-          _buildExpandableSection(
-              FontAwesomeIcons.graduationCap, Colors.orange, 'Qualifications', instructor.qualifications!),
-        if (instructor.experiences != null && instructor.experiences!.isNotEmpty)
-          _buildExpandableSection(
-              FontAwesomeIcons.briefcase, Colors.purple, 'Experiences', instructor.experiences!),
+          _buildExpandableSection(FontAwesomeIcons.graduationCap, Colors.orange,
+              'Qualifications', instructor.qualifications!, _isQualificationsExpanded, (value) {
+                setState(() {
+                  _isQualificationsExpanded = value;
+                });
+              }),
+        if (instructor.experiences != null &&
+            instructor.experiences!.isNotEmpty)
+          _buildExpandableSection(FontAwesomeIcons.briefcase, Colors.purple,
+              'Experiences', instructor.experiences!, _isExperiencesExpanded, (value) {
+                setState(() {
+                  _isExperiencesExpanded = value;
+                });
+              }),
         if (instructor.gender != null)
-          _buildExpandableSection(
-              FontAwesomeIcons.venusMars, Colors.pink, 'Gender', [instructor.gender!]),
+          _buildExpandableSection(FontAwesomeIcons.venusMars, Colors.pink,
+              'Gender', [instructor.gender!], _isGenderExpanded, (value) {
+                setState(() {
+                  _isGenderExpanded = value;
+                });
+              }),
         if (instructor.isVerified != null && instructor.isVerified == true)
-          _buildExpandableSection(
-              FontAwesomeIcons.checkCircle, Colors.green, 'Verified', ['Verified']),
+          _buildExpandableSection(FontAwesomeIcons.checkCircle, Colors.green,
+              'Verified', ['Verified'], _isVerifiedExpanded, (value) {
+                setState(() {
+                  _isVerifiedExpanded = value;
+                });
+              }),
         if (instructor.institutes != null && instructor.institutes!.isNotEmpty)
-          _buildExpandableSection(
-              FontAwesomeIcons.university, Colors.brown, 'Institutes', instructor.institutes!.map((e) => e.name).toList()),
+          _buildExpandableSection(FontAwesomeIcons.university, Colors.brown,
+              'Institutes', instructor.institutes!.map((e) => e.name).toList(), _isInstitutesExpanded, (value) {
+                setState(() {
+                  _isInstitutesExpanded = value;
+                });
+              }),
       ],
     );
   }
 
   Widget _buildExpandableSection(
-      IconData icon, Color color, String title, List<String> items) {
+      IconData icon, Color color, String title, List<String> items, bool isExpanded, Function(bool) onExpand) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -220,22 +246,22 @@ class _InstructorDetailsScreenState extends State<InstructorDetailsScreen> {
                 const SizedBox(width: 10),
                 Text(
                   title,
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             IconButton(
-              icon: Icon(_isExpanded ? Icons.remove : Icons.add),
+              icon: Icon(isExpanded ? Icons.remove : Icons.add),
               onPressed: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
+                onExpand(!isExpanded);
               },
             ),
           ],
         ),
         const SizedBox(height: 10),
-        for (var item in items) Text('- $item'),
+        if (isExpanded)
+          for (var item in items) Text('- $item'),
         const SizedBox(height: 20),
       ],
     );

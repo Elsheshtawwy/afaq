@@ -56,28 +56,30 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
-  Future<String?> _uploadImage(File image) async {
-    try {
-      String formattedDate =
-          DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      final filePath = image.path;
 
-      print('Selected image path : $filePath');
 
-      Reference storageRef = FirebaseStorage.instance.ref('images');
-      // File compressedImage = await _compressImage(file: image);
+Future<String?> _uploadImage(File image) async {
+  try {
+    String formattedDate =
+        DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+    final filePath = image.path;
 
-      final mountainsRef = await storageRef.putFile(image);
+    print('Selected image path : $filePath');
 
-      final String downloadUrl = mountainsRef.metadata!.fullPath;
-      debugPrint('Image uploaded successfully: $downloadUrl');
+    Reference storageRef = FirebaseStorage.instance.ref('images/$formattedDate');
+    final uploadTask = await storageRef.putFile(image);
 
-      return downloadUrl;
-    } catch (e) {
-      debugPrint('Error uploading image: $e');
-      return null;
-    }
+    final String downloadUrl = await storageRef.getDownloadURL();
+    debugPrint('Image uploaded successfully: $downloadUrl');
+
+    return downloadUrl;
+  } catch (e) {
+    debugPrint('Error uploading image: $e');
+    return null;
   }
+}
+
+
 
   Future<File> _compressImage({required File file}) async {
     return file;

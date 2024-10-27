@@ -1,3 +1,7 @@
+import 'package:afaq/pages/MyProfileScreens/EditProfile.dart';
+import 'package:afaq/pages/MyProfileScreens/LanguageSelectionScreen.dart';
+import 'package:afaq/pages/MyProfileScreens/NotificationScreen.dart';
+import 'package:afaq/pages/MyProfileScreens/TermsAndConditions.dart';
 import 'package:afaq/pages/auth/FeedScreen.dart';
 import 'package:afaq/pages/auth/UserInfoScreen.dart';
 import 'package:flutter/material.dart';
@@ -60,7 +64,7 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Afaq',
       theme: _buildThemeData(),
-      home:  const HomePage(),
+      home: const HomePage(),
       routes: {
         '/splash': (context) => const SplashScreen(),
         '/login': (context) => const LoginScreen(),
@@ -71,6 +75,10 @@ class _MyAppState extends State<MyApp> {
               selectedUserType: 'Learner',
             ),
         '/userInfo': (context) => const UserInfoScreen(),
+        '/termsAndConditions': (context) => const TermsAndConditionsScreen(),
+        '/LanguageSelection': (context) => LanguageSelectionScreen(),
+        '/editProfile': (context) => const EditProfile(),
+        '/notifications': (context) => const NotificationScreen(),
       },
     );
   }
