@@ -25,7 +25,7 @@ class InviteFriendsScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 "Share with your friends",
                 style: TextStyle(
                   fontSize: 24,

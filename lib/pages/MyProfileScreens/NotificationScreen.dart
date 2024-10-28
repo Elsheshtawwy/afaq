@@ -1,5 +1,4 @@
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
@@ -36,25 +35,18 @@ class _NotificationScreenState extends State<NotificationScreen> {
       body: Column(
         children: [
           ProfileOption(
-              text: "Push Notifications",
-              trailing: LiteRollingSwitch(
-                width: 85,
-                value: pushNotifications,
-                textOn: 'On',
-                textOff: 'Off',
-                colorOn: Colors.green,
-                colorOff: Colors.red,
-                iconOn: Icons.done,
-                iconOff: Icons.remove_circle_outline,
-                onChanged: (bool value) {
-                  setState(() {
-                    pushNotifications = value;
-                  });
-                },
-                onDoubleTap: () => print('double tap'),
-                onSwipe: () => print('swipe'),
-                onTap: () => print('tap'),
-              )),
+            text: "Push Notifications",
+            trailing: Switch(
+              value: pushNotifications,
+              onChanged: (bool value) {
+                setState(() {
+                  pushNotifications = value;
+                });
+              },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
+            ),
+          ),
           const SizedBox(height: 8),
           ProfileOption(
             text: "Sound",
@@ -65,6 +57,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   sound = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -77,6 +71,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   vibrate = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -89,6 +85,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   generalNotification = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -101,6 +99,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   promoDiscount = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -113,6 +113,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   paymentOptions = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -125,6 +127,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   appUpdate = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -137,6 +141,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   newServiceAvailable = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
           const SizedBox(height: 8),
@@ -149,6 +155,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   newTipsAvailable = value;
                 });
               },
+              activeColor: Colors.teal,
+              inactiveThumbColor: Colors.grey,
             ),
           ),
         ],

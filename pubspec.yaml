@@ -59,6 +59,7 @@ dependencies:
   lite_rolling_switch:
   toggle_switch:
   share_plus:
+  syncfusion_flutter_datepicker:
   
 
 
@@ -95,6 +96,7 @@ flutter:
     - assets/images/
     - assets/icons/
     - assets/categories/
+    - assets/HelpCenter/
     - assets/socialLogos/dark/
     - assets/socialLogos/light/
     # - assets/socialLogos/google/

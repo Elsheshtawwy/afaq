@@ -8,7 +8,6 @@ import 'package:afaq/pages/mainScreens/MyProfile.dart';
 import 'package:afaq/pages/DetailsScreens.dart/InstitutesDetailsScreen.dart';
 import 'package:afaq/pages/mainScreens/InstitutesScreen.dart';
 import 'package:afaq/pages/DetailsScreens.dart/InstructorDetailsScreen.dart';
-import 'package:afaq/pages/MyProfileScreens/EditProfile.dart';
 import 'package:afaq/pages/mainScreens/categoriesScreen.dart';
 import 'package:afaq/pages/mainScreens/CoursesScreen.dart';
 import 'package:afaq/pages/mainScreens/InstructorScreen.dart';

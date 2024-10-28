@@ -74,24 +74,13 @@ class MyProfile extends StatelessWidget {
                           text: "Dark Mode",
                           trailing: Consumer<DarkModeProvider>(
                             builder: (context, darkModeProvider, child) {
-                              return LiteRollingSwitch(
-                                width: 100.0,
+                              return Switch(
+                                activeColor: Colors.teal,
+                                inactiveThumbColor: Colors.grey,
                                 value: darkModeProvider.isDark,
-                                textOn: 'Dark',
-                                textOff: 'Light',
-                                colorOn: Colors.black,
-                                colorOff: Colors.white,
-                                iconOn: Icons.nightlight_round,
-                                iconOff: Icons.wb_sunny,
-                                textSize: 16.0,
-                                onChanged: (bool state) {
+                                onChanged: (bool value) {
                                   darkModeProvider.SwitchMode();
                                 },
-                                onTap: () {},
-                                onDoubleTap: () {},
-                                onSwipe: () {},
-                                textOnColor: Colors.white,
-                                textOffColor: Colors.black,
                               );
                             },
                           ),
@@ -103,8 +92,12 @@ class MyProfile extends StatelessWidget {
                             Navigator.pushNamed(context, '/termsAndConditions');
                           },
                         ),
-                        const ProfileOption(
-                            icon: Icons.help, text: "Help Center"),
+                        ProfileOption(
+                            icon: Icons.help,
+                            text: "Help Center",
+                            onTap: () {
+                              Navigator.pushNamed(context, '/helpCenter');
+                            }),
                         ProfileOption(
                           icon: Icons.person_add,
                           text: "Invite Friends",
@@ -176,12 +169,17 @@ class ProfileOption extends StatelessWidget {
   }
 }
 
-class ProfilePicture extends StatelessWidget {
+class ProfilePicture extends StatefulWidget {
   final double radius;
   final double size;
 
   const ProfilePicture({super.key, this.radius = 50, this.size = 100});
 
+  @override
+  State<ProfilePicture> createState() => _ProfilePictureState();
+}
+
+class _ProfilePictureState extends State<ProfilePicture> {
   @override
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
@@ -192,40 +190,37 @@ class ProfilePicture extends StatelessWidget {
           : Future.value(
               "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg"),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircleAvatar(
-            radius: radius,
-            backgroundImage:
-                const AssetImage('assets/images/default_profile_picture.png'),
-          );
-        } else if (snapshot.hasError ||
+        if (snapshot.connectionState == ConnectionState.waiting ||
+            snapshot.hasError ||
             !snapshot.hasData ||
             snapshot.data == null) {
-          return CircleAvatar(
-            radius: radius,
-            backgroundImage: const NetworkImage(
-              'https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg',
-            ),
-            child: Icon(Icons.person, size: radius, color: Colors.grey),
+          return _buildProfilePicture(
+            const AssetImage('assets/profile.png'),
           );
         } else {
-          return Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: const Color(0xff167F71),
-                width: 2,
-              ),
-            ),
-            width: size,
-            child: CircleAvatar(
-              radius: radius,
-              backgroundImage: NetworkImage(snapshot.data!),
-              backgroundColor: Colors.grey[200],
-            ),
+          return _buildProfilePicture(
+            NetworkImage(snapshot.data!),
           );
         }
       },
+    );
+  }
+
+  Widget _buildProfilePicture(ImageProvider imageProvider) {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: const Color(0xff167F71),
+          width: 2,
+        ),
+      ),
+      width: widget.size,
+      child: CircleAvatar(
+        radius: widget.radius,
+        backgroundImage: imageProvider,
+        backgroundColor: Colors.grey[200],
+      ),
     );
   }
 
@@ -237,7 +232,7 @@ class ProfilePicture extends StatelessWidget {
           .doc(userId)
           .get();
       BaseProvider().setBusy(false);
-      return userDoc.get('profilePicture');
+      return userDoc.get('profilePicture') as String?;
     } catch (e) {
       print('Error fetching profile picture: $e');
       return null;

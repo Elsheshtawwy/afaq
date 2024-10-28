@@ -22,6 +22,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   final _fullNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _bioController = TextEditingController();
+  final _dobController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   File? _profileImage;
@@ -33,22 +34,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     _fullNameController.dispose();
     _phoneController.dispose();
     _bioController.dispose();
+    _dobController.dispose();
     super.dispose();
   }
 
-  Future<void> requestStoragePermission() async {
-    final status = await Permission.photos.request();
-    print('Storage permission status: $status');
-    if (!status.isGranted) {
-      await openAppSettings();
-    }
-  }
-
   Future<void> _pickImage() async {
-    // await requestStoragePermission();
-
-    final XFile? pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _profileImage = File(pickedFile.path);
@@ -56,51 +47,31 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     }
   }
 
-
-
-Future<String?> _uploadImage(File image) async {
-  try {
-    String formattedDate =
-        DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-    final filePath = image.path;
-
-    print('Selected image path : $filePath');
-
-    Reference storageRef = FirebaseStorage.instance.ref('images/$formattedDate');
-    final uploadTask = await storageRef.putFile(image);
-
-    final String downloadUrl = await storageRef.getDownloadURL();
-    debugPrint('Image uploaded successfully: $downloadUrl');
-
-    return downloadUrl;
-  } catch (e) {
-    debugPrint('Error uploading image: $e');
-    return null;
-  }
-}
-
-
-
-  Future<File> _compressImage({required File file}) async {
-    return file;
+  Future<String?> _uploadImage(File image) async {
+    try {
+      String formattedDate = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      Reference storageRef = FirebaseStorage.instance.ref('images/$formattedDate');
+      await storageRef.putFile(image);
+      return await storageRef.getDownloadURL();
+    } catch (e) {
+      debugPrint('Error uploading image: $e');
+      return null;
+    }
   }
 
   Future<void> _saveUserData(String? imageUrl) async {
-    if (_fullNameController.text.isNotEmpty &&
-        _phoneController.text.isNotEmpty) {
+    if (_fullNameController.text.isNotEmpty && _phoneController.text.isNotEmpty) {
       try {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          await FirebaseFirestore.instance
-              .collection('users')
-              .doc(user.uid)
-              .set({
+          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
             'fullName': _fullNameController.text,
             'phone': _phoneController.text,
             'profilePicture': imageUrl ?? '',
             'bio': _bioController.text,
             'userType': _selectedUserType,
             'gender': _selectedGender,
+            'birthDate': _dobController.text,
           });
         }
       } catch (e) {
@@ -127,7 +98,6 @@ Future<String?> _uploadImage(File image) async {
         child: LayoutBuilder(
           builder: (context, constraints) {
             final screenHeight = constraints.maxHeight;
-
             return Container(
               width: double.infinity,
               height: double.infinity,
@@ -195,8 +165,7 @@ Future<String?> _uploadImage(File image) async {
             child: CircleAvatar(
               radius: 50,
               backgroundColor: Colors.white,
-              backgroundImage:
-                  _profileImage != null ? FileImage(_profileImage!) : null,
+              backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
               child: _profileImage == null
                   ? Icon(
                       CupertinoIcons.photo_camera,
@@ -210,8 +179,7 @@ Future<String?> _uploadImage(File image) async {
           CustomTextField(
             controller: _fullNameController,
             labelText: 'Full Name',
-            prefixIcon:
-                Icon(CupertinoIcons.person, color: Colors.blue.shade600),
+            prefixIcon: Icon(CupertinoIcons.person, color: Colors.blue.shade600),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your full name';
@@ -242,6 +210,8 @@ Future<String?> _uploadImage(File image) async {
           ),
           SizedBox(height: screenHeight * 0.02),
           _buildGenderDropdown(),
+          SizedBox(height: screenHeight * 0.02),
+          _buildDatePicker(),
           SizedBox(height: screenHeight * 0.04),
           _isLoading
               ? const CircularProgressIndicator()
@@ -296,8 +266,7 @@ Future<String?> _uploadImage(File image) async {
       },
       decoration: InputDecoration(
         labelText: 'Select Your Role',
-        prefixIcon:
-            Icon(CupertinoIcons.person_2_fill, color: Colors.blue.shade600),
+        prefixIcon: Icon(CupertinoIcons.person_2_fill, color: Colors.blue.shade600),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -328,6 +297,39 @@ Future<String?> _uploadImage(File image) async {
         filled: true,
         fillColor: Colors.white,
       ),
+    );
+  }
+
+  Widget _buildDatePicker() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 8),
+        GestureDetector(
+          onTap: () async {
+            DateTime? pickedDate = await showDatePicker(
+              context: context,
+              initialDate: _dobController.text.isNotEmpty
+                  ? DateTime.parse(_dobController.text)
+                  : DateTime.now(),
+              firstDate: DateTime(1900),
+              lastDate: DateTime.now(),
+            );
+            if (pickedDate != null) {
+              setState(() {
+                _dobController.text = pickedDate.toString().split(' ')[0];
+              });
+            }
+          },
+          child: AbsorbPointer(
+            child: CustomTextField(
+              controller: _dobController,
+              labelText: 'Birth Date',
+              prefixIcon: Icon(Icons.calendar_today, color: Colors.blue.shade600),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
