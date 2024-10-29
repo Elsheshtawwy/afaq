@@ -2,11 +2,13 @@ class CategoryModel {
   final String id;
   final String name;
   final String imageUrl;
+   bool? isSelected;
 
   CategoryModel({
     required this.id,
     required this.name,
     required this.imageUrl,
+    this.isSelected = false,
   });
 
   factory CategoryModel.fromMap(Map<String, dynamic> map) {
@@ -14,6 +16,7 @@ class CategoryModel {
       id: map['id'],
       name: map['name'],
       imageUrl: map['imageUrl'],
+      isSelected: map['isSelected'] ?? false,
     );
   }
 
@@ -22,6 +25,7 @@ class CategoryModel {
       'id': id,
       'name': name,
       'imageUrl': imageUrl,
+      'isSelected': isSelected,
     };
   }
 }

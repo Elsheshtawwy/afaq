@@ -1,4 +1,8 @@
+import 'package:afaq/widgets/Auth_widgets/MainText.dart';
+import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
 import 'package:afaq/widgets/TextField/CustomTextField.dart';
+import 'package:afaq/widgets/UserInfo_widgets/CustomeToggle.dart';
+import 'package:afaq/widgets/UserInfo_widgets/DatePicker.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/showAwesomeDialog/showAwesomeDialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -7,9 +11,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
+
+import 'package:toggle_switch/toggle_switch.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});
@@ -101,8 +108,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                 gradient: LinearGradient(
                   colors: [
                     Colors.blue.shade200,
+                    Colors.blue.shade400,
                     Colors.blue.shade500,
-                    Colors.blue.shade600,
                   ],
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -119,21 +126,14 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            const Text(
-                              'Tell us more about you!',
-                              style: TextStyle(
-                                fontSize: 28,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                            const MainText(
+                              text: 'Tell Us About Yourself',
+                              fontSize: 28,
                             ),
-                            SizedBox(height: screenHeight * 0.03),
-                            const Text(
-                              'You can change this information later.',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: Colors.white70,
-                              ),
+                            SizedBox(height: screenHeight * 0.02),
+                            const SubtitleText(
+                              text: 'You can update your profile later',
+                              fontSize: 18,
                             ),
                             SizedBox(height: screenHeight * 0.03),
                             _buildForm(screenHeight),
@@ -199,20 +199,54 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             },
           ),
           SizedBox(height: screenHeight * 0.02),
-          _buildDropdownButtonFormField(),
-          SizedBox(height: screenHeight * 0.02),
           CustomTextField(
             controller: _bioController,
             labelText: 'Bio',
             prefixIcon: Icon(CupertinoIcons.info, color: Colors.blue.shade600),
           ),
           SizedBox(height: screenHeight * 0.02),
-          _buildGenderDropdown(),
+          DatePickerWidget(
+            labelText: 'Date of Birth',
+            controller: _dobController,
+          ),
           SizedBox(height: screenHeight * 0.02),
-          _buildDatePicker(),
+          CustomToggle(
+            initialIndex: _selectedUserType == 'Learner' ? 0 : 1,
+            labels: const ['Learner', 'Instructor'],
+            icons: const [
+              FontAwesomeIcons.userGraduate,
+              FontAwesomeIcons.chalkboardTeacher
+            ],
+            activeBgColors: const [
+              [Colors.teal],
+              [Colors.teal]
+            ],
+            onToggle: (index) {
+              setState(() {
+                _selectedUserType = index == 0 ? 'Learner' : 'Instructor';
+              });
+            },
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          CustomToggle(
+            initialIndex: _selectedGender == 'Male' ? 0 : 1,
+            labels: const ['Male', 'Female'],
+            icons: const [FontAwesomeIcons.mars, FontAwesomeIcons.venus],
+            activeBgColors: const [
+              [Colors.teal],
+              [Colors.pink]
+            ],
+            onToggle: (index) {
+              setState(() {
+                _selectedGender = index == 0 ? 'Male' : 'Female';
+              });
+            },
+          ),
           SizedBox(height: screenHeight * 0.04),
           _isLoading
-              ? const CircularProgressIndicator()
+              ? const CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation(Colors.white),
+                )
               : CustomButton(
                   label: 'Continue',
                   onPressed: _onContinuePressed,
@@ -240,7 +274,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             DialogType.error);
       } else {
         await _saveUserData(imageUrl);
-
         setState(() {
           _isLoading = false;
         });
@@ -248,88 +281,5 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         Navigator.pushNamed(context, '/feed', arguments: _selectedUserType);
       }
     }
-  }
-
-  Widget _buildDropdownButtonFormField() {
-    return DropdownButtonFormField<String>(
-      value: _selectedUserType,
-      items: const [
-        DropdownMenuItem(value: "Learner", child: Text("Learner")),
-        DropdownMenuItem(value: "Instructor", child: Text("Instructor")),
-      ],
-      onChanged: (value) {
-        setState(() {
-          _selectedUserType = value ?? "Learner";
-        });
-      },
-      decoration: InputDecoration(
-        labelText: 'Select Your Role',
-        prefixIcon:
-            Icon(CupertinoIcons.person_2_fill, color: Colors.blue.shade600),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildGenderDropdown() {
-    return DropdownButtonFormField<String>(
-      value: _selectedGender,
-      items: const [
-        DropdownMenuItem(value: "Male", child: Text("Male")),
-        DropdownMenuItem(value: "Female", child: Text("Female")),
-      ],
-      onChanged: (value) {
-        setState(() {
-          _selectedGender = value ?? "Male";
-        });
-      },
-      decoration: InputDecoration(
-        labelText: 'Gender',
-        prefixIcon: Icon(CupertinoIcons.person, color: Colors.blue.shade600),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        filled: true,
-        fillColor: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildDatePicker() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 8),
-        GestureDetector(
-          onTap: () async {
-            DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: _dobController.text.isNotEmpty
-                  ? DateTime.parse(_dobController.text)
-                  : DateTime.now(),
-              firstDate: DateTime(1900),
-              lastDate: DateTime.now(),
-            );
-            if (pickedDate != null) {
-              setState(() {
-                _dobController.text = pickedDate.toString().split(' ')[0];
-              });
-            }
-          },
-          child: AbsorbPointer(
-            child: CustomTextField(
-              controller: _dobController,
-              labelText: 'Birth Date',
-              prefixIcon:
-                  Icon(Icons.calendar_today, color: Colors.blue.shade600),
-            ),
-          ),
-        ),
-      ],
-    );
   }
 }
