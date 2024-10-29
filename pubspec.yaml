@@ -97,6 +97,7 @@ flutter:
     - assets/icons/
     - assets/categories/
     - assets/HelpCenter/
+    - assets/paymentMethods/
     - assets/socialLogos/dark/
     - assets/socialLogos/light/
     # - assets/socialLogos/google/

@@ -1,6 +1,5 @@
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
 import 'package:flutter/material.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});

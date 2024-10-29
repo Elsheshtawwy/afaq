@@ -1,17 +1,20 @@
-import 'package:afaq/pages/MyProfileScreens/EditProfile.dart';
-import 'package:afaq/pages/MyProfileScreens/HelpCenter.dart';
-import 'package:afaq/pages/MyProfileScreens/Invite_Frineds.dart';
-import 'package:afaq/pages/MyProfileScreens/LanguageSelectionScreen.dart';
-import 'package:afaq/pages/MyProfileScreens/NotificationScreen.dart';
-import 'package:afaq/pages/MyProfileScreens/TermsAndConditions.dart';
-import 'package:afaq/pages/auth/FeedScreen.dart';
-import 'package:afaq/pages/auth/UserInfoScreen.dart';
+import 'package:afaq/ScreenRouter.dart';
+import 'package:afaq/pages/auth/welcomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 
 import 'firebase_options.dart';
+import 'package:afaq/pages/MyProfileScreens/EditProfile.dart';
+import 'package:afaq/pages/MyProfileScreens/HelpCenter.dart';
+import 'package:afaq/pages/MyProfileScreens/Invite_Frineds.dart';
+import 'package:afaq/pages/MyProfileScreens/LanguageSelectionScreen.dart';
+import 'package:afaq/pages/MyProfileScreens/NotificationScreen.dart';
+import 'package:afaq/pages/MyProfileScreens/Payment_Option.dart';
+import 'package:afaq/pages/MyProfileScreens/TermsAndConditions.dart';
+import 'package:afaq/pages/auth/FeedScreen.dart';
+import 'package:afaq/pages/auth/UserInfoScreen.dart';
 import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
 import 'package:afaq/pages/splash/splash_screen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
@@ -66,24 +69,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'Afaq',
       theme: _buildThemeData(),
-      home: const HomePage(),
-      routes: {
-        '/splash': (context) => const SplashScreen(),
-        '/login': (context) => const LoginScreen(),
-        '/signup': (context) => const SignUpScreen(),
-        '/onboarding': (context) => const OnboardingScreen(),
-        '/home': (context) => const HomePage(),
-        '/feed': (context) => const FeedScreen(
-              selectedUserType: 'Learner',
-            ),
-        '/userInfo': (context) => const UserInfoScreen(),
-        '/termsAndConditions': (context) => const TermsAndConditionsScreen(),
-        '/LanguageSelection': (context) => const LanguageSelectionScreen(),
-        '/editProfile': (context) => const EditProfile(),
-        '/notifications': (context) => const NotificationScreen(),
-        '/inviteFriendsScreen' : (context) => const InviteFriendsScreen(),
-        '/helpCenter': (context) =>  HelpCenterScreen(),
-      },
+      home: const SplashScreen(),
+      routes: _buildRoutes(),
     );
   }
 
@@ -98,5 +85,25 @@ class _MyAppState extends State<MyApp> {
       colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4667FD)),
       useMaterial3: true,
     );
+  }
+
+  Map<String, WidgetBuilder> _buildRoutes() {
+    return {
+      '/welcome': (context) => const WelcomeScreen(),
+      '/splash': (context) => const SplashScreen(),
+      '/login': (context) => const LoginScreen(),
+      '/signup': (context) => const SignUpScreen(),
+      '/onboarding': (context) => const OnboardingScreen(),
+      '/home': (context) => const HomePage(),
+      '/feed': (context) => const FeedScreen(selectedUserType: 'Learner'),
+      '/userInfo': (context) => const UserInfoScreen(),
+      '/termsAndConditions': (context) => const TermsAndConditionsScreen(),
+      '/LanguageSelection': (context) => const LanguageSelectionScreen(),
+      '/editProfile': (context) => const EditProfile(),
+      '/notifications': (context) => const NotificationScreen(),
+      '/inviteFriendsScreen': (context) => const InviteFriendsScreen(),
+      '/helpCenter': (context) => HelpCenterScreen(),
+      '/paymentOption': (context) => PaymentOptionsScreen(),
+    };
   }
 }

@@ -1,8 +1,15 @@
 import 'package:afaq/providers/auth_provider.dart';
 import 'package:afaq/providers/base_provider.dart';
-import 'package:afaq/widgets/CustomTextField.dart';
+import 'package:afaq/widgets/Auth_widgets/AuthOption.dart';
+import 'package:afaq/widgets/Auth_widgets/LogoWidget.dart';
+import 'package:afaq/widgets/Auth_widgets/MainText.dart';
+import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
+import 'package:afaq/widgets/Auth_widgets/VisibilityIcon.dart';
+import 'package:afaq/widgets/TextField/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
-import 'package:afaq/widgets/buttons/socialIcons.dart';
+import 'package:afaq/widgets/Auth_widgets/SocialSignUpOptions.dart';
+import 'package:afaq/widgets/showAwesomeDialog/showAwesomeDialog.dart';
+import 'package:afaq/widgets/Auth_widgets/validate.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +57,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
           _isLoading = true;
         });
         try {
-          final authProvider = Provider.of<Auth_Provider>(context, listen: false);
+          final authProvider =
+              Provider.of<Auth_Provider>(context, listen: false);
           final result = await authProvider.createAccount(
             context,
             _emailController.text,
@@ -63,72 +71,24 @@ class _SignUpScreenState extends State<SignUpScreen> {
             base_provider.setBusy(false);
           }
         } catch (e) {
-          _showAwesomeDialog(
-              'Error', 'An error occurred. Please try again.', DialogType.error);
+          AwesomeDialogHelper('Error', 'An error occurred. Please try again.',
+              DialogType.error);
         } finally {
           setState(() {
             _isLoading = false;
           });
         }
       } else {
-        _showAwesomeDialog('Permission Denied', 'Storage permission is required to proceed.', DialogType.warning);
+        AwesomeDialogHelper('Permission Denied',
+            'Storage permission is required to proceed.', DialogType.warning);
       }
     } else if (!_agreeToTerms) {
-      _showAwesomeDialog('Terms & Conditions',
+      AwesomeDialogHelper('Terms & Conditions',
           'You must agree to the terms and conditions.', DialogType.warning);
     }
   }
 
-  void _showAwesomeDialog(String title, String message, DialogType dialogType) {
-    AwesomeDialog(
-      context: context,
-      dialogType: dialogType,
-      animType: AnimType.bottomSlide,
-      title: title,
-      desc: message,
-      btnOkOnPress: () {},
-    ).show();
-  }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email';
-    }
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your password';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    return null;
-  }
-
-  String? _validateConfirmPassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
-    }
-    if (value != _passwordController.text) {
-      return 'Passwords do not match';
-    }
-    return null;
-  }
-
-  Widget _buildVisibilityIcon(bool obscureText, VoidCallback onPressed) {
-    return IconButton(
-      icon: Icon(
-        obscureText ? Icons.visibility : Icons.visibility_off,
-        color: Colors.blue.shade600,
-      ),
-      onPressed: onPressed,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,49 +120,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         SizedBox(height: screenHeight * 0.01),
-                        _buildLogo(screenHeight),
+                        LogoWidget(
+                          screenHeight: screenHeight,
+                        ),
                         SizedBox(height: screenHeight * 0.01),
-                        _buildWelcomeText(),
-                        SizedBox(height: screenHeight * 0.04),
+                        MainText(text: 'Sign Up', fontSize: 32),
+                        SizedBox(height: screenHeight * 0.01),
+                        SubtitleText(
+                          text: 'Create an account to get started',
+                          fontSize: 18,
+                        ),
+                        SizedBox(height: screenHeight * 0.03),
                         _buildSignUpForm(screenHeight),
                         SizedBox(height: screenHeight * 0.02),
-                        _buildSocialSignUpOptions(screenHeight),
+                        SocialSignUpOptions(
+                          screenHeight: screenHeight,
+                          baseProvider: base_provider,
+                          context: context,
+                          text: 'Or Sign Up With',
+                        ),
                         SizedBox(height: screenHeight * 0.02),
-                        _buildSignInOption(),
+                        AuthOption(
+                          text: 'Login',
+                          question: 'Already have an account?',
+                          route: '/login',
+                        )
                       ],
                     ),
                   ),
                 ),
         ),
       ),
-    );
-  }
-
-  Widget _buildLogo(double screenHeight) {
-    return Image.asset(
-      'assets/images/logo.png',
-      height: screenHeight * 0.12,
-      errorBuilder: (context, error, stackTrace) {
-        return const Icon(Icons.error, size: 100);
-      },
-    );
-  }
-
-  Widget _buildWelcomeText() {
-    return const Column(
-      children: [
-        Text(
-          'Welcome!',
-          style: TextStyle(
-              fontSize: 28, fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        SizedBox(height: 8),
-        Text(
-          'Create an account to access all features',
-          style: TextStyle(fontSize: 16, color: Colors.white70),
-          textAlign: TextAlign.center,
-        ),
-      ],
     );
   }
 
@@ -216,7 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
             labelText: 'Email',
             keyboardType: TextInputType.emailAddress,
             prefixIcon: Icon(CupertinoIcons.mail, color: Colors.blue.shade600),
-            validator: _validateEmail,
+            validator: (value) => Validator.validateEmail(value),
           ),
           SizedBox(height: screenHeight * 0.02),
           CustomTextField(
@@ -224,15 +172,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
             labelText: 'Password',
             obscureText: _obscurePassword,
             prefixIcon: Icon(CupertinoIcons.lock, color: Colors.blue.shade600),
-            suffixIcon: _buildVisibilityIcon(
-              _obscurePassword,
-              () {
+            suffixIcon: VisibilityIcon(
+              obscureText: _obscurePassword,
+              onPressed: () {
                 setState(() {
                   _obscurePassword = !_obscurePassword;
                 });
               },
             ),
-            validator: _validatePassword,
+            validator: (value) => Validator.validatePassword(value),
           ),
           SizedBox(height: screenHeight * 0.02),
           CustomTextField(
@@ -240,15 +188,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
             labelText: 'Confirm Password',
             obscureText: _obscureConfirmPassword,
             prefixIcon: Icon(CupertinoIcons.lock, color: Colors.blue.shade600),
-            suffixIcon: _buildVisibilityIcon(
-              _obscureConfirmPassword,
-              () {
+            suffixIcon: VisibilityIcon(
+              obscureText: _obscureConfirmPassword,
+              onPressed: () {
                 setState(() {
                   _obscureConfirmPassword = !_obscureConfirmPassword;
                 });
               },
             ),
-            validator: _validateConfirmPassword,
+            validator: (value) => Validator.validateConfirmPassword(
+                value, _passwordController.text),
           ),
           SizedBox(height: screenHeight * 0.02),
           _buildTermsAndConditionsCheckbox(),
@@ -280,74 +229,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
         const Text(
           'I agree to the Terms & Conditions',
           style: TextStyle(fontSize: 14, color: Colors.white),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSocialSignUpOptions(double screenHeight) {
-    return Column(
-      children: [
-        const Text(
-          'Or Sign Up With',
-          style: TextStyle(color: Colors.white, fontSize: 14),
-        ),
-        SizedBox(height: screenHeight * 0.02),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            buildSocialButtons(
-              [
-                'assets/socialLogos/light/google.png',
-                'assets/socialLogos/light/facebook.png',
-              ],
-              [
-                () async {
-                  try {
-                    base_provider.setBusy(true);
-                    await Auth_Provider().signInWithGoogle();
-                    Navigator.pushReplacementNamed(context, '/home');
-                    base_provider.setBusy(false);
-                  } catch (e) {
-                    _showAwesomeDialog(
-                        'Error', 'Google Sign-In failed', DialogType.error);
-                  }
-                },
-                () {
-                  // Facebook Sign In
-                }
-              ],
-            )
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSignInOption() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Already have an account? ',
-          style: TextStyle(fontSize: 14, color: Colors.white),
-        ),
-        GestureDetector(
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: TextButton(
-            child: const Text(
-              'Sign In',
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.orange),
-            ),
-            onPressed: () {
-              Navigator.pushNamed(context, '/login');
-            },
-          ),
         ),
       ],
     );

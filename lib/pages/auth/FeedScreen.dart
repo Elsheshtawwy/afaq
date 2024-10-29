@@ -1,5 +1,5 @@
 import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
-import 'package:afaq/widgets/CustomTextField.dart';
+import 'package:afaq/widgets/TextField/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';

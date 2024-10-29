@@ -3,7 +3,6 @@ import 'package:afaq/providers/dark_mode_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:provider/provider.dart';
 
 class MyProfile extends StatelessWidget {
@@ -47,8 +46,12 @@ class MyProfile extends StatelessWidget {
                             Navigator.pushNamed(context, '/editProfile');
                           },
                         ),
-                        const ProfileOption(
-                            icon: Icons.payment, text: "Payment Option"),
+                        ProfileOption(
+                            icon: Icons.payment,
+                            text: "Payment Option",
+                            onTap: () {
+                              Navigator.pushNamed(context, '/paymentOption');
+                            }),
                         ProfileOption(
                           icon: Icons.notifications,
                           text: "Notifications",

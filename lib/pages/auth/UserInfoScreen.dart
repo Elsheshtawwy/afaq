@@ -1,5 +1,6 @@
-import 'package:afaq/widgets/CustomTextField.dart';
+import 'package:afaq/widgets/TextField/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
+import 'package:afaq/widgets/showAwesomeDialog/showAwesomeDialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 
 class UserInfoScreen extends StatefulWidget {
@@ -39,7 +39,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 
   Future<void> _pickImage() async {
-    final XFile? pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _profileImage = File(pickedFile.path);
@@ -49,8 +50,10 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   Future<String?> _uploadImage(File image) async {
     try {
-      String formattedDate = DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
-      Reference storageRef = FirebaseStorage.instance.ref('images/$formattedDate');
+      String formattedDate =
+          DateFormat('yyyyMMdd_HHmmss').format(DateTime.now());
+      Reference storageRef =
+          FirebaseStorage.instance.ref('images/$formattedDate');
       await storageRef.putFile(image);
       return await storageRef.getDownloadURL();
     } catch (e) {
@@ -60,11 +63,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   }
 
   Future<void> _saveUserData(String? imageUrl) async {
-    if (_fullNameController.text.isNotEmpty && _phoneController.text.isNotEmpty) {
+    if (_fullNameController.text.isNotEmpty &&
+        _phoneController.text.isNotEmpty) {
       try {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
-          await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(user.uid)
+              .set({
             'fullName': _fullNameController.text,
             'phone': _phoneController.text,
             'profilePicture': imageUrl ?? '',
@@ -78,17 +85,6 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         debugPrint('Error saving user data: $e');
       }
     }
-  }
-
-  void _showAwesomeDialog(String title, String message, DialogType dialogType) {
-    AwesomeDialog(
-      context: context,
-      dialogType: dialogType,
-      animType: AnimType.bottomSlide,
-      title: title,
-      desc: message,
-      btnOkOnPress: () {},
-    ).show();
   }
 
   @override
@@ -165,7 +161,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             child: CircleAvatar(
               radius: 50,
               backgroundColor: Colors.white,
-              backgroundImage: _profileImage != null ? FileImage(_profileImage!) : null,
+              backgroundImage:
+                  _profileImage != null ? FileImage(_profileImage!) : null,
               child: _profileImage == null
                   ? Icon(
                       CupertinoIcons.photo_camera,
@@ -179,7 +176,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           CustomTextField(
             controller: _fullNameController,
             labelText: 'Full Name',
-            prefixIcon: Icon(CupertinoIcons.person, color: Colors.blue.shade600),
+            prefixIcon:
+                Icon(CupertinoIcons.person, color: Colors.blue.shade600),
             validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Please enter your full name';
@@ -236,7 +234,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       }
 
       if (imageUrl == null) {
-        _showAwesomeDialog(
+        AwesomeDialogHelper(
             'Error',
             'An error occurred while uploading your profile picture.',
             DialogType.error);
@@ -266,7 +264,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       },
       decoration: InputDecoration(
         labelText: 'Select Your Role',
-        prefixIcon: Icon(CupertinoIcons.person_2_fill, color: Colors.blue.shade600),
+        prefixIcon:
+            Icon(CupertinoIcons.person_2_fill, color: Colors.blue.shade600),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12.0),
         ),
@@ -325,7 +324,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             child: CustomTextField(
               controller: _dobController,
               labelText: 'Birth Date',
-              prefixIcon: Icon(Icons.calendar_today, color: Colors.blue.shade600),
+              prefixIcon:
+                  Icon(Icons.calendar_today, color: Colors.blue.shade600),
             ),
           ),
         ),

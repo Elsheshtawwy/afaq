@@ -5,7 +5,7 @@ class UserModel {
   final String? phoneNumber;
   final String password;
   final String? profilePicture;
-  final String role; 
+  final String role;
   final List<String>? coursesEnrolled;
   final List<String>? wishlist;
   final String? bio;
@@ -15,7 +15,8 @@ class UserModel {
   final DateTime joinedDate;
   final Map<String, dynamic>? paymentDetails;
   final bool isVerified;
-  final String? gender; 
+  final String? gender;
+  final double balance;
 
   UserModel({
     required this.id,
@@ -34,7 +35,8 @@ class UserModel {
     this.preferences,
     this.paymentDetails,
     this.isVerified = false,
-    this.gender, 
+    this.gender,
+    this.balance = 0.0,
   });
 
   // JSON serialization
@@ -56,7 +58,8 @@ class UserModel {
       preferences: json['preferences'],
       paymentDetails: json['paymentDetails'],
       isVerified: json['isVerified'] ?? false,
-      gender: json['gender'], 
+      gender: json['gender'],
+      balance: json['balance']?.toDouble() ?? 0.0,
     );
   }
 
@@ -78,11 +81,11 @@ class UserModel {
       'joinedDate': joinedDate.toIso8601String(),
       'paymentDetails': paymentDetails,
       'isVerified': isVerified,
-      'gender': gender, 
+      'gender': gender,
+      'balance': balance,
     };
   }
 
-  // CopyWith method
   UserModel copyWith({
     String? id,
     String? name,
@@ -100,7 +103,8 @@ class UserModel {
     DateTime? joinedDate,
     Map<String, dynamic>? paymentDetails,
     bool? isVerified,
-    String? gender, 
+    String? gender,
+    double? balance,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -119,7 +123,8 @@ class UserModel {
       preferences: preferences ?? this.preferences,
       paymentDetails: paymentDetails ?? this.paymentDetails,
       isVerified: isVerified ?? this.isVerified,
-      gender: gender ?? this.gender, 
+      gender: gender ?? this.gender,
+      balance: balance ?? this.balance,
     );
   }
 }

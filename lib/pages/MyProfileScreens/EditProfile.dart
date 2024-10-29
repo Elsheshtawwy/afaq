@@ -1,4 +1,5 @@
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
+import 'package:afaq/widgets/TextField/CustomTextField.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-
 import 'package:toggle_switch/toggle_switch.dart';
 
 class EditProfile extends StatefulWidget {
@@ -157,7 +157,7 @@ class _EditProfileState extends State<EditProfile> {
   Widget _buildProfileImage() {
     return Stack(
       children: [
-        ProfilePicture(),
+        const ProfilePicture(),
         Positioned(
           bottom: 0,
           right: 0,
@@ -181,23 +181,34 @@ class _EditProfileState extends State<EditProfile> {
           controller: _fullNameController,
           labelText: 'Full Name',
         ),
+        SizedBox(
+          height: 16,
+        ),
         _buildDatePicker(),
+        SizedBox(height: 16,),
         CustomTextField(
           controller: _emailController,
           labelText: 'Email',
-          icon: Icons.email,
+          prefixIcon: Icon(Icons.email),
+        ),
+        SizedBox(
+          height: 16,
         ),
         CustomTextField(
           controller: _phoneController,
           labelText: 'Phone Number',
           prefixIcon: const Icon(Icons.flag, color: Colors.red),
         ),
+        SizedBox(
+          height: 16,
+        ),
         CustomTextField(
           controller: _bioController,
           labelText: 'Bio',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
         ToggleSwitch(
+          animationDuration : 1000,
           minWidth: 90.0,
           initialLabelIndex: _selectedGender == 'Male' ? 0 : 1,
           cornerRadius: 20.0,
@@ -205,9 +216,9 @@ class _EditProfileState extends State<EditProfile> {
           inactiveBgColor: Colors.grey,
           inactiveFgColor: Colors.white,
           totalSwitches: 2,
-          labels: ['Male', 'Female'],
-          icons: [FontAwesomeIcons.mars, FontAwesomeIcons.venus],
-          activeBgColors: [
+          labels: const ['Male', 'Female'],
+          icons: const [FontAwesomeIcons.mars, FontAwesomeIcons.venus],
+          activeBgColors: const [
             [Colors.blue],
             [Colors.pink]
           ],
@@ -218,7 +229,7 @@ class _EditProfileState extends State<EditProfile> {
             print('switched to: $index');
           },
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 16),
         CustomTextField(
           controller: _studentController,
           labelText: 'Student',
@@ -252,7 +263,7 @@ class _EditProfileState extends State<EditProfile> {
             child: CustomTextField(
               controller: _dobController,
               labelText: 'Birth Date',
-              icon: Icons.calendar_today,
+              suffixIcon: Icon(Icons.calendar_today),
             ),
           ),
         ),
@@ -296,44 +307,6 @@ class _EditProfileState extends State<EditProfile> {
         'Update',
         style: TextStyle(
             fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-      ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  final TextEditingController controller;
-  final String labelText;
-  final IconData? icon;
-  final Widget? prefixIcon;
-
-  const CustomTextField(
-      {super.key,
-      required this.controller,
-      required this.labelText,
-      this.icon,
-      this.prefixIcon});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: TextField(
-        controller: controller,
-        decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle: const TextStyle(fontSize: 14),
-          prefixIcon: prefixIcon,
-          suffixIcon: icon != null ? Icon(icon) : null,
-          filled: true,
-          fillColor: Colors.grey[200],
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
-          ),
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 0),
-        ),
       ),
     );
   }

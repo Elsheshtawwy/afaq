@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 
 class HelpCenterScreen extends StatelessWidget {
+  const HelpCenterScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Help Center'),
+        title: const Text('Help Center'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Welcome to the Help Center!',
               style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'Here are some frequently asked questions:',
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Expanded(
               child: ListView(
                 children: [
@@ -49,7 +51,7 @@ class HelpCenterScreen extends StatelessWidget {
   Widget _buildFAQItem(BuildContext context, String question, String route) {
     return Card(
       color: Colors.white,
-      margin: EdgeInsets.symmetric(vertical: 8, horizontal: 5),
+      margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
@@ -66,15 +68,15 @@ class HelpCenterScreen extends StatelessWidget {
           padding: const EdgeInsets.all(15.0),
           child: Row(
             children: [
-              Icon(Icons.help_outline, color: Colors.blue),
-              SizedBox(width: 10),
+              const Icon(Icons.help_outline, color: Colors.blue),
+              const SizedBox(width: 10),
               Expanded(
                 child: Text(
                   question,
-                  style: TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16),
                 ),
               ),
-              Icon(Icons.arrow_forward_ios, color: Colors.grey),
+              const Icon(Icons.arrow_forward_ios, color: Colors.grey),
             ],
           ),
         ),
@@ -87,7 +89,7 @@ class FAQScreen extends StatelessWidget {
   final String title;
   final String contentKey;
 
-  FAQScreen({required this.title, required this.contentKey});
+  const FAQScreen({super.key, required this.title, required this.contentKey});
 
   @override
   Widget build(BuildContext context) {
@@ -98,18 +100,18 @@ class FAQScreen extends StatelessWidget {
         title: Text(title),
       ),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              SizedBox(height: 50),
+              const SizedBox(height: 50),
               Image.asset(contentData['image']!, width: 200),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Text(
                 contentData['content']!,
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ],
           ),

@@ -1,7 +1,16 @@
 import 'package:afaq/providers/auth_provider.dart';
-import 'package:afaq/widgets/CustomTextField.dart';
+import 'package:afaq/providers/base_provider.dart';
+import 'package:afaq/widgets/Auth_widgets/AuthOption.dart';
+import 'package:afaq/widgets/Auth_widgets/ForgotPasswordWidget.dart';
+import 'package:afaq/widgets/Auth_widgets/LogoWidget.dart';
+import 'package:afaq/widgets/Auth_widgets/MainText.dart';
+import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
+import 'package:afaq/widgets/Auth_widgets/VisibilityIcon.dart';
+import 'package:afaq/widgets/Auth_widgets/validate.dart';
+import 'package:afaq/widgets/TextField/CustomTextField.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
-import 'package:afaq/widgets/buttons/socialIcons.dart';
+import 'package:afaq/widgets/Auth_widgets/SocialSignUpOptions.dart';
+import 'package:afaq/widgets/showAwesomeDialog/showAwesomeDialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,7 +31,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   final _forgotPasswordController = TextEditingController();
   bool _isLoading = false;
-  
 
   @override
   void dispose() {
@@ -31,59 +39,15 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your email address';
-    }
-    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-      return 'Please enter a valid email address';
-    }
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Please enter your password';
-    }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-    return null;
-  }
-
-  Widget _buildVisibilityIcon() {
-    return IconButton(
-      icon: Icon(
-        _obscurePassword ? Icons.visibility : Icons.visibility_off,
-        color: Colors.blue.shade600,
-      ),
-      onPressed: () {
-        setState(() {
-          _obscurePassword = !_obscurePassword;
-        });
-      },
-    );
-  }
-
   void _showLoadingIndicator(bool show) {
     setState(() {
       _isLoading = show;
     });
   }
 
-  void _showAwesomeDialog(String title, String message, DialogType dialogType) {
-    AwesomeDialog(
-      context: context,
-      dialogType: dialogType,
-      animType: AnimType.bottomSlide,
-      title: title,
-      desc: message,
-      btnOkOnPress: () {},
-    ).show();
-  }
-
   @override
   Widget build(BuildContext context) {
+    final base_provider = Provider.of<BaseProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -112,35 +76,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: screenHeight * 0.01),
-                      Image.asset(
-                        'assets/images/logo.png',
-                        height: screenHeight * 0.12,
-                        errorBuilder: (context, error, stackTrace) {
-                          return const Icon(Icons.error, size: 100);
-                        },
+                      LogoWidget(screenHeight: screenHeight),
+                      SizedBox(height: screenHeight * 0.01),
+                      MainText(
+                        text: 'Welcome Back',
+                        fontSize: 32,
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      const Text(
-                        'Welcome Back!',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      const Text(
-                        'Please enter your credentials to continue',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.white70,
-                        ),
-                        textAlign: TextAlign.center,
+                      SubtitleText(
+                        text: 'Log in to your account',
+                        fontSize: 18,
                       ),
                       SizedBox(height: screenHeight * 0.04),
                       Form(
                         key: _formKey,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CustomTextField(
                               controller: _emailController,
@@ -148,7 +99,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               keyboardType: TextInputType.emailAddress,
                               prefixIcon: Icon(CupertinoIcons.mail,
                                   color: Colors.blue.shade600),
-                              validator: _validateEmail,
+                              validator: (value) =>
+                                  Validator.validateEmail(value),
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             CustomTextField(
@@ -157,91 +109,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               obscureText: _obscurePassword,
                               prefixIcon: Icon(CupertinoIcons.lock,
                                   color: Colors.blue.shade600),
-                              suffixIcon: _buildVisibilityIcon(),
-                              validator: _validatePassword,
+                              suffixIcon: VisibilityIcon(
+                                obscureText: _obscurePassword,
+                                onPressed: () {
+                                  setState(() {
+                                    _obscurePassword = !_obscurePassword;
+                                  });
+                                },
+                              ),
+                              validator: (value) =>
+                                  Validator.validatePassword(value),
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             Align(
                               alignment: Alignment.centerRight,
-                              child: TextButton(
-                                onPressed: () async {
-                                  AwesomeDialog(
-                                    context: context,
-                                    dialogType: DialogType.info,
-                                    animType: AnimType.bottomSlide,
-                                    title: 'Forgot Password',
-                                    body: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        const Text(
-                                            'Please enter your email to reset your password:'),
-                                        TextField(
-                                          controller: _forgotPasswordController,
-                                          decoration: const InputDecoration(
-                                            labelText: 'Email',
-                                            hintText: 'Enter your email',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    btnCancelOnPress: () {
-                                      _forgotPasswordController.clear();
-                                    },
-                                    btnOkText: 'Submit',
-                                    btnOkOnPress: () async {
-                                      final email =
-                                          _forgotPasswordController.text.trim();
-                                      if (email.isNotEmpty) {
-                                        if (RegExp(r'^[^@]+@[^@]+\.[^@]+')
-                                            .hasMatch(email)) {
-                                          try {
-                                            final methods = await FirebaseAuth
-                                                .instance
-                                                .fetchSignInMethodsForEmail(
-                                                    email);
-                                            if (methods.isNotEmpty) {
-                                              await FirebaseAuth.instance
-                                                  .sendPasswordResetEmail(
-                                                      email: email);
-                                              _showAwesomeDialog(
-                                                  'Success',
-                                                  'Password reset email sent',
-                                                  DialogType.success);
-                                              _forgotPasswordController.clear();
-                                            } else {
-                                              _showAwesomeDialog(
-                                                  'Warning',
-                                                  'This email is not registered',
-                                                  DialogType.warning);
-                                            }
-                                          } catch (e) {
-                                            _showAwesomeDialog(
-                                                'Error',
-                                                'Failed to send password reset email',
-                                                DialogType.error);
-                                          }
-                                        } else {
-                                          _showAwesomeDialog(
-                                              'Warning',
-                                              'Please enter a valid email address',
-                                              DialogType.warning);
-                                        }
-                                      } else {
-                                        _showAwesomeDialog(
-                                            'Warning',
-                                            'Please enter an email address',
-                                            DialogType.warning);
-                                      }
-                                    },
-                                  ).show();
-                                },
-                                child: const Text(
-                                  'Forgot Password?',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 14,
-                                  ),
-                                ),
+                              child: ForgotPasswordWidget(
+                                forgotPasswordController:
+                                    _forgotPasswordController,
                               ),
                             ),
                             SizedBox(height: screenHeight * 0.01),
@@ -250,9 +134,9 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   _showLoadingIndicator(true);
-                                  final authProvider = Provider.of<Auth_Provider>(
-                                      context,
-                                      listen: false);
+                                  final authProvider =
+                                      Provider.of<Auth_Provider>(context,
+                                          listen: false);
                                   bool success = await authProvider.login(
                                     context,
                                     _emailController.text,
@@ -263,70 +147,24 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Navigator.pushReplacementNamed(
                                         context, '/home');
                                   } else {
-                                    _showAwesomeDialog(
-                                        'Error', 'Login failed', DialogType.error);
+                                    AwesomeDialogHelper('Error', 'Login failed',
+                                        DialogType.error);
                                   }
                                 }
                               },
                             ),
                             SizedBox(height: screenHeight * 0.02),
-                            const Text(
-                              'Or Log In With',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14),
+                            SocialSignUpOptions(
+                              screenHeight: screenHeight,
+                              baseProvider: base_provider,
+                              context: context,
+                              text: 'Or Log In With',
                             ),
                             SizedBox(height: screenHeight * 0.02),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                buildSocialButtons(
-                                  [
-                                    'assets/socialLogos/light/google.png',
-                                    'assets/socialLogos/light/facebook.png',
-                                  ],
-                                  [
-                                    () async {
-                                      try {
-                                        await Auth_Provider().signInWithGoogle();
-                                        Navigator.pushReplacementNamed(
-                                            context, '/home');
-                                      } catch (e) {
-                                        _showAwesomeDialog(
-                                            'Error',
-                                            'Google Sign-In failed',
-                                            DialogType.error);
-                                      }
-                                    },
-                                    () {
-                                      // Facebook Sign In
-                                    }
-                                  ],
-                                )
-                              ],
-                            ),
-                            SizedBox(height: screenHeight * 0.02),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  'Don\'t have an account? ',
-                                  style: TextStyle(
-                                      fontSize: 14, color: Colors.white),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(context, '/signup');
-                                  },
-                                  child: const Text(
-                                    'Sign Up',
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.orange,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            AuthOption(
+                              text: 'Sign Up',
+                              question: 'Don\'t have an account?',
+                              route: '/signup',
                             ),
                           ],
                         ),

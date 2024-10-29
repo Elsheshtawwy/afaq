@@ -1,13 +1,10 @@
 import 'dart:async';
-
 import 'package:afaq/ScreenRouter.dart';
 import 'package:afaq/helpers/functions.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({
-    super.key,
-  });
+  const SplashScreen({super.key});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -15,37 +12,34 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-  late Timer _loadingTimer;
+  late final AnimationController _controller;
+  late final Animation<double> _animation;
+  late final Timer _loadingTimer;
   String _loadingText = 'Loading';
 
   @override
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
       vsync: this,
-    );
-    _animation =
-        CurvedAnimation(parent: _controller, curve: Curves.bounceInOut);
+    )..repeat(reverse: true);
 
-    _controller.repeat(reverse: true);
+    _animation = CurvedAnimation(parent: _controller, curve: Curves.easeInOut);
 
-    _loadingTimer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
+    _loadingTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       setState(() {
-        if (_loadingText.endsWith('...')) {
-          _loadingText = 'Loading';
-        } else {
-          _loadingText += '.';
-        }
+        _loadingText =
+            _loadingText.endsWith('...') ? 'Loading' : '$_loadingText.';
       });
     });
 
-    Timer(const Duration(seconds: 3), () {
+    Timer(const Duration(seconds: 4), () {
       _loadingTimer.cancel();
       Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const ScreenRouter()));
+        context,
+        MaterialPageRoute(builder: (context) => const ScreenRouter()),
+      );
     });
   }
 
@@ -63,53 +57,50 @@ class _SplashScreenState extends State<SplashScreen>
         decoration: BoxDecoration(
           gradient: LinearGradient(
             colors: [
-              Colors.lightBlue.shade100,
-              Colors.lightBlue.shade300,
-              Colors.lightBlue.shade700,
+              Colors.blue.shade200,
+              Colors.blue.shade400,
+              Colors.blue.shade600,
             ],
             stops: const [0.1, 0.5, 0.9],
             begin: Alignment.topCenter,
             end: Alignment.bottomRight,
           ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 4,
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-          borderRadius: BorderRadius.circular(15),
         ),
-        child: Center(
-          child: FadeTransition(
-            opacity: _animation,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ScaleTransition(
-                  scale: _animation,
-                  child: Image.asset(
-                    "assets/images/logo.png",
-                    width: getSize(context).width * 0.4,
-                  ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            double logoSize = constraints.maxWidth * 0.4;
+            return Center(
+              child: FadeTransition(
+                opacity: _animation,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ScaleTransition(
+                      scale: _animation,
+                      child: Image.asset(
+                        "assets/images/logo.png",
+                        width: logoSize,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      _loadingText,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                const CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-                const SizedBox(height: 20),
-                Text(
-                  _loadingText,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ),
+              ),
+            );
+          },
         ),
       ),
     );
