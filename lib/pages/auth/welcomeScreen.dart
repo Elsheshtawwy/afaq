@@ -58,17 +58,17 @@ class WelcomeScreen extends StatelessWidget {
                         screenHeight: screenHeight,
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      MainText(
+                      const MainText(
                         text: 'Welcome to Afaq',
                         fontSize: 32,
                       ),
                       const SizedBox(height: 8),
-                      SubtitleText(
+                      const SubtitleText(
                         text: 'Your Learning Companion',
                         fontSize: 18,
                       ),
                       SizedBox(height: screenHeight * 0.05),
-                      WelcomeScreenButtons(),
+                      const WelcomeScreenButtons(),
                       SizedBox(height: screenHeight * 0.03),
                       SocialSignUpOptions(
                         screenHeight: screenHeight,

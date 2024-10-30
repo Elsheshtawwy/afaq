@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class PaymentOptionsScreen extends StatelessWidget {
+  const PaymentOptionsScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -37,7 +39,7 @@ class PaymentOptionsScreen extends StatelessWidget {
             const SizedBox(height: 12),
             PaymentMethodsRow(),
             const SizedBox(height: 24),
-            CustomTextField(
+            const CustomTextField(
               labelText: 'Card Number: XXX-XXX-XXX',
             ),
             
@@ -53,7 +55,7 @@ class PaymentOptionsScreen extends StatelessWidget {
 class SectionTitle extends StatelessWidget {
   final String title;
 
-  const SectionTitle({required this.title});
+  const SectionTitle({super.key, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -68,6 +70,8 @@ class SectionTitle extends StatelessWidget {
 }
 
 class BalanceDisplay extends StatelessWidget {
+  const BalanceDisplay({super.key});
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<DocumentSnapshot>(
@@ -116,6 +120,8 @@ class BalanceDisplay extends StatelessWidget {
 }
 
 class PaymentMethodsRow extends StatelessWidget {
+  const PaymentMethodsRow({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -150,6 +156,8 @@ class PaymentMethodsRow extends StatelessWidget {
 }
 
 class PaymentOptionsList extends StatelessWidget {
+  const PaymentOptionsList({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ListView(

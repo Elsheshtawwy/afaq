@@ -5,7 +5,7 @@
     final String question;
     final String route;
 
-    AuthOption({required this.text, required this.question, required this.route});
+    const AuthOption({super.key, required this.text, required this.question, required this.route});
 
     @override
     Widget build(BuildContext context) {
@@ -14,7 +14,7 @@
         children: [
            Text(
             question,
-            style: TextStyle(fontSize: 14, color: Colors.white),
+            style: const TextStyle(fontSize: 14, color: Colors.white),
           ),
           GestureDetector(
             onTap: () {

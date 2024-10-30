@@ -16,7 +16,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 
-import 'package:toggle_switch/toggle_switch.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({super.key});

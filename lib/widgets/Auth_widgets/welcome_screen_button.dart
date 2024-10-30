@@ -5,7 +5,7 @@ import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:flutter/material.dart';
 
 class WelcomeScreenButtons extends StatelessWidget {
-  const WelcomeScreenButtons({Key? key}) : super(key: key);
+  const WelcomeScreenButtons({super.key});
 
   Widget _buildButton(BuildContext context, String label, Widget screen) {
     return CustomButton(

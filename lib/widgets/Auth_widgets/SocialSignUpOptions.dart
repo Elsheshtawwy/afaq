@@ -12,7 +12,7 @@ class SocialSignUpOptions extends StatelessWidget {
   final String text;
   final double? fontSize;
 
-  SocialSignUpOptions({
+  const SocialSignUpOptions({super.key, 
     required this.screenHeight,
     required this.baseProvider,
     required this.context,
@@ -40,10 +40,12 @@ class SocialSignUpOptions extends StatelessWidget {
               [
                 () async {
                   try {
-                    baseProvider.setBusy(true);
-                    await Auth_Provider().signInWithGoogle();
-                    Navigator.pushReplacementNamed(context, '/home');
                     baseProvider.setBusy(false);
+                    await Auth_Provider().signInWithGoogle();
+                    
+                    Navigator.pushReplacementNamed(context, '/home');
+
+                    baseProvider.setBusy(true);
                   } catch (e) {
                     AwesomeDialogHelper(
                         'Error', 'Google Sign-In failed', DialogType.error);

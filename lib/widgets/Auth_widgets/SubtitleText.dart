@@ -3,7 +3,7 @@
   class SubtitleText extends StatelessWidget {
     final String text;
     final double fontSize;
-    const SubtitleText({Key? key, required this.text, required this.fontSize}) : super(key: key);
+    const SubtitleText({super.key, required this.text, required this.fontSize});
 
     @override
     Widget build(BuildContext context) {

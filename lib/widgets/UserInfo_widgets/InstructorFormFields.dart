@@ -8,11 +8,11 @@ class InstructorFormFields extends StatelessWidget {
   final TextEditingController experiencesController;
 
   const InstructorFormFields({
-    Key? key,
+    super.key,
     required this.specializationController,
     required this.qualificationsController,
     required this.experiencesController,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

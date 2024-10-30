@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final base_provider = Provider.of<BaseProvider>(context);
+    final baseProvider = Provider.of<BaseProvider>(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 
@@ -78,12 +78,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       LogoWidget(screenHeight: screenHeight),
                       SizedBox(height: screenHeight * 0.01),
-                      MainText(
+                      const MainText(
                         text: 'Welcome Back',
                         fontSize: 32,
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      SubtitleText(
+                      const SubtitleText(
                         text: 'Log in to your account',
                         fontSize: 18,
                       ),
@@ -156,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             SizedBox(height: screenHeight * 0.02),
                             SocialSignUpOptions(
                               screenHeight: screenHeight,
-                              baseProvider: base_provider,
+                              baseProvider: baseProvider,
                               context: context,
                               text: 'Or Log In With',
                             ),

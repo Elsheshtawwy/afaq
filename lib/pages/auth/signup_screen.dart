@@ -124,9 +124,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           screenHeight: screenHeight,
                         ),
                         SizedBox(height: screenHeight * 0.01),
-                        MainText(text: 'Sign Up', fontSize: 32),
+                        const MainText(text: 'Sign Up', fontSize: 32),
                         SizedBox(height: screenHeight * 0.01),
-                        SubtitleText(
+                        const SubtitleText(
                           text: 'Create an account to get started',
                           fontSize: 18,
                         ),

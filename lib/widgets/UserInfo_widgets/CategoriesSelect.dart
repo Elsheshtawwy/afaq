@@ -1,21 +1,21 @@
 import 'package:afaq/models/CategoryModel.dart';
 import 'package:flutter/material.dart';
 
-class StudentFormFields extends StatelessWidget {
+class CategoriesSelect extends StatelessWidget {
   final List<CategoryModel> interests;
   final List<CategoryModel> selectedInterests;
   final Function(CategoryModel) onInterestSelected;
   final Function(CategoryModel) onInterestRemoved;
   final Widget preferencesDropdown;
 
-  const StudentFormFields({
-    Key? key,
+  const CategoriesSelect({
+    super.key,
     required this.interests,
     required this.selectedInterests,
     required this.onInterestSelected,
     required this.onInterestRemoved,
     required this.preferencesDropdown,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

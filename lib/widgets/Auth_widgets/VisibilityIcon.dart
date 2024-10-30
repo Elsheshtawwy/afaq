@@ -5,10 +5,10 @@
     final VoidCallback onPressed;
 
     const VisibilityIcon({
-      Key? key,
+      super.key,
       required this.obscureText,
       required this.onPressed,
-    }) : super(key: key);
+    });
 
     @override
     Widget build(BuildContext context) {

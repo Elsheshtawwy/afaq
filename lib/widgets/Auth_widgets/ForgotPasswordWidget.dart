@@ -6,8 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ForgotPasswordWidget extends StatelessWidget {
   final TextEditingController forgotPasswordController;
 
-  ForgotPasswordWidget({Key? key, required this.forgotPasswordController})
-      : super(key: key);
+  const ForgotPasswordWidget({super.key, required this.forgotPasswordController});
 
   Future<void> _onForgotPasswordPressed(BuildContext context) async {
     AwesomeDialog(

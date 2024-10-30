@@ -2,13 +2,12 @@ import 'package:afaq/models/CategoryModel.dart';
 import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
 import 'package:afaq/widgets/Auth_widgets/MainText.dart';
 import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
+import 'package:afaq/widgets/UserInfo_widgets/CategoriesSelect.dart';
 import 'package:afaq/widgets/UserInfo_widgets/InstructorFormFields.dart';
-import 'package:afaq/widgets/UserInfo_widgets/StudentFormFields.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -60,9 +59,13 @@ class _FeedScreenState extends State<FeedScreen> {
 
   Future<void> _savePreferencesToFirestore() async {
     if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user!.uid).set({
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .update({
         'preferences': _selectedInterests.map((e) => e.name).toList(),
         'preferenceType': _selectedPreference,
+        'email': FirebaseAuth.instance.currentUser!.email,
       });
     }
   }
@@ -216,7 +219,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                           _experiencesController,
                                     )
                                   else
-                                    StudentFormFields(
+                                    CategoriesSelect(
                                       interests: _interests,
                                       selectedInterests: _selectedInterests,
                                       onInterestSelected: (interest) {

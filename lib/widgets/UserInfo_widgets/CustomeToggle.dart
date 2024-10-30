@@ -10,13 +10,13 @@
     final void Function(int?)? onToggle;
 
     const CustomToggle({
-      Key? key,
+      super.key,
       required this.initialIndex,
       required this.labels,
       required this.icons,
       required this.activeBgColors,
       required this.onToggle,
-    }) : super(key: key);
+    });
 
     @override
     Widget build(BuildContext context) {

@@ -3,7 +3,7 @@
   class LogoWidget extends StatelessWidget {
     final double screenHeight;
 
-    const LogoWidget({required this.screenHeight});
+    const LogoWidget({super.key, required this.screenHeight});
 
     @override
     Widget build(BuildContext context) {

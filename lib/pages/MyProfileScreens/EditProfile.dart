@@ -1,5 +1,7 @@
+import 'package:afaq/helpers/functions.dart';
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
 import 'package:afaq/widgets/TextField/CustomTextField.dart';
+import 'package:afaq/widgets/UserInfo_widgets/CustomeToggle.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:toggle_switch/toggle_switch.dart';
 
 class EditProfile extends StatefulWidget {
   const EditProfile({super.key});
@@ -48,7 +49,7 @@ class _EditProfileState extends State<EditProfile> {
         setState(() {
           _fullNameController.text = userDoc['fullName'];
           _phoneController.text = userDoc['phone'];
-          _bioController.text = userDoc['bio'];
+          _bioController.text = userDoc['birthDate'];
           _selectedUserType = userDoc['userType'];
           _selectedGender = userDoc['gender'];
           _dobController.text = userDoc['dob'];
@@ -66,6 +67,8 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         _profileImage = File(pickedFile.path);
       });
+    } else {
+      print('No image selected.');
     }
   }
 
@@ -95,6 +98,10 @@ class _EditProfileState extends State<EditProfile> {
         'email': _emailController.text,
         'student': _studentController.text,
       });
+      await updateAuthEmail(
+        _emailController.text,
+      );
+
       AwesomeDialog(
         context: context,
         dialogType: DialogType.success,
@@ -103,6 +110,25 @@ class _EditProfileState extends State<EditProfile> {
         desc: 'User info updated',
         btnOkOnPress: () {},
       ).show();
+    }
+  }
+
+  Future<void> updateAuthEmail(String newEmail) async {
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        // Send verification email
+        await user.sendEmailVerification();
+
+        // Update email after verification
+        await user.verifyBeforeUpdateEmail(newEmail);
+        await user.updateEmail(newEmail);
+        await user.reload();
+        user = FirebaseAuth.instance.currentUser;
+        print("Email updated successfully in Authentication");
+      }
+    } catch (e) {
+      print("Error updating email in Authentication: $e");
     }
   }
 
@@ -119,6 +145,9 @@ class _EditProfileState extends State<EditProfile> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = getSize(context).width;
+    final screenHeight = getSize(context).height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.teal,
@@ -135,18 +164,21 @@ class _EditProfileState extends State<EditProfile> {
         ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.05,
+          vertical: screenHeight * 0.02,
+        ),
         child: Form(
           key: _formKey,
           child: Column(
             children: [
-              _buildProfileImage(),
-              const SizedBox(height: 24),
-              _buildFormFields(),
-              const SizedBox(height: 24),
+              _buildProfileImage(screenWidth),
+              SizedBox(height: screenHeight * 0.03),
+              _buildFormFields(screenWidth, screenHeight),
+              SizedBox(height: screenHeight * 0.03),
               _isLoading
                   ? const CircularProgressIndicator()
-                  : _buildUpdateButton(),
+                  : _buildUpdateButton(screenWidth, screenHeight),
             ],
           ),
         ),
@@ -154,7 +186,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildProfileImage() {
+  Widget _buildProfileImage(double screenWidth) {
     return Stack(
       children: [
         const ProfilePicture(),
@@ -164,7 +196,7 @@ class _EditProfileState extends State<EditProfile> {
           child: GestureDetector(
             onTap: _pickImage,
             child: CircleAvatar(
-              radius: 18,
+              radius: screenWidth * 0.05,
               backgroundColor: Colors.white,
               child: Icon(Icons.camera_alt, color: Colors.teal[800]),
             ),
@@ -174,75 +206,74 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildFormFields() {
+  Widget _buildFormFields(double screenWidth, double screenHeight) {
     return Column(
       children: [
         CustomTextField(
           controller: _fullNameController,
           labelText: 'Full Name',
         ),
-        SizedBox(
-          height: 16,
-        ),
-        _buildDatePicker(),
-        SizedBox(height: 16,),
+        SizedBox(height: screenHeight * 0.02),
+        _buildDatePicker(screenWidth, screenHeight),
+        SizedBox(height: screenHeight * 0.02),
         CustomTextField(
           controller: _emailController,
           labelText: 'Email',
-          prefixIcon: Icon(Icons.email),
+          prefixIcon: const Icon(Icons.email),
         ),
-        SizedBox(
-          height: 16,
-        ),
+        SizedBox(height: screenHeight * 0.02),
         CustomTextField(
           controller: _phoneController,
           labelText: 'Phone Number',
           prefixIcon: const Icon(Icons.flag, color: Colors.red),
         ),
-        SizedBox(
-          height: 16,
-        ),
+        SizedBox(height: screenHeight * 0.02),
         CustomTextField(
           controller: _bioController,
           labelText: 'Bio',
         ),
-        const SizedBox(height: 16),
-        ToggleSwitch(
-          animationDuration : 1000,
-          minWidth: 90.0,
-          initialLabelIndex: _selectedGender == 'Male' ? 0 : 1,
-          cornerRadius: 20.0,
-          activeFgColor: Colors.white,
-          inactiveBgColor: Colors.grey,
-          inactiveFgColor: Colors.white,
-          totalSwitches: 2,
+        SizedBox(height: screenHeight * 0.02),
+        CustomToggle(
+          initialIndex: _selectedUserType == 'Learner' ? 0 : 1,
+          labels: const ['Learner', 'Instructor'],
+          icons: const [
+            FontAwesomeIcons.userGraduate,
+            FontAwesomeIcons.chalkboardTeacher
+          ],
+          activeBgColors: const [
+            [Colors.teal],
+            [Colors.teal]
+          ],
+          onToggle: (index) {
+            setState(() {
+              _selectedUserType = index == 0 ? 'Learner' : 'Instructor';
+            });
+          },
+        ),
+        SizedBox(height: screenHeight * 0.02),
+        CustomToggle(
+          initialIndex: _selectedGender == 'Male' ? 0 : 1,
           labels: const ['Male', 'Female'],
           icons: const [FontAwesomeIcons.mars, FontAwesomeIcons.venus],
           activeBgColors: const [
-            [Colors.blue],
+            [Colors.teal],
             [Colors.pink]
           ],
           onToggle: (index) {
             setState(() {
               _selectedGender = index == 0 ? 'Male' : 'Female';
             });
-            print('switched to: $index');
           },
-        ),
-        const SizedBox(height: 16),
-        CustomTextField(
-          controller: _studentController,
-          labelText: 'Student',
         ),
       ],
     );
   }
 
-  Widget _buildDatePicker() {
+  Widget _buildDatePicker(double screenWidth, double screenHeight) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SizedBox(height: 8),
+        SizedBox(height: screenHeight * 0.01),
         GestureDetector(
           onTap: () async {
             DateTime? pickedDate = await showDatePicker(
@@ -263,7 +294,7 @@ class _EditProfileState extends State<EditProfile> {
             child: CustomTextField(
               controller: _dobController,
               labelText: 'Birth Date',
-              suffixIcon: Icon(Icons.calendar_today),
+              suffixIcon: const Icon(Icons.calendar_today),
             ),
           ),
         ),
@@ -271,7 +302,7 @@ class _EditProfileState extends State<EditProfile> {
     );
   }
 
-  Widget _buildUpdateButton() {
+  Widget _buildUpdateButton(double screenWidth, double screenHeight) {
     return ElevatedButton.icon(
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
@@ -293,7 +324,10 @@ class _EditProfileState extends State<EditProfile> {
       },
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.teal,
-        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+        padding: EdgeInsets.symmetric(
+          horizontal: screenWidth * 0.1,
+          vertical: screenHeight * 0.02,
+        ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(30.0),
         ),

@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:afaq/ScreenRouter.dart';
-import 'package:afaq/helpers/functions.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {

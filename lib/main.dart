@@ -102,7 +102,7 @@ class _MyAppState extends State<MyApp> {
       '/editProfile': (context) => const EditProfile(),
       '/notifications': (context) => const NotificationScreen(),
       '/inviteFriendsScreen': (context) => const InviteFriendsScreen(),
-      '/helpCenter': (context) => HelpCenterScreen(),
+      '/helpCenter': (context) => const HelpCenterScreen(),
       '/paymentOption': (context) => PaymentOptionsScreen(),
     };
   }

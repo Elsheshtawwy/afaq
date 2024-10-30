@@ -1,15 +1,45 @@
 import 'package:afaq/models/InstituteModel.dart';
+import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/instituteCard.dart';
+import 'package:afaq/widgets/categoryFilters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
-class InstitutesScreen extends StatelessWidget {
-    final List<InstituteModel> Institutes;
+class InstitutesScreen extends StatefulWidget {
+  final List<InstituteModel> institutes;
 
-  const InstitutesScreen({super.key, required this.Institutes});
+  const InstitutesScreen({super.key, required this.institutes});
+
+  @override
+  _InstitutesScreenState createState() => _InstitutesScreenState();
+}
+
+class _InstitutesScreenState extends State<InstitutesScreen> {
+  TextEditingController _searchController = TextEditingController();
+  String searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController.addListener(() {
+      setState(() {
+        searchQuery = _searchController.text;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    List<InstituteModel> filteredItems = widget.institutes
+        .where((item) =>
+            item.name.toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
@@ -30,16 +60,18 @@ class InstitutesScreen extends StatelessWidget {
           actions: [
             IconButton(
               icon: const Icon(CupertinoIcons.search, color: Colors.black),
-              onPressed: () {},
+              onPressed: () {
+                CustomSearchBar()
+                    .showSearchDialog(context, _searchController, 'Institute');
+              },
             ),
           ],
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Add any filters or categories here if needed
             Expanded(
-              child: _buildInstituteList(),
+              child: _buildInstituteList(filteredItems),
             ),
           ],
         ),
@@ -47,17 +79,14 @@ class InstitutesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInstituteList() {
-    
+  Widget _buildInstituteList(List<InstituteModel> filteredItems) {
     return ListView.builder(
-      itemCount: Institutes.length,
+      itemCount: filteredItems.length,
       itemBuilder: (context, index) {
         return InstituteCard(
-          institute: Institutes[index],
+          institute: filteredItems[index],
         );
       },
     );
   }
 }
-
-

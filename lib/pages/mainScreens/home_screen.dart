@@ -2,6 +2,7 @@ import 'package:afaq/models/CategoryModel.dart';
 import 'package:afaq/models/CourseModel.dart';
 import 'package:afaq/models/InstituteModel.dart';
 import 'package:afaq/models/InstructorModel.dart';
+import 'package:afaq/pages/auth/FeedScreen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/pages/DetailsScreens.dart/CourseDetailsPage.dart';
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
@@ -33,99 +34,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final List<CategoryModel> categories = [
-    CategoryModel(id: "0", name: 'Arabic', imageUrl: 'assets/icons/arabic.png'),
-    CategoryModel(
-        id: "1",
-        name: 'Artificial Intelligence',
-        imageUrl: 'assets/icons/artificialintelligence.png'),
-    CategoryModel(
-        id: "2", name: 'Biology', imageUrl: 'assets/icons/Biology.png'),
-    CategoryModel(
-        id: "3",
-        name: 'Business Law',
-        imageUrl: 'assets/icons/businessLaw.png'),
-    CategoryModel(
-        id: "4",
-        name: 'Car Mechanics',
-        imageUrl: 'assets/icons/carMechanics.png'),
-    CategoryModel(
-        id: "5", name: 'Chemistry', imageUrl: 'assets/icons/Chemistry.png'),
-    CategoryModel(
-        id: "6",
-        name: 'Communication Skills',
-        imageUrl: 'assets/icons/communicationSkills.png'),
-    CategoryModel(
-        id: "7",
-        name: 'Cybersecurity',
-        imageUrl: 'assets/icons/cybersecurity.png'),
-    CategoryModel(
-        id: "8",
-        name: 'Digital Marketing',
-        imageUrl: 'assets/icons/digitalMarketing.png'),
-    CategoryModel(
-        id: "9", name: 'English', imageUrl: 'assets/icons/English.png'),
-    CategoryModel(
-        id: "10",
-        name: 'Electricity',
-        imageUrl: 'assets/icons/electricity.png'),
-    CategoryModel(
-        id: "11", name: 'Fitness', imageUrl: 'assets/icons/fitness.png'),
-    CategoryModel(
-        id: "12", name: 'German', imageUrl: 'assets/icons/germany.png'),
-    CategoryModel(
-        id: "13",
-        name: 'Human Resources',
-        imageUrl: 'assets/icons/humanResources.png'),
-    CategoryModel(
-        id: "14",
-        name: 'Interior Design',
-        imageUrl: 'assets/icons/interiorDesign.png'),
-    CategoryModel(
-        id: "15", name: 'Leadership', imageUrl: 'assets/icons/leadership.png'),
-    CategoryModel(
-        id: "16",
-        name: 'Mathematics',
-        imageUrl: 'assets/icons/mathematics.png'),
-    CategoryModel(
-        id: "17", name: 'Nursing', imageUrl: 'assets/icons/nursing.png'),
-    CategoryModel(
-        id: "18", name: 'Nutrition', imageUrl: 'assets/icons/nutrition.png'),
-    CategoryModel(
-        id: "19", name: 'Painting', imageUrl: 'assets/icons/painting.png'),
-    CategoryModel(
-        id: "20",
-        name: 'Personal Finance',
-        imageUrl: 'assets/icons/personalFinance.png'),
-    CategoryModel(
-        id: "21", name: 'Physics', imageUrl: 'assets/icons/Physics.png'),
-    CategoryModel(
-        id: "22",
-        name: 'Playing Instruments',
-        imageUrl: 'assets/icons/playingInstruments.png'),
-    CategoryModel(
-        id: "23", name: 'Pottery', imageUrl: 'assets/icons/pottery.png'),
-    CategoryModel(
-        id: "24",
-        name: 'Programming',
-        imageUrl: 'assets/icons/programming.png'),
-    CategoryModel(
-        id: "25",
-        name: 'Project Management',
-        imageUrl: 'assets/icons/projectManagement.png'),
-    CategoryModel(
-        id: "26",
-        name: 'Time Management',
-        imageUrl: 'assets/icons/timeManagement.png'),
-    CategoryModel(
-        id: "27",
-        name: 'Web Development',
-        imageUrl: 'assets/icons/webDevelopment.png'),
-    CategoryModel(
-        id: "28",
-        name: 'Woodworking',
-        imageUrl: 'assets/icons/woodworking.png'),
-  ];
+  final List<CategoryModel> categories = getInterests();
 
   final List<CourseModel> courses = [
     CourseModel(
@@ -454,6 +363,7 @@ class _HomePageState extends State<HomePage> {
       institutes: [],
     ),
   ];
+
   final List<InstituteModel> institutes = [
     InstituteModel(
       id: '1',
@@ -601,7 +511,7 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 20),
               _buildSectionHeader('Popular Institutes', () {
                 Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return InstitutesScreen(Institutes: institutes);
+                  return InstitutesScreen(institutes: institutes);
                 }));
               }),
               const SizedBox(height: 8),
@@ -838,7 +748,7 @@ class _HomePageState extends State<HomePage> {
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 8),
         scrollDirection: Axis.horizontal,
-        itemCount: categories.length, // عدد الفئات
+        itemCount: categories.length,
         itemBuilder: (context, index) {
           return _buildCategoryChip(
             categories[index].name,

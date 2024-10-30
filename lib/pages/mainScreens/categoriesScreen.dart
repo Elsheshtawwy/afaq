@@ -3,13 +3,25 @@ import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/categoryItem.dart';
 import 'package:flutter/material.dart';
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   final List<CategoryModel> categories;
 
   const CategoriesScreen({super.key, required this.categories});
 
   @override
+  _CategoriesScreenState createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> {
+  String searchQuery = '';
+
+  @override
   Widget build(BuildContext context) {
+    List<CategoryModel> filteredItems = widget.categories
+        .where((item) =>
+            item.name.toLowerCase().contains(searchQuery.toLowerCase()))
+        .toList();
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -29,10 +41,15 @@ class CategoriesScreen extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         child: Column(
           children: [
-            const CustomSearchBar(
+            CustomSearchBar(
               hintText: 'Search for',
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+              },
             ),
-            Expanded(child: _CategoryGrid(categories: categories)),
+            Expanded(child: _CategoryGrid(categories: filteredItems)),
           ],
         ),
       ),

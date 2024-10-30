@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class MainText extends StatelessWidget {
   final String text;
   final double fontSize;
-  const MainText({Key? key, required this.text, required this.fontSize})
-      : super(key: key);
+  const MainText({super.key, required this.text, required this.fontSize});
 
   @override
   Widget build(BuildContext context) {
