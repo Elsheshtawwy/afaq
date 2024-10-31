@@ -101,11 +101,11 @@ Subscription Packages: Offer subscription plans for unlimited course access or m
 
 Contact
 
-For more information or assistance, please contact our support team:
+For more information or assistance, please contact me:
 
-Email: support@afaqapp.com
+Email: Badrelsistawy@gmail.com
 
-Phone: +1 (234) 567-8901
+Phone: +218318740644
 
 
 
