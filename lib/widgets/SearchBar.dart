@@ -59,7 +59,7 @@ class CustomSearchBar extends StatelessWidget {
   }
 
   void showSearchDialog(BuildContext context,
-      TextEditingController _searchController, String text) {
+      TextEditingController searchController, String text) {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.noHeader,
@@ -71,17 +71,17 @@ class CustomSearchBar extends StatelessWidget {
           children: [
             Text(
               'Search ${text}s',
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
             const SizedBox(height: 16),
             TextField(
-              controller: _searchController,
+              controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Enter ${text.toLowerCase()} name',
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
             ),
             const SizedBox(height: 16),
@@ -90,7 +90,7 @@ class CustomSearchBar extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {
-                    _searchController.clear();
+                    searchController.clear();
                   },
                   child: const Text('Clear'),
                 ),

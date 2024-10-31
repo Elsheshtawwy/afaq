@@ -65,24 +65,45 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Afaq',
-      theme: _buildThemeData(),
-      home: const SplashScreen(),
-      routes: _buildRoutes(),
-    );
+    return Consumer<DarkModeProvider>(
+        builder: (context, darkModeProvider, child) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Afaq',
+        theme:
+            darkModeProvider.isDark ? _buildDarkThemeData() : _buildThemeData(),
+        home: const SplashScreen(),
+        routes: _buildRoutes(),
+      );
+    });
   }
 
   ThemeData _buildThemeData() {
     return ThemeData(
       scaffoldBackgroundColor: const Color(0xFFF5F9FF),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFFF5F9FF),
+        backgroundColor: Colors.teal,
         elevation: 0,
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
       ),
       primaryColor: const Color(0xFF4667FD),
       colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF4667FD)),
+      useMaterial3: true,
+    );
+  }
+
+  ThemeData _buildDarkThemeData() {
+    return ThemeData.dark().copyWith(
+      scaffoldBackgroundColor: const Color(0xFF121212),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.teal,
+        elevation: 0,
+        titleTextStyle: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 24),
+      ),
+      primaryColor: const Color(0xFFBB86FC),
+      colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFBB86FC)),
       useMaterial3: true,
     );
   }

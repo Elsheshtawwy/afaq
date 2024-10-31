@@ -5,6 +5,7 @@ import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
 import 'package:afaq/widgets/UserInfo_widgets/CategoriesSelect.dart';
 import 'package:afaq/widgets/UserInfo_widgets/InstructorFormFields.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
+import 'package:afaq/widgets/data/data.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +27,7 @@ class _FeedScreenState extends State<FeedScreen> {
   late TextEditingController _specializationController;
   late TextEditingController _qualificationsController;
   late TextEditingController _experiencesController;
-  final List<CategoryModel> _interests = getInterests();
+  final List<CategoryModel> _interests =  dataClass().getInterests();
   final List<CategoryModel> _selectedInterests = [];
   String _selectedPreference = "Academic Courses";
   bool _isEmailVerified = false;
@@ -266,98 +267,4 @@ class _FeedScreenState extends State<FeedScreen> {
   }
 }
 
-List<CategoryModel> getInterests() {
-  return [
-    CategoryModel(id: "0", name: 'Arabic', imageUrl: 'assets/icons/arabic.png'),
-    CategoryModel(
-        id: "1",
-        name: 'Artificial Intelligence',
-        imageUrl: 'assets/icons/artificialintelligence.png'),
-    CategoryModel(
-        id: "2", name: 'Biology', imageUrl: 'assets/icons/Biology.png'),
-    CategoryModel(
-        id: "3",
-        name: 'Business Law',
-        imageUrl: 'assets/icons/businessLaw.png'),
-    CategoryModel(
-        id: "4",
-        name: 'Car Mechanics',
-        imageUrl: 'assets/icons/carMechanics.png'),
-    CategoryModel(
-        id: "5", name: 'Chemistry', imageUrl: 'assets/icons/Chemistry.png'),
-    CategoryModel(
-        id: "6",
-        name: 'Communication Skills',
-        imageUrl: 'assets/icons/communicationSkills.png'),
-    CategoryModel(
-        id: "7",
-        name: 'Cybersecurity',
-        imageUrl: 'assets/icons/cybersecurity.png'),
-    CategoryModel(
-        id: "8",
-        name: 'Digital Marketing',
-        imageUrl: 'assets/icons/digitalMarketing.png'),
-    CategoryModel(
-        id: "9", name: 'English', imageUrl: 'assets/icons/English.png'),
-    CategoryModel(
-        id: "10",
-        name: 'Electricity',
-        imageUrl: 'assets/icons/electricity.png'),
-    CategoryModel(
-        id: "11", name: 'Fitness', imageUrl: 'assets/icons/fitness.png'),
-    CategoryModel(
-        id: "12", name: 'German', imageUrl: 'assets/icons/germany.png'),
-    CategoryModel(
-        id: "13",
-        name: 'Human Resources',
-        imageUrl: 'assets/icons/humanResources.png'),
-    CategoryModel(
-        id: "14",
-        name: 'Interior Design',
-        imageUrl: 'assets/icons/interiorDesign.png'),
-    CategoryModel(
-        id: "15", name: 'Leadership', imageUrl: 'assets/icons/leadership.png'),
-    CategoryModel(
-        id: "16",
-        name: 'Mathematics',
-        imageUrl: 'assets/icons/mathematics.png'),
-    CategoryModel(
-        id: "17", name: 'Nursing', imageUrl: 'assets/icons/nursing.png'),
-    CategoryModel(
-        id: "18", name: 'Nutrition', imageUrl: 'assets/icons/nutrition.png'),
-    CategoryModel(
-        id: "19", name: 'Painting', imageUrl: 'assets/icons/painting.png'),
-    CategoryModel(
-        id: "20",
-        name: 'Personal Finance',
-        imageUrl: 'assets/icons/personalFinance.png'),
-    CategoryModel(
-        id: "21", name: 'Physics', imageUrl: 'assets/icons/Physics.png'),
-    CategoryModel(
-        id: "22",
-        name: 'Playing Instruments',
-        imageUrl: 'assets/icons/playingInstruments.png'),
-    CategoryModel(
-        id: "23", name: 'Pottery', imageUrl: 'assets/icons/pottery.png'),
-    CategoryModel(
-        id: "24",
-        name: 'Programming',
-        imageUrl: 'assets/icons/programming.png'),
-    CategoryModel(
-        id: "25",
-        name: 'Project Management',
-        imageUrl: 'assets/icons/projectManagement.png'),
-    CategoryModel(
-        id: "26",
-        name: 'Time Management',
-        imageUrl: 'assets/icons/timeManagement.png'),
-    CategoryModel(
-        id: "27",
-        name: 'Web Development',
-        imageUrl: 'assets/icons/webDevelopment.png'),
-    CategoryModel(
-        id: "28",
-        name: 'Woodworking',
-        imageUrl: 'assets/icons/woodworking.png'),
-  ];
-}
+

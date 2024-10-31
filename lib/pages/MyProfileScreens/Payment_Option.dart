@@ -10,7 +10,6 @@ class PaymentOptionsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
         elevation: 0,
         title: const Text(
           'Payment Options',
@@ -23,27 +22,26 @@ class PaymentOptionsScreen extends StatelessWidget {
           },
         ),
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
+      body: const SingleChildScrollView(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SectionTitle(title: 'Booking Balance'),
+            SectionTitle(title: 'Booking Balance'),
             BalanceDisplay(),
-            const SizedBox(height: 24),
-            const SectionTitle(title: 'Refill Afaq Cards'),
-            const Text(
+            SizedBox(height: 24),
+            SectionTitle(title: 'Refill Afaq Cards'),
+            Text(
               'You can buy Afaq cards from:',
               style: TextStyle(fontSize: 16, color: Colors.grey),
             ),
-            const SizedBox(height: 12),
+            SizedBox(height: 12),
             PaymentMethodsRow(),
-            const SizedBox(height: 24),
-            const CustomTextField(
+            SizedBox(height: 24),
+            CustomTextField(
               labelText: 'Card Number: XXX-XXX-XXX',
             ),
-            
-            const SizedBox(height: 24),
+            SizedBox(height: 24),
             PaymentOptionsList(),
           ],
         ),

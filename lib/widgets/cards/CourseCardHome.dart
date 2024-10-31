@@ -18,12 +18,15 @@ class CourseCardHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final cardWidth = screenWidth * 0.8;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          width: width,
+          width: cardWidth,
           height: 240,
           margin: const EdgeInsets.only(bottom: 8),
           decoration: BoxDecoration(
@@ -41,7 +44,7 @@ class CourseCardHome extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildImage(),
+              _buildImage(cardWidth),
               _buildCourseInfo(),
             ],
           ),
@@ -50,13 +53,13 @@ class CourseCardHome extends StatelessWidget {
     );
   }
 
-  Widget _buildImage() {
+  Widget _buildImage(double width) {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: CachedNetworkImage(
         imageUrl: course.imageUrl![0].toString() ?? '',
         height: 120,
-        width: double.infinity,
+        width: width,
         fit: BoxFit.fill,
         placeholder: (context, url) => const Center(
           child: CircularProgressIndicator(),
@@ -67,53 +70,60 @@ class CourseCardHome extends StatelessWidget {
   }
 
   Widget _buildCourseInfo() {
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            course.title ?? '',
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            course.subtitle ?? '',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Text(
-                course.price?.toString() ?? '',
-                style: const TextStyle(color: Colors.blue),
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              course.title ?? '',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
               ),
-              const Spacer(),
-              Row(
-                children: [
-                  const Icon(Icons.star, color: Colors.yellow, size: 16),
-                  const SizedBox(width: 4),
-                  Text(
-                    course.rating?.toString() ?? '',
-                    style: const TextStyle(fontSize: 14),
+            ),
+            const SizedBox(height: 4),
+            LayoutBuilder(
+              builder: (context, constraints) {
+                double fontSize = constraints.maxWidth > 350 ? 14 : 12;
+                return Text(
+                  course.subtitle ?? '',
+                  style: TextStyle(
+                    fontSize: fontSize,
+                    color: Colors.grey[600],
                   ),
-                  const SizedBox(width: 5),
-                  Text(
-                    '(${course.numberOfRatings ?? 0}) Std',
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ],
+                );
+              },
+            ),
+            const Spacer(),
+            Row(
+              children: [
+                Text(
+                  course.price?.toString() ?? '',
+                  style: const TextStyle(color: Colors.blue),
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    const Icon(Icons.star, color: Colors.yellow, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      course.rating?.toString() ?? '',
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    const SizedBox(width: 5),
+                    Text(
+                      '(${course.numberOfRatings ?? 0}) Std',
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

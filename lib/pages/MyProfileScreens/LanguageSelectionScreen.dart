@@ -21,18 +21,17 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Language', style: TextStyle(fontWeight: FontWeight.bold)),
+        elevation: 0,
+        title: const Text('Language',
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
       ),
       body: Container(
-        color: const Color(0xFFF6F8FB),
         padding: const EdgeInsets.all(16.0),
         child: ListView(
           children: [
@@ -83,7 +82,8 @@ class LanguageOption extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
 
-  const LanguageOption({super.key, 
+  const LanguageOption({
+    super.key,
     required this.language,
     required this.isSelected,
     required this.onTap,
@@ -106,9 +106,11 @@ class LanguageOption extends StatelessWidget {
             Checkbox(
               value: isSelected,
               onChanged: (_) => onTap(),
-              activeColor:
-                  const Color(0xFF008B7D), // Green color for selected checkbox
+              activeColor: const Color(0xFF008B7D),
               checkColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4.0),
+              ),
             ),
           ],
         ),

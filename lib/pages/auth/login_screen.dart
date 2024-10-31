@@ -15,7 +15,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -78,12 +77,12 @@ class _LoginScreenState extends State<LoginScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       LogoWidget(screenHeight: screenHeight),
                       SizedBox(height: screenHeight * 0.01),
-                      const MainText(
+                       MainText(
                         text: 'Welcome Back',
                         fontSize: 32,
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      const SubtitleText(
+                       SubtitleText(
                         text: 'Log in to your account',
                         fontSize: 18,
                       ),
@@ -161,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               text: 'Or Log In With',
                             ),
                             SizedBox(height: screenHeight * 0.02),
-                            AuthOption(
+                            const AuthOption(
                               text: 'Sign Up',
                               question: 'Don\'t have an account?',
                               route: '/signup',

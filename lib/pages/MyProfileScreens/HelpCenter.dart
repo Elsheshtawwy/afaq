@@ -1,4 +1,6 @@
+import 'package:afaq/providers/dark_mode_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HelpCenterScreen extends StatelessWidget {
   const HelpCenterScreen({super.key});
@@ -7,7 +9,17 @@ class HelpCenterScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Help Center'),
+        elevation: 0,
+        title: Text(
+          'Help Center',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -73,7 +85,7 @@ class HelpCenterScreen extends StatelessWidget {
               Expanded(
                 child: Text(
                   question,
-                  style: const TextStyle(fontSize: 16),
+                  style: const TextStyle(fontSize: 16, color: Colors.black87),
                 ),
               ),
               const Icon(Icons.arrow_forward_ios, color: Colors.grey),
@@ -95,29 +107,42 @@ class FAQScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final contentData = _getContent(contentKey);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              Image.asset(contentData['image']!, width: 200),
-              const SizedBox(height: 30),
-              Text(
-                contentData['content']!,
-                style: const TextStyle(fontSize: 16),
-              ),
-            ],
+    return Consumer<DarkModeProvider>(
+        builder: (context, darkModeProvider, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            title,
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              Navigator.pop(context);
+            },
           ),
         ),
-      ),
-    );
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const SizedBox(height: 50),
+                Image.asset(contentData['image']!,
+                    width: 200,
+                    color: darkModeProvider.isDark ? Colors.white : null),
+                const SizedBox(height: 30),
+                Text(
+                  contentData['content']!,
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    });
   }
 
   Map<String, String> _getContent(String key) {

@@ -1,6 +1,5 @@
   import 'package:flutter/material.dart';
   import 'package:toggle_switch/toggle_switch.dart';
-  import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
   class CustomToggle extends StatelessWidget {
     final int initialIndex;

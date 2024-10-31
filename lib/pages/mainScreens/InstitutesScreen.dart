@@ -1,7 +1,6 @@
 import 'package:afaq/models/InstituteModel.dart';
 import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/instituteCard.dart';
-import 'package:afaq/widgets/categoryFilters.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -15,7 +14,7 @@ class InstitutesScreen extends StatefulWidget {
 }
 
 class _InstitutesScreenState extends State<InstitutesScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
 
   @override
@@ -61,7 +60,7 @@ class _InstitutesScreenState extends State<InstitutesScreen> {
             IconButton(
               icon: const Icon(CupertinoIcons.search, color: Colors.black),
               onPressed: () {
-                CustomSearchBar()
+                const CustomSearchBar()
                     .showSearchDialog(context, _searchController, 'Institute');
               },
             ),

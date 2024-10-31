@@ -80,7 +80,11 @@ class _CourseCardState extends State<CourseCard> {
         margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         padding: const EdgeInsets.all(12.0),
         decoration: BoxDecoration(
-          color: Colors.white,
+          gradient: LinearGradient(
+            colors: [Colors.white, Colors.grey.shade200],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
@@ -100,7 +104,7 @@ class _CourseCardState extends State<CourseCard> {
                 image: DecorationImage(
                   image: CachedNetworkImageProvider(
                       widget.course.imageUrl![0].toString() ?? ''),
-                  fit: BoxFit.cover,
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -163,6 +167,7 @@ class _CourseCardState extends State<CourseCard> {
               icon: Icon(
                 isBookmarked ? Icons.bookmark : Icons.bookmark_border,
                 color: isBookmarked ? Colors.green : null,
+                size: 28,
               ),
               onPressed: _toggleBookmark,
             ),

@@ -1,3 +1,4 @@
+import 'package:afaq/helpers/functions.dart';
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +24,16 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Notifications'),
+        elevation: 0,
+        title: const Text(
+          'Notifications',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -33,6 +41,9 @@ class _NotificationScreenState extends State<NotificationScreen> {
       ),
       body: Column(
         children: [
+          SizedBox(
+            height: getSize(context).height * 0.02,
+          ),
           ProfileOption(
             text: "Push Notifications",
             trailing: Switch(

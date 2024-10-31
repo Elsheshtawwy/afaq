@@ -150,11 +150,8 @@ class _EditProfileState extends State<EditProfile> {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
-        elevation: 0,
         title: const Text(
           'Edit Profile',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -323,7 +320,6 @@ class _EditProfileState extends State<EditProfile> {
         }
       },
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.teal,
         padding: EdgeInsets.symmetric(
           horizontal: screenWidth * 0.1,
           vertical: screenHeight * 0.02,

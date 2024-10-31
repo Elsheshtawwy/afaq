@@ -1,5 +1,7 @@
 import 'package:afaq/helpers/functions.dart';
+import 'package:afaq/providers/dark_mode_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TermsAndConditionsScreen extends StatelessWidget {
   const TermsAndConditionsScreen({super.key});
@@ -14,15 +16,14 @@ class TermsAndConditionsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Terms & Conditions',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
       body: Padding(
@@ -155,13 +156,16 @@ class SectionContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      content,
-      style: TextStyle(
-        fontSize: fontSize,
-        height: 1.5,
-        color: Colors.black87,
-      ),
-    );
+    return Consumer<DarkModeProvider>(
+        builder: (context, darkModeProvider, child) {
+      return Text(
+        content,
+        style: TextStyle(
+          fontSize: fontSize,
+          height: 1.5,
+          color: darkModeProvider.isDark ? Colors.white70 : Colors.black87,
+        ),
+      );
+    });
   }
 }

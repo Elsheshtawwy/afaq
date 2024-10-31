@@ -358,14 +358,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-  flutter_otp_text_field:
+  flutter_localizations:
     dependency: "direct main"
-    description:
-      name: flutter_otp_text_field
-      sha256: "77e5ca5af01d2adf79757ffab4ad5ca29d5c710b3edf29e590fa5db7551d760e"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -577,13 +574,13 @@ packages:
     source: hosted
     version: "0.2.1+1"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
-      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
+      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
       url: "https://pub.dev"
     source: hosted
-    version: "0.18.1"
+    version: "0.19.0"
   js:
     dependency: transitive
     description:
@@ -624,14 +621,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-  lite_rolling_switch:
-    dependency: "direct main"
-    description:
-      name: lite_rolling_switch
-      sha256: f5685911d249534ac6ac9862622f18846d31799c90fa4600b475d902d132b090
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   matcher:
     dependency: transitive
     description:
@@ -681,7 +670,7 @@ packages:
     source: hosted
     version: "2.1.0"
   path:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: path
       sha256: "087ce49c3f0dc39180befefc60fdb4acd8f8620e5682fe2476afd0b3688bb4af"
@@ -926,7 +915,7 @@ packages:
     source: hosted
     version: "7.0.0"
   sqflite:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: sqflite
       sha256: "79a297dc3cc137e758c6a4baf83342b039e5a6d2436fcdf3f96a00adaaf2ad62"

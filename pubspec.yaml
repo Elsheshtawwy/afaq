@@ -30,43 +30,33 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  auto_size_text:
+  auto_size_text: 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: 
-  font_awesome_flutter:  
+  font_awesome_flutter: 
   card_swiper: 
-  flutter_otp_text_field:
   firebase_core: 
   firebase_auth: 
-  cloud_firestore:
-  firebase_storage:
-  firebase_messaging:
-  google_sign_in:
-  flutter_facebook_auth:
-  shared_preferences:
-  provider:
-  awesome_dialog:
+  cloud_firestore: 
+  firebase_storage: 
+  firebase_messaging: 
+  google_sign_in: 
+  flutter_facebook_auth: 
+  shared_preferences: 
+  provider: 
+  awesome_dialog: 
   image_picker: 
-  cached_network_image:
-  flutter_cache_manager:
-  sqflite:
-  intl:
-  path_provider:
-  permission_handler:
-  path:
-  lite_rolling_switch:
-  toggle_switch:
-  share_plus:
-  syncfusion_flutter_datepicker:
-  
-
-
- 
-   
-  
-  
+  cached_network_image: 
+  flutter_cache_manager: 
+  path_provider: 
+  permission_handler: 
+  toggle_switch: 
+  syncfusion_flutter_datepicker: 
+  flutter_localizations:
+        sdk: flutter
+  share_plus:    
 
 dev_dependencies:
   flutter_test:
@@ -81,7 +71,6 @@ dev_dependencies:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 
@@ -100,21 +89,18 @@ flutter:
     - assets/paymentMethods/
     - assets/socialLogos/dark/
     - assets/socialLogos/light/
+    - assets/translations/
     # - assets/socialLogos/google/
     # - assets/socialLogos/google/light/
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/to/resolution-aware-images
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/to/asset-from-package
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
- 
+    # An image asset can refer to one or more resolution-specific "variants", see
+    # https://flutter.dev/to/resolution-aware-images
+    # For details regarding adding assets from package dependencies, see
+    # https://flutter.dev/to/asset-from-package
+    # To add custom fonts to your application, add a fonts section here,
+    # in this "flutter" section. Each entry in this list should have a
+    # "family" key with the font family name, and a "fonts" key with a
+    # list giving the asset and other descriptors for the font. For
+    # example:
     # - family: Schyler
     #   fonts:
     #     - asset: fonts/Schyler-Regular.ttf
@@ -128,3 +114,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+flutter_intl:
+  enabled: true
