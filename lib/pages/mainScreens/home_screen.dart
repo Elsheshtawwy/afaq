@@ -2,9 +2,10 @@ import 'package:afaq/models/CategoryModel.dart';
 import 'package:afaq/models/CourseModel.dart';
 import 'package:afaq/models/InstituteModel.dart';
 import 'package:afaq/models/InstructorModel.dart';
-import 'package:afaq/pages/auth/FeedScreen.dart';
+import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
 import 'package:afaq/pages/auth/login_screen.dart';
 import 'package:afaq/pages/DetailsScreens.dart/CourseDetailsPage.dart';
+import 'package:afaq/pages/mainScreens/AddCourseScreen.dart';
 import 'package:afaq/pages/mainScreens/MyProfile.dart';
 import 'package:afaq/pages/DetailsScreens.dart/InstitutesDetailsScreen.dart';
 import 'package:afaq/pages/mainScreens/InstitutesScreen.dart';
@@ -13,6 +14,8 @@ import 'package:afaq/pages/mainScreens/categoriesScreen.dart';
 import 'package:afaq/pages/mainScreens/CoursesScreen.dart';
 import 'package:afaq/pages/mainScreens/InstructorScreen.dart';
 import 'package:afaq/providers/auth_provider.dart';
+import 'package:afaq/providers/dark_mode_provider.dart';
+import 'package:afaq/providers/user_data_provider.dart';
 import 'package:afaq/widgets/SearchBar.dart';
 import 'package:afaq/widgets/cards/CourseCardHome.dart';
 import 'package:afaq/widgets/cards/instituteCardHome.dart';
@@ -43,7 +46,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    getProfilePicture(FirebaseAuth.instance.currentUser?.uid ?? '');
+    UserDataProvider()
+        .getProfilePicture(FirebaseAuth.instance.currentUser?.uid ?? '');
     return;
   }
 
@@ -54,76 +58,78 @@ class _HomePageState extends State<HomePage> {
     final screenWidth = MediaQuery.of(context).size.width;
     final isLargeScreen = screenWidth > 600;
 
-    return Scaffold(
-      appBar: _buildAppBar(),
-      drawer: _buildDrawer(),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                child: CustomSearchBar(
-                  hintText: 'Search for',
+    return Consumer<UserDataProvider>(builder: (context, userDataProvider, _) {
+      return Scaffold(
+        floatingActionButton: _FloatingActionButton(),
+        appBar: _buildAppBar(),
+        drawer: _buildDrawer(),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16),
+                  child: CustomSearchBar(
+                    hintText: 'Search for',
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20),
-              _buildSwiper(),
-              const SizedBox(height: 20),
-              _buildSectionHeader('Categories', () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            CategoriesScreen(categories: categories)));
-              }),
-              const SizedBox(height: 10),
-              _buildCategories(),
-              const SizedBox(height: 20),
-              _buildSectionHeader('Popular Courses', () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CoursesScreen(
-                            courses: courses, instructors: instructors)));
-              }),
-              const CategoryFilters(),
-              const SizedBox(height: 8),
-              _buildPopularCourses(isLargeScreen, courses),
-              const SizedBox(height: 20),
-              _buildSectionHeader('Top Instructors', () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            InstructorScreen(instructors: instructors)));
-              }),
-              const SizedBox(height: 8),
-              _buildTopMentors(),
-              const SizedBox(height: 20),
-              _buildSectionHeader('Popular Institutes', () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return InstitutesScreen(institutes: institutes);
-                }));
-              }),
-              const SizedBox(height: 8),
-              _buildInstitutes(),
-            ],
+                const SizedBox(height: 20),
+                _buildSwiper(),
+                const SizedBox(height: 20),
+                _buildSectionHeader('Categories', () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CategoriesScreen(categories: categories)));
+                }),
+                const SizedBox(height: 10),
+                _buildCategories(),
+                const SizedBox(height: 20),
+                _buildSectionHeader('Popular Courses', () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => CoursesScreen(
+                              courses: courses, instructors: instructors)));
+                }),
+                const CategoryFilters(),
+                const SizedBox(height: 8),
+                _buildPopularCourses(isLargeScreen, courses),
+                const SizedBox(height: 20),
+                _buildSectionHeader('Top Instructors', () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              InstructorScreen(instructors: instructors)));
+                }),
+                const SizedBox(height: 8),
+                _buildTopMentors(),
+                const SizedBox(height: 20),
+                _buildSectionHeader('Popular Institutes', () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return InstitutesScreen(institutes: institutes);
+                  }));
+                }),
+                const SizedBox(height: 8),
+                _buildInstitutes(),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   AppBar _buildAppBar() {
     return AppBar(
       elevation: 0,
-      backgroundColor: Colors.white,
       leading: Builder(
         builder: (context) => IconButton(
-          icon: const Icon(Icons.menu, color: Color(0xff167F71)),
+          icon: const Icon(Icons.menu, color: Colors.white),
           onPressed: () {
             Scaffold.of(context).openDrawer();
           },
@@ -131,104 +137,127 @@ class _HomePageState extends State<HomePage> {
       ),
       title: const Text(
         'AFAQ',
-        style: TextStyle(color: Color(0xff167F71), fontWeight: FontWeight.bold),
+        style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
       ),
       centerTitle: true,
       actions: [
-        IconButton(
-          iconSize: 40,
-          padding: const EdgeInsets.all(0),
-          icon: const ImageIcon(
-            AssetImage("assets/notifiction.png"),
-            color: Color(0xff167F71),
-          ),
-          onPressed: () {},
-        ),
-        IconButton(
-          padding: const EdgeInsets.only(right: 8),
-          icon: const ProfilePicture(
-            size: 40,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const MyProfile(),
+        Row(
+          children: [
+            IconButton(
+              iconSize: 40,
+              padding: const EdgeInsets.all(0),
+              icon: const ImageIcon(
+                AssetImage("assets/notifiction.png"),
+                color: Colors.white,
               ),
-            );
-          },
+              onPressed: () {},
+            ),
+            IconButton(
+              padding: const EdgeInsets.all(0),
+              icon: const ProfilePicture(
+                size: 40,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const MyProfile(),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+          ],
         ),
       ],
     );
   }
 
-  Drawer _buildDrawer() {
-    return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: <Widget>[
-          DrawerHeader(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.lightBlue.shade100,
-                  Colors.lightBlue.shade300,
-                  Colors.lightBlue.shade700,
-                ],
-                stops: const [0.1, 0.5, 0.9],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
+  Consumer<DarkModeProvider> _buildDrawer() {
+    return Consumer<DarkModeProvider>(
+        builder: (context, darkModeProvider, child) {
+      return Drawer(
+        backgroundColor:
+            darkModeProvider.isDark ? Colors.grey[900] : Colors.white,
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.lightBlue.shade100,
+                    Colors.lightBlue.shade300,
+                    Colors.lightBlue.shade700,
+                  ],
+                  stops: const [0.1, 0.5, 0.9],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
+              ),
+              child: const Text(
+                'Menu',
+                style: TextStyle(
+                  fontSize: 24,
+                  color: Colors.white,
+                ),
               ),
             ),
-            child: const Text(
-              'Menu',
-              style: TextStyle(
-                fontSize: 24,
-                color: Colors.white,
-              ),
+            _buildDrawerItem(Icons.home, 'Home'),
+            _buildDrawerItem(Icons.search, 'Search'),
+            _buildDrawerItem(Icons.school, 'Courses'),
+            _buildDrawerItem(Icons.person, 'Profile'),
+            _buildDrawerItem(Icons.message, 'Messages'),
+            _buildDrawerItem(Icons.book, 'Liked Courses'),
+            const Divider(),
+            ListTile(
+              leading: Icon(Icons.logout,
+                  color: darkModeProvider.isDark ? Colors.white : Colors.black),
+              title: Text('Logout',
+                  style: TextStyle(
+                      color: darkModeProvider.isDark
+                          ? Colors.white
+                          : Colors.black)),
+              onTap: () {
+                GoogleSignIn().signOut();
+                final authProvider =
+                    Provider.of<Auth_Provider>(context, listen: false);
+                authProvider.logout(context);
+                Navigator.pop(context);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                );
+              },
             ),
-          ),
-          _buildDrawerItem(Icons.home, 'Home'),
-          _buildDrawerItem(Icons.search, 'Search'),
-          _buildDrawerItem(Icons.school, 'Courses'),
-          _buildDrawerItem(Icons.person, 'Profile'),
-          _buildDrawerItem(Icons.message, 'Messages'),
-          _buildDrawerItem(Icons.book, 'Liked Courses'),
-          const Divider(),
-          ListTile(
-            leading: const Icon(Icons.logout),
-            title: const Text('Logout'),
-            onTap: () {
-              GoogleSignIn().signOut();
-              final authProvider =
-                  Provider.of<Auth_Provider>(context, listen: false);
-              authProvider.logout(context);
-              Navigator.pop(context);
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-              );
-            },
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 
-  ListTile _buildDrawerItem(IconData icon, String title) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => LikedCoursesScreen(
-                  userId: FirebaseAuth.instance.currentUser?.uid ?? '',
-                  instructors: instructors)),
-        );
-      },
-    );
+  Consumer<DarkModeProvider> _buildDrawerItem(IconData icon, String title) {
+    return Consumer<DarkModeProvider>(
+        builder: (context, darkModeProvider, child) {
+      return ListTile(
+        leading: Icon(icon,
+            color: darkModeProvider.isDark ? Colors.white : Colors.black),
+        title: Text(title,
+            style: TextStyle(
+                color: darkModeProvider.isDark ? Colors.white : Colors.black)),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => LikedCoursesScreen(
+                    userId: FirebaseAuth.instance.currentUser?.uid ?? '',
+                    instructors: instructors)),
+          );
+        },
+      );
+    });
   }
 
   Widget _buildSwiper() {
@@ -463,15 +492,40 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-}
 
-Future<String?> getProfilePicture(String userId) async {
-  try {
-    DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-    return userDoc.get('profilePicture');
-  } catch (e) {
-    print('Error fetching profile picture: $e');
-    return null;
+  Widget _FloatingActionButton() {
+    return FutureBuilder<DocumentSnapshot>(
+      future: FirebaseFirestore.instance
+          .collection('institutes')
+          .doc(FirebaseAuth.instance.currentUser?.uid)
+          .get(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const SizedBox.shrink();
+        }
+        if (snapshot.hasError) {
+          return const SizedBox.shrink();
+        }
+        if (snapshot.hasData && snapshot.data?.data() != null) {
+          var userData = snapshot.data?.data() as Map<String, dynamic>;
+          if (userData['userType'] == 'Institute') {
+            return FloatingActionButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const AddCourseScreen(),
+                  ),
+                );
+              },
+              child: const Icon(Icons.add),
+            );
+          }
+        }
+        return const SizedBox.shrink();
+      },
+    );
   }
 }
+
+

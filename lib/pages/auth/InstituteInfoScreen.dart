@@ -1,8 +1,6 @@
 import 'package:afaq/widgets/Auth_widgets/MainText.dart';
 import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
 import 'package:afaq/widgets/TextField/CustomTextField.dart';
-import 'package:afaq/widgets/UserInfo_widgets/CustomeToggle.dart';
-import 'package:afaq/widgets/UserInfo_widgets/DatePicker.dart';
 import 'package:afaq/widgets/buttons/CustomButton.dart';
 import 'package:afaq/widgets/showAwesomeDialog/showAwesomeDialog.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -11,34 +9,30 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'dart:io';
 
-class UserInfoScreen extends StatefulWidget {
-  const UserInfoScreen({super.key});
+class InstituteInfoScreen extends StatefulWidget {
+  const InstituteInfoScreen({super.key});
 
   @override
-  _UserInfoScreenState createState() => _UserInfoScreenState();
+  _InstituteInfoScreenState createState() => _InstituteInfoScreenState();
 }
 
-class _UserInfoScreenState extends State<UserInfoScreen> {
+class _InstituteInfoScreenState extends State<InstituteInfoScreen> {
   final _fullNameController = TextEditingController();
   final _phoneController = TextEditingController();
   final _bioController = TextEditingController();
-  final _dobController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _isLoading = false;
   File? _profileImage;
-  String _selectedGender = "Male";
 
   @override
   void dispose() {
     _fullNameController.dispose();
     _phoneController.dispose();
     _bioController.dispose();
-    _dobController.dispose();
     super.dispose();
   }
 
@@ -73,15 +67,13 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         final user = FirebaseAuth.instance.currentUser;
         if (user != null) {
           await FirebaseFirestore.instance
-              .collection('users')
+              .collection('institutes')
               .doc(user.uid)
               .update({
-            'fullName': _fullNameController.text,
+            'instituteName': _fullNameController.text,
             'phone': _phoneController.text,
             'profilePicture': imageUrl ?? '',
             'bio': _bioController.text,
-            'gender': _selectedGender,
-            'birthDate': _dobController.text,
           });
         }
       } catch (e) {
@@ -171,12 +163,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           SizedBox(height: screenHeight * 0.02),
           CustomTextField(
             controller: _fullNameController,
-            labelText: 'Full Name',
+            labelText: 'institutes Name',
             prefixIcon:
                 Icon(CupertinoIcons.person, color: Colors.blue.shade600),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your full name';
+                return 'Please enter the institute name';
               }
               return null;
             },
@@ -189,7 +181,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             prefixIcon: Icon(CupertinoIcons.phone, color: Colors.blue.shade600),
             validator: (value) {
               if (value == null || value.isEmpty) {
-                return 'Please enter your phone number';
+                return 'Please enter the phone number';
               }
               return null;
             },
@@ -201,26 +193,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             prefixIcon: Icon(CupertinoIcons.info, color: Colors.blue.shade600),
           ),
           SizedBox(height: screenHeight * 0.02),
-          DatePickerWidget(
-            labelText: 'Date of Birth',
-            controller: _dobController,
-          ),
           SizedBox(height: screenHeight * 0.02),
           SizedBox(height: screenHeight * 0.02),
-          CustomToggle(
-            initialIndex: _selectedGender == 'Male' ? 0 : 1,
-            labels: const ['Male', 'Female'],
-            icons: const [FontAwesomeIcons.mars, FontAwesomeIcons.venus],
-            activeBgColors: const [
-              [Colors.teal],
-              [Colors.pink]
-            ],
-            onToggle: (index) {
-              setState(() {
-                _selectedGender = index == 0 ? 'Male' : 'Female';
-              });
-            },
-          ),
           SizedBox(height: screenHeight * 0.04),
           _isLoading
               ? const CircularProgressIndicator(
@@ -257,7 +231,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           _isLoading = false;
         });
 
-        Navigator.pushNamed(context, '/feed');
+        Navigator.pushNamed(context, '/home');
       }
     }
   }

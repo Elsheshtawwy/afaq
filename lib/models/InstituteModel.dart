@@ -8,13 +8,9 @@ class InstituteModel {
   final List<String> contactNumbers;
   final String? email;
   final String? logoUrl;
-  final double? rating;
-  final List<String>? reviews;
   final String? accreditation;
   final String? bio;
-  final List<InstructorModel>? instructors;
   final List<CourseModel>? courses;
-  final List<String>? images; 
 
   InstituteModel({
     required this.id,
@@ -23,13 +19,9 @@ class InstituteModel {
     required this.contactNumbers,
     this.email,
     this.logoUrl,
-    this.rating,
-    this.reviews,
     this.accreditation,
     this.bio,
-    this.instructors,
     this.courses,
-    this.images, 
   });
 
   factory InstituteModel.fromJson(Map<String, dynamic> json) {
@@ -40,17 +32,11 @@ class InstituteModel {
       contactNumbers: List<String>.from(json['contactNumbers'] ?? []),
       email: json['email'] as String?,
       logoUrl: json['logoUrl'] as String?,
-      rating: (json['rating'] as num?)?.toDouble(),
-      reviews: List<String>.from(json['reviews'] ?? []),
       accreditation: json['accreditation'] as String?,
       bio: json['bio'] as String?,
-      instructors: (json['instructors'] as List<dynamic>?)
-          ?.map((i) => InstructorModel.fromJson(i as Map<String, dynamic>))
-          .toList(),
       courses: (json['courses'] as List<dynamic>?)
           ?.map((c) => CourseModel.fromJson(c as Map<String, dynamic>))
           .toList(),
-      images: List<String>.from(json['images'] ?? []), 
     );
   }
 
@@ -62,13 +48,9 @@ class InstituteModel {
       'contactNumbers': contactNumbers,
       'email': email,
       'logoUrl': logoUrl,
-      'rating': rating,
-      'reviews': reviews,
       'accreditation': accreditation,
       'bio': bio,
-      'instructors': instructors?.map((i) => i.toJson()).toList(),
       'courses': courses?.map((c) => c.toJson()).toList(),
-      'images': images, 
     };
   }
 }

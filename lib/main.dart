@@ -1,5 +1,7 @@
-import 'package:afaq/ScreenRouter.dart';
+import 'package:afaq/pages/auth/AccountTypeScree.dart';
+import 'package:afaq/pages/auth/InstituteInfoScreen.dart';
 import 'package:afaq/pages/auth/welcomeScreen.dart';
+import 'package:afaq/providers/user_data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -34,6 +36,8 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider<BaseProvider>(create: (_) => BaseProvider()),
+        ChangeNotifierProvider<UserDataProvider>(
+            create: (_) => UserDataProvider()),
         ChangeNotifierProvider<DarkModeProvider>(
             create: (_) => DarkModeProvider()),
         ChangeNotifierProvider<Auth_Provider>(create: (_) => Auth_Provider()),
@@ -72,7 +76,9 @@ class _MyAppState extends State<MyApp> {
         title: 'Afaq',
         theme:
             darkModeProvider.isDark ? _buildDarkThemeData() : _buildThemeData(),
-        home: const SplashScreen(),
+        home: const Scaffold(
+          body: SplashScreen(),
+        ),
         routes: _buildRoutes(),
       );
     });
@@ -104,7 +110,6 @@ class _MyAppState extends State<MyApp> {
       ),
       primaryColor: const Color(0xFFBB86FC),
       colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFBB86FC)),
-      useMaterial3: true,
     );
   }
 
@@ -118,13 +123,15 @@ class _MyAppState extends State<MyApp> {
       '/home': (context) => const HomePage(),
       '/feed': (context) => const FeedScreen(selectedUserType: 'Learner'),
       '/userInfo': (context) => const UserInfoScreen(),
+      '/instituteInfoScreen': (context) => const InstituteInfoScreen(),
       '/termsAndConditions': (context) => const TermsAndConditionsScreen(),
       '/LanguageSelection': (context) => const LanguageSelectionScreen(),
       '/editProfile': (context) => const EditProfile(),
       '/notifications': (context) => const NotificationScreen(),
       '/inviteFriendsScreen': (context) => const InviteFriendsScreen(),
       '/helpCenter': (context) => const HelpCenterScreen(),
-      '/paymentOption': (context) => PaymentOptionsScreen(),
+      '/paymentOption': (context) => const PaymentOptionsScreen(),
+      '/AccountTypeScreen': (context) => const AccountTypeScree(),
     };
   }
 }

@@ -69,13 +69,7 @@ class InstituteCard extends StatelessWidget {
                   children: [
                     Icon(Icons.star, color: Colors.yellow[700], size: 16),
                     const SizedBox(width: 3),
-                    Text(
-                      institute.rating?.toStringAsFixed(1) ?? 'N/A',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
+                    
                   ],
                 ),
                 const SizedBox(height: 8),

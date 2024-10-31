@@ -50,7 +50,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   Future<void> _signUp() async {
     if (_formKey.currentState!.validate() && _agreeToTerms) {
-      // Request storage permission
       var status = await Permission.storage.request();
       if (status.isGranted) {
         setState(() {
@@ -67,7 +66,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
           if (result) {
             base_provider.setBusy(true);
-            Navigator.pushNamed(context, '/userInfo');
+            Navigator.pushNamed(context, '/AccountTypeScreen');
             base_provider.setBusy(false);
           }
         } catch (e) {
@@ -87,8 +86,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
           'You must agree to the terms and conditions.', DialogType.warning);
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -112,7 +109,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
           child: _isLoading
-              ? const Center(child: CircularProgressIndicator())
+              ? const Center(
+                  child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ))
               : SingleChildScrollView(
                   child: Padding(
                     padding: const EdgeInsets.all(24.0),
@@ -140,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           text: 'Or Sign Up With',
                         ),
                         SizedBox(height: screenHeight * 0.02),
-                        AuthOption(
+                        const AuthOption(
                           text: 'Login',
                           question: 'Already have an account?',
                           route: '/login',

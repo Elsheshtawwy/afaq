@@ -1,5 +1,7 @@
 import 'package:afaq/models/CategoryModel.dart';
 import 'package:afaq/pages/Onboarding/onboardingScreen.dart';
+import 'package:afaq/pages/mainScreens/home_screen.dart';
+import 'package:afaq/providers/user_data_provider.dart';
 import 'package:afaq/widgets/Auth_widgets/MainText.dart';
 import 'package:afaq/widgets/Auth_widgets/SubtitleText.dart';
 import 'package:afaq/widgets/UserInfo_widgets/CategoriesSelect.dart';
@@ -27,7 +29,7 @@ class _FeedScreenState extends State<FeedScreen> {
   late TextEditingController _specializationController;
   late TextEditingController _qualificationsController;
   late TextEditingController _experiencesController;
-  final List<CategoryModel> _interests =  dataClass().getInterests();
+  final List<CategoryModel> _interests = dataClass().getInterests();
   final List<CategoryModel> _selectedInterests = [];
   String _selectedPreference = "Academic Courses";
   bool _isEmailVerified = false;
@@ -45,7 +47,7 @@ class _FeedScreenState extends State<FeedScreen> {
       _experiencesController = TextEditingController();
     }
 
-    _checkAccountStatus();
+    UserDataProvider().checkAccountStatus();
   }
 
   @override
@@ -71,23 +73,7 @@ class _FeedScreenState extends State<FeedScreen> {
     }
   }
 
-  Future<void> _checkAccountStatus() async {
-    await Future.delayed(const Duration(seconds: 1));
-    bool emailVerified = await _fetchEmailVerificationStatus();
-    setState(() {
-      _isEmailVerified = emailVerified;
-    });
-  }
-
-  Future<bool> _fetchEmailVerificationStatus() async {
-    if (user != null) {
-      await user!.reload();
-      return user!.emailVerified;
-    }
-    return false;
-  }
-
-  Widget _buildPreferencesDropdown() {
+  Widget buildPreferencesDropdown() {
     return DropdownButtonFormField<String>(
       value: _selectedPreference,
       items: const [
@@ -129,7 +115,8 @@ class _FeedScreenState extends State<FeedScreen> {
         _isLoading = true;
       });
 
-      bool emailVerified = await _fetchEmailVerificationStatus();
+      bool emailVerified =
+          await UserDataProvider().fetchEmailVerificationStatus();
       setState(() {
         _isEmailVerified = emailVerified;
       });
@@ -139,7 +126,7 @@ class _FeedScreenState extends State<FeedScreen> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const OnboardingScreen(),
+            builder: (context) => const HomePage(),
           ),
         );
       } else {
@@ -237,7 +224,7 @@ class _FeedScreenState extends State<FeedScreen> {
                                         });
                                       },
                                       preferencesDropdown:
-                                          _buildPreferencesDropdown(),
+                                          buildPreferencesDropdown(),
                                     ),
                                   SizedBox(height: screenHeight * 0.04),
                                   _isLoading
@@ -266,5 +253,3 @@ class _FeedScreenState extends State<FeedScreen> {
     );
   }
 }
-
-

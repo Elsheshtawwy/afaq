@@ -26,12 +26,12 @@ class InviteFriendsScreen extends StatelessWidget {
           ),
         ),
         body: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
+                const Text(
                   "Share with your friends",
                   style: TextStyle(
                     fontSize: 24,
@@ -40,7 +40,7 @@ class InviteFriendsScreen extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ClipRRect(
                   borderRadius: const BorderRadius.all(Radius.circular(12)),
                   child: Image.asset(
@@ -49,7 +49,7 @@ class InviteFriendsScreen extends StatelessWidget {
                     height: getSize(context).width * 0.4,
                   ),
                 ),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 ElevatedButton.icon(
                   onPressed: () {
                     Share.share('قم بتنزيل تطبيق أفاق من هنا: $appLink');
@@ -67,11 +67,11 @@ class InviteFriendsScreen extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         darkModeProvider.isDark ? Colors.white : Colors.teal,
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       horizontal: 24,
                       vertical: 12,
                     ),
-                    textStyle: TextStyle(
+                    textStyle: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                     ),

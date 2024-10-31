@@ -39,7 +39,8 @@ class InstituteCardHome extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: institute.logoUrl ?? 'assets/default_logo.png',
               placeholder: (context, url) => const CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Image.asset('assets/default_logo.png'),
+              errorWidget: (context, url, error) =>
+                  Image.asset('assets/default_logo.png'),
               height: 120,
               width: double.infinity,
               fit: BoxFit.cover,
@@ -67,14 +68,6 @@ class InstituteCardHome extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  institute.rating.toString() ?? 'No rating',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
                 const SizedBox(height: 8),
                 Text(
                   institute.accreditation ?? 'No accreditation',

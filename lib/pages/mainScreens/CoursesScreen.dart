@@ -20,7 +20,7 @@ class CoursesScreen extends StatefulWidget {
 }
 
 class _CoursesScreenState extends State<CoursesScreen> {
-  TextEditingController _searchController = TextEditingController();
+  final TextEditingController _searchController = TextEditingController();
   String searchQuery = '';
 
   @override
@@ -66,7 +66,7 @@ class _CoursesScreenState extends State<CoursesScreen> {
             IconButton(
               icon: const Icon(CupertinoIcons.search, color: Colors.black),
               onPressed: () {
-                CustomSearchBar()
+                const CustomSearchBar()
                     .showSearchDialog(context, _searchController, 'Course');
               },
             ),

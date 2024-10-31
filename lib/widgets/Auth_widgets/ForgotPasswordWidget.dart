@@ -1,4 +1,3 @@
-import 'package:afaq/widgets/showAwesomeDialog/showAwesomeDialog.dart';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:firebase_auth/firebase_auth.dart';

@@ -1,5 +1,6 @@
 import 'package:afaq/providers/base_provider.dart';
 import 'package:afaq/providers/dark_mode_provider.dart';
+import 'package:afaq/providers/user_data_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -115,34 +116,6 @@ class MyProfile extends StatelessWidget {
                   ],
                 ),
               ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: 4,
-          type: BottomNavigationBarType.fixed,
-          selectedItemColor: Colors.teal,
-          unselectedItemColor: Colors.grey,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.book),
-              label: 'My Courses',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.chat),
-              label: 'Inbox',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.payment),
-              label: 'Transaction',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-        ),
       );
     });
   }
@@ -176,7 +149,7 @@ class ProfileOption extends StatelessWidget {
                 fontSize: 16,
                 color: darkModeProvider.isDark ? Colors.white : Colors.black)),
         trailing: trailing ??
-             Icon(Icons.arrow_forward_ios,
+            Icon(Icons.arrow_forward_ios,
                 size: 16,
                 color: darkModeProvider.isDark ? Colors.white : Colors.black),
         onTap: onTap,
@@ -200,26 +173,28 @@ class _ProfilePictureState extends State<ProfilePicture> {
   Widget build(BuildContext context) {
     final currentUser = FirebaseAuth.instance.currentUser;
 
-    return FutureBuilder<String?>(
-      future: currentUser != null
-          ? getProfilePicture(currentUser.uid)
-          : Future.value(
-              "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg"),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting ||
-            snapshot.hasError ||
-            !snapshot.hasData ||
-            snapshot.data == null) {
-          return _buildProfilePicture(
-            const AssetImage('assets/profile.png'),
-          );
-        } else {
-          return _buildProfilePicture(
-            NetworkImage(snapshot.data!),
-          );
-        }
-      },
-    );
+    return Consumer<UserDataProvider>(builder: (context, userDataProvider, _) {
+      return FutureBuilder<String?>(
+        future: currentUser != null
+            ? userDataProvider.getProfilePicture(currentUser.uid)
+            : Future.value(
+                "https://static.vecteezy.com/system/resources/thumbnails/002/318/271/small_2x/user-profile-icon-free-vector.jpg"),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting ||
+              snapshot.hasError ||
+              !snapshot.hasData ||
+              snapshot.data == null) {
+            return _buildProfilePicture(
+              const AssetImage('assets/profile.png'),
+            );
+          } else {
+            return _buildProfilePicture(
+              NetworkImage(snapshot.data!),
+            );
+          }
+        },
+      );
+    });
   }
 
   Widget _buildProfilePicture(ImageProvider imageProvider) {
@@ -238,20 +213,5 @@ class _ProfilePictureState extends State<ProfilePicture> {
         backgroundColor: Colors.grey[200],
       ),
     );
-  }
-
-  Future<String?> getProfilePicture(String userId) async {
-    try {
-      BaseProvider().setBusy(true);
-      DocumentSnapshot userDoc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(userId)
-          .get();
-      BaseProvider().setBusy(false);
-      return userDoc.get('profilePicture') as String?;
-    } catch (e) {
-      print('Error fetching profile picture: $e');
-      return null;
-    }
   }
 }

@@ -5,7 +5,7 @@ import 'package:afaq/models/InstructorModel.dart';
 import 'package:flutter/material.dart';
 
 class dataClass extends StatelessWidget {
-  dataClass({super.key});
+  const dataClass({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,136 +14,125 @@ class dataClass extends StatelessWidget {
 
   List<CategoryModel> getInterests() {
     return [
-      CategoryModel(
-          id: "0", name: 'Arabic', imageUrl: 'assets/icons/arabic.png'),
-      CategoryModel(
-          id: "1",
-          name: 'Artificial Intelligence',
-          imageUrl: 'assets/icons/artificialintelligence.png'),
-      CategoryModel(
-          id: "2", name: 'Biology', imageUrl: 'assets/icons/Biology.png'),
-      CategoryModel(
-          id: "3",
-          name: 'Business Law',
-          imageUrl: 'assets/icons/businessLaw.png'),
-      CategoryModel(
-          id: "4",
-          name: 'Car Mechanics',
-          imageUrl: 'assets/icons/carMechanics.png'),
-      CategoryModel(
-          id: "5", name: 'Chemistry', imageUrl: 'assets/icons/Chemistry.png'),
-      CategoryModel(
-          id: "6",
-          name: 'Communication Skills',
-          imageUrl: 'assets/icons/communicationSkills.png'),
-      CategoryModel(
-          id: "7",
-          name: 'Cybersecurity',
-          imageUrl: 'assets/icons/cybersecurity.png'),
-      CategoryModel(
-          id: "8",
-          name: 'Digital Marketing',
-          imageUrl: 'assets/icons/digitalMarketing.png'),
-      CategoryModel(
-          id: "9", name: 'English', imageUrl: 'assets/icons/English.png'),
-      CategoryModel(
-          id: "10",
-          name: 'Electricity',
-          imageUrl: 'assets/icons/electricity.png'),
-      CategoryModel(
-          id: "11", name: 'Fitness', imageUrl: 'assets/icons/fitness.png'),
-      CategoryModel(
-          id: "12", name: 'German', imageUrl: 'assets/icons/germany.png'),
-      CategoryModel(
-          id: "13",
-          name: 'Human Resources',
-          imageUrl: 'assets/icons/humanResources.png'),
-      CategoryModel(
-          id: "14",
-          name: 'Interior Design',
-          imageUrl: 'assets/icons/interiorDesign.png'),
-      CategoryModel(
-          id: "15",
-          name: 'Leadership',
-          imageUrl: 'assets/icons/leadership.png'),
-      CategoryModel(
-          id: "16",
-          name: 'Mathematics',
-          imageUrl: 'assets/icons/mathematics.png'),
-      CategoryModel(
-          id: "17", name: 'Nursing', imageUrl: 'assets/icons/nursing.png'),
-      CategoryModel(
-          id: "18", name: 'Nutrition', imageUrl: 'assets/icons/nutrition.png'),
-      CategoryModel(
-          id: "19", name: 'Painting', imageUrl: 'assets/icons/painting.png'),
-      CategoryModel(
-          id: "20",
-          name: 'Personal Finance',
-          imageUrl: 'assets/icons/personalFinance.png'),
-      CategoryModel(
-          id: "21", name: 'Physics', imageUrl: 'assets/icons/Physics.png'),
-      CategoryModel(
-          id: "22",
-          name: 'Playing Instruments',
-          imageUrl: 'assets/icons/playingInstruments.png'),
-      CategoryModel(
-          id: "23", name: 'Pottery', imageUrl: 'assets/icons/pottery.png'),
-      CategoryModel(
-          id: "24",
-          name: 'Programming',
-          imageUrl: 'assets/icons/programming.png'),
-      CategoryModel(
-          id: "25",
-          name: 'Project Management',
-          imageUrl: 'assets/icons/projectManagement.png'),
-      CategoryModel(
-          id: "26",
-          name: 'Time Management',
-          imageUrl: 'assets/icons/timeManagement.png'),
-      CategoryModel(
-          id: "27",
-          name: 'Web Development',
-          imageUrl: 'assets/icons/webDevelopment.png'),
-      CategoryModel(
-          id: "28",
-          name: 'Woodworking',
-          imageUrl: 'assets/icons/woodworking.png'),
-      CategoryModel(
-          id: "29",
-          name: 'Photography',
-          imageUrl: 'assets/icons/photography.png'),
-      CategoryModel(
-          id: "30",
-          name: 'Psychology',
-          imageUrl: 'assets/icons/psychology.png'),
-      CategoryModel(
-          id: "31",
-          name: 'Public Speaking',
-          imageUrl: 'assets/icons/publicSpeaking.png'),
-      CategoryModel(
-          id: "32", name: 'Robotics', imageUrl: 'assets/icons/robotics.png'),
-      CategoryModel(
-          id: "33",
-          name: 'Self-Defense',
-          imageUrl: 'assets/icons/selfDefense.png'),
-      CategoryModel(
-          id: "34",
-          name: 'Software Development',
-          imageUrl: 'assets/icons/softwareDevelopment.png'),
-      CategoryModel(
-          id: "35", name: 'Spanish', imageUrl: 'assets/icons/spanish.png'),
-      CategoryModel(
-          id: "36",
-          name: 'Travel and Tourism',
-          imageUrl: 'assets/icons/travelAndTourism.png'),
-      CategoryModel(
-          id: "37",
-          name: 'UX/UI Design',
-          imageUrl: 'assets/icons/uxuiDesign.png'),
-      CategoryModel(
-          id: "38",
-          name: 'Writing Skills',
-          imageUrl: 'assets/icons/writingSkills.png'),
+      // CategoryModel(
+      //     id: "0", name: 'Arabic', imageUrl: 'assets/icons/arabic.png'),
+      // CategoryModel(
+      //     id: "1",
+      //     name: 'Artificial Intelligence',
+      //     imageUrl: 'assets/icons/artificialintelligence.png'),
+      // CategoryModel(
+      //     id: "2", name: 'Biology', imageUrl: 'assets/icons/Biology.png'),
+      // CategoryModel(
+      //     id: "3",
+      //     name: 'Business Law',
+      //     imageUrl: 'assets/icons/businessLaw.png'),
+      // CategoryModel(
+      //     id: "4",
+      //     name: 'Car Mechanics',
+      //     imageUrl: 'assets/icons/carMechanics.png'),
+      // CategoryModel(
+      //     id: "5", name: 'Chemistry', imageUrl: 'assets/icons/Chemistry.png'),
+      // CategoryModel(
+      //     id: "6",
+      //     name: 'Communication Skills',
+      //     imageUrl: 'assets/icons/communicationSkills.png'),
+      // CategoryModel(
+      //     id: "7",
+      //     name: 'Cybersecurity',
+      //     imageUrl: 'assets/icons/cybersecurity.png'),
+      // CategoryModel(
+      //     id: "8",
+      //     name: 'Digital Marketing',
+      //     imageUrl: 'assets/icons/digitalMarketing.png'),
+      // CategoryModel(
+      //     id: "9", name: 'English', imageUrl: 'assets/icons/English.png'),
+      // CategoryModel(
+      //     id: "10",
+      //     name: 'Electricity',
+      //     imageUrl: 'assets/icons/electricity.png'),
+      // CategoryModel(
+      //     id: "11", name: 'Fitness', imageUrl: 'assets/icons/fitness.png'),
+      // CategoryModel(
+      //     id: "12", name: 'German', imageUrl: 'assets/icons/germany.png'),
+      // CategoryModel(
+      //     id: "13",
+      //     name: 'Human Resources',
+      //     imageUrl: 'assets/icons/humanResources.png'),
+      // CategoryModel(
+      //     id: "14",
+      //     name: 'Interior Design',
+      //     imageUrl: 'assets/icons/interiorDesign.png'),
+      // CategoryModel(
+      //     id: "15",
+      //     name: 'Leadership',
+      //     imageUrl: 'assets/icons/leadership.png'),
+      // CategoryModel(
+      //     id: "16",
+      //     name: 'Mathematics',
+      //     imageUrl: 'assets/icons/mathematics.png'),
+      // CategoryModel(
+      //     id: "17", name: 'Nursing', imageUrl: 'assets/icons/nursing.png'),
+      // CategoryModel(
+      //     id: "18", name: 'Nutrition', imageUrl: 'assets/icons/nutrition.png'),
+      // CategoryModel(
+      //     id: "19", name: 'Painting', imageUrl: 'assets/icons/painting.png'),
+      // CategoryModel(
+      //     id: "20",
+      //     name: 'Personal Finance',
+      //     imageUrl: 'assets/icons/personalFinance.png'),
+      // CategoryModel(
+      //     id: "21", name: 'Physics', imageUrl: 'assets/icons/Physics.png'),
+      // CategoryModel(
+      //     id: "22",
+      //     name: 'Playing Instruments',
+      //     imageUrl: 'assets/icons/playingInstruments.png'),
+      // CategoryModel(
+      //     id: "23", name: 'Pottery', imageUrl: 'assets/icons/pottery.png'),
+      // CategoryModel(
+      //     id: "24",
+      //     name: 'Programming',
+      //     imageUrl: 'assets/icons/programming.png'),
+      // CategoryModel(
+      //     id: "25",
+      //     name: 'Project Management',
+      //     imageUrl: 'assets/icons/projectManagement.png'),
+      // CategoryModel(
+      //     id: "26",
+      //     name: 'Time Management',
+      //     imageUrl: 'assets/icons/timeManagement.png'),
+      // CategoryModel(
+      //     id: "28",
+      //     name: 'Woodworking',
+      //     imageUrl: 'assets/icons/woodworking.png'),
+      // CategoryModel(
+      //     id: "30",
+      //     name: 'Psychology',
+      //     imageUrl: 'assets/icons/psychology.png'),
+      // CategoryModel(
+      //     id: "31",
+      //     name: 'Public Speaking',
+      //     imageUrl: 'assets/icons/publicSpeaking.png'),
+      // CategoryModel(
+      //     id: "32", name: 'Robotics', imageUrl: 'assets/icons/robotics.png'),
+      // CategoryModel(
+      //     id: "33",
+      //     name: 'Self-Defense',
+      //     imageUrl: 'assets/icons/selfDefense.png'),
+      // CategoryModel(
+      //     id: "35", name: 'Spanish', imageUrl: 'assets/icons/spanish.png'),
+      // CategoryModel(
+      //     id: "36",
+      //     name: 'Travel and Tourism',
+      //     imageUrl: 'assets/icons/travelAndTourism.png'),
+      // CategoryModel(
+      //     id: "37",
+      //     name: 'UX/UI Design',
+      //     imageUrl: 'assets/icons/uxuiDesign.png'),
+      // CategoryModel(
+      //     id: "38",
+      //     name: 'Writing Skills',
+      //     imageUrl: 'assets/icons/writingSkills.png'),
+      
     ];
   }
 
@@ -975,12 +964,9 @@ class dataClass extends StatelessWidget {
         contactNumbers: ['+218 61-222-2222'],
         email: 'info@limu.edu.ly',
         logoUrl: 'https://uli.rcu.gov.sa/media/wh5dhgbq/image.jpg',
-        rating: 4.5,
-        reviews: ["200"],
         accreditation: 'Libyan Ministry of Higher Education',
         bio:
             'The Libyan International Medical University is a private university in Benghazi, Libya, founded in 2007.',
-        instructors: [],
         courses: [],
       ),
       InstituteModel(
@@ -991,12 +977,9 @@ class dataClass extends StatelessWidget {
         email: 'info@uot.edu.ly',
         logoUrl:
             'https://www.kesan.org/wp-content/uploads/2019/03/%D8%AC%D9%8A-%D8%A7%D9%94%D9%8A-%D8%A7%D9%88-%D8%A7%D8%B3-%D9%84%D9%84%D8%BA%D8%A7%D8%AA-%D8%A7%D9%84%D8%A7%D9%94%D8%AC%D9%86%D8%A8%D9%8A%D8%A9-%D9%83%D8%A7%D9%84%D9%8A%D9%81%D9%88%D8%B1%D9%86%D9%8A%D8%A7.jpg',
-        rating: 4.7,
-        reviews: ["200"],
         accreditation: 'Libyan Ministry of Higher Education',
         bio:
             'The University of Tripoli is the largest and oldest university in Libya, established in 1957.',
-        instructors: [],
         courses: [],
       ),
       InstituteModel(
@@ -1007,12 +990,9 @@ class dataClass extends StatelessWidget {
         email: 'info@mu.edu.ly',
         logoUrl:
             'https://elmahrousanews.com/wp-content/uploads/2021/09/%D8%A7%D9%84%D9%85%D8%B9%D9%87%D8%AF-%D8%A7%D9%84%D8%B9%D8%A7%D9%84%D9%89-%D9%84%D9%84%D8%BA%D8%A7%D8%AA-%D8%A8%D9%85%D8%B5%D8%B1-%D8%A7%D9%84%D8%AC%D8%AF%D9%8A%D8%AF%D8%A9-1-300x199.jpg',
-        rating: 4.6,
-        reviews: ["200"],
         accreditation: 'Libyan Ministry of Higher Education',
         bio:
             'Misurata University is a public university located in Misurata, Libya, founded in 1984.',
-        instructors: [],
         courses: [],
       ),
       InstituteModel(
@@ -1023,12 +1003,9 @@ class dataClass extends StatelessWidget {
         email: 'info@uob.edu.ly',
         logoUrl:
             'https://www.kesan.org/wp-content/uploads/2019/03/%D8%AC%D9%8A-%D8%A7%D9%94%D9%8A-%D8%A7%D9%88-%D8%A7%D8%B3-%D9%84%D9%84%D8%BA%D8%A7%D8%AA-%D8%A7%D9%84%D8%A7%D9%94%D8%AC%D9%86%D8%A8%D9%8A%D8%A9-%D9%83%D8%A7%D9%84%D9%8A%D9%81%D9%88%D8%B1%D9%86%D9%8A%D8%A7.jpg',
-        rating: 4.6,
-        reviews: ["200"],
         accreditation: 'Libyan Ministry of Higher Education',
         bio:
             'The University of Benghazi, formerly known as Garyounis University, is one of the largest public universities in Libya.',
-        instructors: [],
         courses: [],
       ),
       InstituteModel(
@@ -1039,12 +1016,9 @@ class dataClass extends StatelessWidget {
         email: 'info@sirte.edu.ly',
         logoUrl:
             'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvyqmugSqEBoM8caXHE14ep76yiBmMPZaMMQ&s',
-        rating: 4.4,
-        reviews: ["200"],
         accreditation: 'Libyan Ministry of Higher Education',
         bio:
             'Sirte University is a public university located in Sirte, Libya, and offers a variety of programs in multiple disciplines.',
-        instructors: [],
         courses: [],
       ),
     ];

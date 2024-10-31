@@ -11,7 +11,7 @@ class InstitutesDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3, // Number of tabs
+      length: 3, 
       child: Scaffold(
         appBar: AppBar(
           title: Text(institute.name ?? 'Institute Details'),
@@ -25,7 +25,6 @@ class InstitutesDetailsScreen extends StatelessWidget {
             IconButton(
               icon: const Icon(Icons.more_vert),
               onPressed: () {
-                // Handle more options
               },
             )
           ],
@@ -36,7 +35,6 @@ class InstitutesDetailsScreen extends StatelessWidget {
             child: Column(
               children: [
                 const SizedBox(height: 20),
-                // Profile Picture and Information
                 Center(
                   child: Column(
                     children: [
@@ -57,7 +55,8 @@ class InstitutesDetailsScreen extends StatelessWidget {
                       ),
                       Text(
                         institute.address ?? 'No Address Provided',
-                        style: const TextStyle(fontSize: 16, color: Colors.grey),
+                        style:
+                            const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                       const SizedBox(height: 10),
                       // Stats Row
@@ -67,36 +66,31 @@ class InstitutesDetailsScreen extends StatelessWidget {
                           Column(
                             children: [
                               Text(institute.courses?.length.toString() ?? '0',
-                                  style: const TextStyle(fontWeight: FontWeight.bold)),
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                               const Text('Courses'),
                             ],
                           ),
                           const SizedBox(width: 30),
                           Column(
                             children: [
-                              Text(institute.rating?.toStringAsFixed(1) ?? 'N/A',
-                                  style: const TextStyle(fontWeight: FontWeight.bold)),
                               const Text('Rating'),
                             ],
                           ),
                           const SizedBox(width: 30),
                           Column(
                             children: [
-                              Text(institute.reviews?.length.toString() ?? '0',
-                                  style: const TextStyle(fontWeight: FontWeight.bold)),
                               const Text('Reviews'),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
-                      // Follow and Message buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () {
-                              // Handle Follow
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
@@ -110,7 +104,6 @@ class InstitutesDetailsScreen extends StatelessWidget {
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () {
-                              // Handle Message
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -152,7 +145,8 @@ class InstitutesDetailsScreen extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => CourseDetailsScreen(course: course),
+                            builder: (context) =>
+                                CourseDetailsScreen(course: course),
                           ),
                         );
                       },

@@ -98,9 +98,12 @@ class _EditProfileState extends State<EditProfile> {
         'email': _emailController.text,
         'student': _studentController.text,
       });
-      await updateAuthEmail(
-        _emailController.text,
-      );
+
+      if (_emailController.text.isNotEmpty) {
+        await updateAuthEmail(_emailController.text);
+      } else {
+        print("Email field is empty, skipping email update.");
+      }
 
       AwesomeDialog(
         context: context,
