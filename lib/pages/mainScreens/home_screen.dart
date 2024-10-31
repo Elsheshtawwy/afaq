@@ -42,14 +42,13 @@ class _HomePageState extends State<HomePage> {
   final List<CourseModel> courses = dataClass().getCourses();
   final List<InstructorModel> instructors = dataClass().getInstructors();
   final List<InstituteModel> institutes = dataClass().getInstitutes();
-  
 
   @override
   void initState() {
     super.initState();
     UserDataProvider()
         .getProfilePicture(FirebaseAuth.instance.currentUser?.uid ?? '');
-        
+
     return;
   }
 
@@ -71,13 +70,6 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16),
-                  child: CustomSearchBar(
-                    hintText: 'Search for',
-                  ),
-                ),
-                const SizedBox(height: 20),
                 _buildSwiper(),
                 const SizedBox(height: 20),
                 _buildSectionHeader('Categories', () {

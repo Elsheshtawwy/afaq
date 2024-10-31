@@ -59,7 +59,6 @@ class InstitutesDetailsScreen extends StatelessWidget {
                             const TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                       const SizedBox(height: 10),
-                      // Stats Row
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
@@ -74,23 +73,32 @@ class InstitutesDetailsScreen extends StatelessWidget {
                           const SizedBox(width: 30),
                           Column(
                             children: [
+                              Text(
+                                  institute.rating?.toStringAsFixed(1) ?? 'N/A',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                               const Text('Rating'),
                             ],
                           ),
                           const SizedBox(width: 30),
                           Column(
                             children: [
+                              Text(institute.reviews?.length.toString() ?? '0',
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold)),
                               const Text('Reviews'),
                             ],
                           ),
                         ],
                       ),
                       const SizedBox(height: 20),
+                      // Follow and Message buttons
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           ElevatedButton(
                             onPressed: () {
+                              // Handle Follow
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue,
@@ -104,6 +112,7 @@ class InstitutesDetailsScreen extends StatelessWidget {
                           const SizedBox(width: 10),
                           ElevatedButton(
                             onPressed: () {
+                              // Handle Message
                             },
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(

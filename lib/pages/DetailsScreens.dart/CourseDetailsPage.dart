@@ -31,7 +31,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   Future<void> _loadCourseImage() async {
     try {
       final file = await DefaultCacheManager()
-          .getSingleFile(widget.course.imageUrl.toString());
+          .getSingleFile(widget.course.imageUrl?.toString() ?? '');
       print(file);
     } catch (e) {
       print("Error loading image: $e");
@@ -51,7 +51,7 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
       appBar: AppBar(
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -119,6 +119,10 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
   }
 
   Widget _buildHeaderImage(BoxConstraints constraints, CourseModel course) {
+    if (course.imageUrl == null || course.imageUrl!.isEmpty) {
+      return Container();
+    }
+
     return SizedBox(
       height: constraints.maxWidth > 600 ? 300 : 200,
       child: Swiper(
@@ -704,12 +708,12 @@ class _CourseDetailsScreenState extends State<CourseDetailsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              "Start Date: ${course.startDate}",
+              "Start Date: ${course.startDate.toString().substring(0, 10)}",
               style: const TextStyle(color: Colors.black),
             ),
             const SizedBox(height: 4),
             Text(
-              "End Date: ${course.endDate}",
+              "End Date: ${course.endDate?.toString().substring(0, 10) ?? 'No end date'}",
               style: const TextStyle(color: Colors.black),
             ),
           ],
