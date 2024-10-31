@@ -42,12 +42,14 @@ class _HomePageState extends State<HomePage> {
   final List<CourseModel> courses = dataClass().getCourses();
   final List<InstructorModel> instructors = dataClass().getInstructors();
   final List<InstituteModel> institutes = dataClass().getInstitutes();
+  
 
   @override
   void initState() {
     super.initState();
     UserDataProvider()
         .getProfilePicture(FirebaseAuth.instance.currentUser?.uid ?? '');
+        
     return;
   }
 
@@ -527,5 +529,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-
-

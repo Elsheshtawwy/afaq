@@ -304,6 +304,7 @@ class _EditProfileState extends State<EditProfile> {
 
   Widget _buildUpdateButton(double screenWidth, double screenHeight) {
     return ElevatedButton.icon(
+      
       onPressed: () async {
         if (_formKey.currentState!.validate()) {
           setState(() {
@@ -323,6 +324,7 @@ class _EditProfileState extends State<EditProfile> {
         }
       },
       style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.teal,
         padding: EdgeInsets.symmetric(
           horizontal: screenWidth * 0.1,
           vertical: screenHeight * 0.02,

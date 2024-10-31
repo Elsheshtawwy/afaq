@@ -78,18 +78,27 @@ class CourseModel {
       rating: (json['rating'] as num?)?.toDouble(),
       imageUrl: json['imageUrl'] is String
           ? [json['imageUrl'] as String]
-          : (json['imageUrl'] as List<dynamic>?)?.map((e) => e as String).toList(),
+          : (json['imageUrl'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
       reviews: json['reviews'] as int?,
       classes: json['classes'] as int?,
       hours: json['hours'] as int?,
       about: json['about'] as String?,
-      features: (json['features'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      features: (json['features'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       reviewsList: (json['reviewsList'] as List<dynamic>?)
           ?.map((e) => Map<String, String>.from(e as Map))
           .toList(),
-      objectives: (json['objectives'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      requirements: (json['requirements'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      lessons: (json['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      objectives: (json['objectives'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      requirements: (json['requirements'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      lessons:
+          (json['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
       currentStudents: json['currentStudents'] as int?,
       targetStudents: json['targetStudents'] as int?,
       level: json['level'] as String?,
@@ -200,6 +209,53 @@ class CourseModel {
       instructors: instructors ?? this.instructors,
       address: address ?? this.address,
       numberOfRatings: numberOfRatings ?? this.numberOfRatings,
+    );
+  }
+
+  CourseModel fromMap(Map<String, dynamic> map) {
+    return CourseModel(
+      id: map['id'] as String? ?? '',
+      title: map['title'] as String?,
+      description: map['description'] as String?,
+      startDate: map['startDate'] != null
+          ? DateTime.parse(map['startDate'] as String)
+          : null,
+      endDate: map['endDate'] != null
+          ? DateTime.parse(map['endDate'] as String)
+          : null,
+      category: map['category'] as String?,
+      subtitle: map['subtitle'] as String?,
+      price: (map['price'] as num?)?.toDouble(),
+      oldPrice: (map['oldPrice'] as num?)?.toDouble(),
+      rating: (map['rating'] as num?)?.toDouble(),
+      imageUrl: map['imageUrl'] is String
+          ? [map['imageUrl'] as String]
+          : (map['imageUrl'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList(),
+      reviews: map['reviews'] as int?,
+      classes: map['classes'] as int?,
+      hours: map['hours'] as int?,
+      about: map['about'] as String?,
+      features:
+          (map['features'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      reviewsList: (map['reviewsList'] as List<dynamic>?)
+          ?.map((e) => Map<String, String>.from(e as Map))
+          .toList(),
+      objectives: (map['objectives'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      requirements: (map['requirements'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      lessons:
+          (map['lessons'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      currentStudents: map['currentStudents'] as int?,
+      targetStudents: map['targetStudents'] as int?,
+      level: map['level'] as String?,
+      isOnline: map['isOnline'] as bool?,
+      address: map['address'] as String?,
+      numberOfRatings: map['numberOfRatings'] as int?,
     );
   }
 }
